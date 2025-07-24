@@ -1,0 +1,369 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contato - Central de Contratos{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="contact-hero py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold mb-4">
+                        Entre em <span class="text-primary">Contato</span>
+                    </h1>
+                    <p class="lead mb-4">
+                        Estamos aqui para ajudar! Entre em contato conosco para esclarecer 
+                        dúvidas, receber suporte ou conhecer mais sobre nossos serviços.
+                    </p>
+                    <div class="contact-highlights">
+                        <div class="highlight-item d-flex align-items-center mb-3">
+                            <div class="highlight-icon me-3">
+                                <i class="fas fa-clock text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Resposta Rápida</h6>
+                                <small class="text-muted">Respondemos em até 24 horas</small>
+                            </div>
+                        </div>
+                        <div class="highlight-item d-flex align-items-center mb-3">
+                            <div class="highlight-icon me-3">
+                                <i class="fas fa-headset text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Suporte Especializado</h6>
+                                <small class="text-muted">Equipe jurídica e técnica qualificada</small>
+                            </div>
+                        </div>
+                        <div class="highlight-item d-flex align-items-center">
+                            <div class="highlight-icon me-3">
+                                <i class="fas fa-shield-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Atendimento Seguro</h6>
+                                <small class="text-muted">Seus dados estão protegidos</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="contact-image text-center">
+                    <div class="contact-icon-grid">
+                        <div class="icon-item">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <span>E-mail</span>
+                        </div>
+                        <div class="icon-item">
+                            <i class="fas fa-phone text-primary"></i>
+                            <span>Telefone</span>
+                        </div>
+                        <div class="icon-item">
+                            <i class="fas fa-map-marker-alt text-primary"></i>
+                            <span>Localização</span>
+                        </div>
+                        <div class="icon-item">
+                            <i class="fas fa-comments text-primary"></i>
+                            <span>Chat</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="contact-form-wrapper">
+                    <div class="text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-3">Envie sua Mensagem</h2>
+                        <p class="lead text-muted">
+                            Preencha o formulário abaixo e nossa equipe entrará em contato
+                        </p>
+                    </div>
+                    
+                    <div class="contact-form-card">
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="row g-4">
+                                <!-- Nome Completo -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.full_name.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-user me-2 text-primary"></i>{{ form.full_name.label }}
+                                    </label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.help_text %}
+                                        <div class="form-text">{{ form.full_name.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.full_name.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.full_name.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- E-mail -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-envelope me-2 text-primary"></i>{{ form.email.label }}
+                                    </label>
+                                    {{ form.email }}
+                                    {% if form.email.help_text %}
+                                        <div class="form-text">{{ form.email.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.email.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Assunto -->
+                                <div class="col-12">
+                                    <label for="{{ form.subject.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-tag me-2 text-primary"></i>{{ form.subject.label }}
+                                    </label>
+                                    {{ form.subject }}
+                                    {% if form.subject.help_text %}
+                                        <div class="form-text">{{ form.subject.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.subject.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.subject.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Mensagem -->
+                                <div class="col-12">
+                                    <label for="{{ form.message.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-comment me-2 text-primary"></i>{{ form.message.label }}
+                                    </label>
+                                    {{ form.message }}
+                                    {% if form.message.help_text %}
+                                        <div class="form-text">{{ form.message.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.message.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.message.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Submit Button -->
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-paper-plane me-2"></i>
+                                            Enviar Mensagem
+                                        </button>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-lock me-1"></i>
+                                            Suas informações estão protegidas pela LGPD
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Outras Formas de Contato</h2>
+            <p class="lead text-muted">
+                Escolha a forma mais conveniente para entrar em contato conosco
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- E-mail -->
+            <div class="col-lg-3 col-md-6">
+                <div class="contact-info-card h-100">
+                    <div class="card-icon">
+                        <i class="fas fa-envelope text-primary"></i>
+                    </div>
+                    <h5 class="card-title">E-mail</h5>
+                    <p class="card-text text-muted">
+                        Envie-nos um e-mail e responderemos rapidamente
+                    </p>
+                    <a href="mailto:contato@centraldecontratos.com" class="contact-link">
+                        contato@centraldecontratos.com
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Telefone -->
+            <div class="col-lg-3 col-md-6">
+                <div class="contact-info-card h-100">
+                    <div class="card-icon">
+                        <i class="fas fa-phone text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Telefone</h5>
+                    <p class="card-text text-muted">
+                        Ligue para falar diretamente com nossa equipe
+                    </p>
+                    <a href="tel:+5511999999999" class="contact-link">
+                        (11) 9 9999-9999
+                    </a>
+                    <div class="contact-hours">
+                        <small class="text-muted">Seg-Sex: 9h às 18h</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- WhatsApp -->
+            <div class="col-lg-3 col-md-6">
+                <div class="contact-info-card h-100">
+                    <div class="card-icon">
+                        <i class="fab fa-whatsapp text-primary"></i>
+                    </div>
+                    <h5 class="card-title">WhatsApp</h5>
+                    <p class="card-text text-muted">
+                        Converse conosco pelo WhatsApp
+                    </p>
+                    <a href="https://wa.me/5511999999999" class="contact-link" target="_blank" rel="noopener">
+                        (11) 9 9999-9999
+                    </a>
+                    <div class="contact-hours">
+                        <small class="text-muted">Atendimento 24h</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Endereço -->
+            <div class="col-lg-3 col-md-6">
+                <div class="contact-info-card h-100">
+                    <div class="card-icon">
+                        <i class="fas fa-map-marker-alt text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Endereço</h5>
+                    <p class="card-text text-muted">
+                        Visite nosso escritório
+                    </p>
+                    <address class="contact-address">
+                        Rua das Empresas, 123<br>
+                        São Paulo - SP<br>
+                        CEP: 01234-567
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Social Media -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-3">Siga-nos nas Redes Sociais</h3>
+                <p class="mb-4 opacity-75">
+                    Fique por dentro das novidades, dicas jurídicas e atualizações da Central de Contratos
+                </p>
+            </div>
+            <div class="col-lg-4">
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Quick Links -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Perguntas Frequentes</h2>
+            <p class="lead text-muted">
+                Talvez sua dúvida já tenha resposta aqui
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="faq-card">
+                    <div class="faq-icon">
+                        <i class="fas fa-file-contract text-primary"></i>
+                    </div>
+                    <h6 class="faq-title">Como funciona a geração de contratos?</h6>
+                    <p class="faq-text text-muted">
+                        Nossos contratos são gerados automaticamente baseados em templates 
+                        jurídicos validados por especialistas.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="faq-card">
+                    <div class="faq-icon">
+                        <i class="fas fa-shield-alt text-primary"></i>
+                    </div>
+                    <h6 class="faq-title">Os contratos têm validade jurídica?</h6>
+                    <p class="faq-text text-muted">
+                        Sim! Todos os nossos contratos são elaborados por advogados 
+                        especialistas e seguem a legislação brasileira.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="faq-card">
+                    <div class="faq-icon">
+                        <i class="fas fa-clock text-primary"></i>
+                    </div>
+                    <h6 class="faq-title">Quanto tempo leva para gerar um contrato?</h6>
+                    <p class="faq-text text-muted">
+                        O processo é instantâneo! Após o preenchimento dos dados, 
+                        seu contrato fica pronto em poucos segundos.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'contracts:catalog' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-search me-2"></i>
+                Ver Todos os Contratos
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

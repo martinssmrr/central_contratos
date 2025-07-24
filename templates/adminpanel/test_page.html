@@ -1,0 +1,19 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Teste - Painel Admin{% endblock %}
+
+{% block breadcrumb_items %}<li class="breadcrumb-item active">Página de Teste</li>{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1>Página de Teste - Admin Panel</h1>
+            <p>Se você está vendo esta página, a autenticação está funcionando.</p>
+            <p>Usuário: {{ user.username }}</p>
+            <p>É staff: {{ user.is_staff }}</p>
+            <p>Data/Hora: {{ now }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

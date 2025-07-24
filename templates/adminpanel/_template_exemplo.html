@@ -1,0 +1,103 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block title %}Nova Página Admin - Central de Contratos{% endblock %}
+
+{% block breadcrumb_items %}<li class="breadcrumb-item active">Nome da Página</li>{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Estilos específicos da página */
+    .admin-custom-card {
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        border-radius: 15px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .admin-custom-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header da Página -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 fw-bold text-dark">
+                        <i class="fas fa-icon me-2" style="color: var(--admin-primary);"></i>
+                        Título da Página
+                    </h1>
+                    <p class="text-muted mb-0">Descrição breve da funcionalidade</p>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-admin-primary">
+                        <i class="fas fa-plus me-2"></i>Nova Ação
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conteúdo Principal -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card admin-custom-card">
+                        <div class="card-body p-4">
+                            <h5 class="card-title">Seção Principal</h5>
+                            <p class="card-text">Conteúdo da página administrativa...</p>
+                            
+                            <!-- Exemplo de tabela administrativa -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Coluna 1</th>
+                                            <th>Coluna 2</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Dados de exemplo</td>
+                                            <td>Mais dados</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // JavaScript específico da página
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Página administrativa carregada');
+        
+        // Exemplo de funcionalidade JavaScript
+        const buttons = document.querySelectorAll('.btn-admin-primary');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Ação do botão
+            });
+        });
+    });
+</script>
+{% endblock %}

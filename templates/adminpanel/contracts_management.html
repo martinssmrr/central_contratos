@@ -1,0 +1,577 @@
+{% extends 'base_admin.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Gestão de Contratos - Admin{% endblock %}
+
+{% block breadcrumb_items %}<li class="breadcrumb-item active">Gestão de Contratos</li>{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===============================================
+   GESTÃO DE CONTRATOS - CSS MODERNO
+   =============================================== */
+
+.contracts-management {
+    min-height: 100vh;
+    background: #f8f9fa;
+    padding: 2rem 0;
+}
+
+.management-header {
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(244, 98, 58, 0.3);
+}
+
+.filters-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #f4623a;
+}
+
+.contracts-table-wrapper {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.contracts-table {
+    margin: 0;
+}
+
+.contracts-table thead {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #fff;
+}
+
+.contracts-table thead th {
+    border: none;
+    padding: 1.25rem 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+.contracts-table tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.contracts-table tbody tr:hover {
+    background: #f8f9fa;
+    transform: scale(1.01);
+}
+
+.contracts-table tbody td {
+    padding: 1.25rem 1rem;
+    vertical-align: middle;
+    border: none;
+}
+
+.client-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.client-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.client-details h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.client-details small {
+    color: #7f8c8d;
+}
+
+.contract-type-badge {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-paid {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: #fff;
+}
+
+.status-pending {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: #fff;
+}
+
+.status-cancelled {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: #fff;
+}
+
+.price-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #27ae60;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-action {
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: none;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-view {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: #fff;
+}
+
+.btn-download {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: #fff;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.pagination-wrapper {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 0 0 12px 12px;
+    border-top: 1px solid #e9ecef;
+}
+
+.search-input,
+.filter-select {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus,
+.filter-select:focus {
+    border-color: #f4623a;
+    box-shadow: 0 0 0 0.2rem rgba(244, 98, 58, 0.25);
+}
+
+.filter-btn {
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 98, 58, 0.4);
+}
+
+.clear-btn {
+    background: #6c757d;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.clear-btn:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.results-info {
+    background: #e8f4f8;
+    border: 1px solid #b3e5fc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #0277bd;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .contracts-table-wrapper {
+        overflow-x: auto;
+    }
+    
+    .filters-card .row {
+        flex-direction: column;
+    }
+    
+    .filters-card .col-md-3,
+    .filters-card .col-md-2 {
+        margin-bottom: 1rem;
+    }
+    
+    .client-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+
+/* Animações */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contracts-table-wrapper {
+    animation: slideInUp 0.6s ease-out;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contracts-management">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="management-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-file-contract me-3"></i>
+                        Gestão de Contratos
+                    </h1>
+                    <p class="mb-0 opacity-75">Visualize e gerencie todos os contratos criados pelos clientes</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'adminpanel:admin_panel' %}" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar ao Painel
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-card">
+            <form method="GET" class="row align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-search me-1"></i>Buscar Cliente
+                    </label>
+                    <input type="text" name="search" value="{{ current_search }}" 
+                           class="form-control search-input" 
+                           placeholder="Nome ou email do cliente">
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-filter me-1"></i>Tipo de Contrato
+                    </label>
+                    <select name="type" class="form-select filter-select">
+                        <option value="">Todos os tipos</option>
+                        {% for contract_type in contract_types %}
+                            <option value="{{ contract_type.slug }}" 
+                                    {% if current_type == contract_type.slug %}selected{% endif %}>
+                                {{ contract_type.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-flag me-1"></i>Status
+                    </label>
+                    <select name="status" class="form-select filter-select">
+                        <option value="">Todos</option>
+                        {% for status_key, status_label in status_choices %}
+                            <option value="{{ status_key }}" 
+                                    {% if current_status == status_key %}selected{% endif %}>
+                                {{ status_label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-calendar me-1"></i>Período
+                    </label>
+                    <select name="date" class="form-select filter-select">
+                        <option value="">Qualquer data</option>
+                        <option value="today" {% if current_date == 'today' %}selected{% endif %}>Hoje</option>
+                        <option value="week" {% if current_date == 'week' %}selected{% endif %}>Última semana</option>
+                        <option value="month" {% if current_date == 'month' %}selected{% endif %}>Último mês</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn filter-btn flex-fill">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <a href="{% url 'adminpanel:contracts_management' %}" class="btn clear-btn">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Informações dos Resultados -->
+        {% if total_count > 0 %}
+        <div class="results-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>{{ total_count }}</strong> contrato{{ total_count|pluralize }} encontrado{{ total_count|pluralize }}
+            {% if current_search or current_type or current_status or current_date %}
+                com os filtros aplicados
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Tabela de Contratos -->
+        <div class="contracts-table-wrapper">
+            {% if contracts %}
+                <table class="table contracts-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Tipo de Contrato</th>
+                            <th>Data de Compra</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contract in contracts %}
+                        <tr>
+                            <!-- Cliente -->
+                            <td>
+                                <div class="client-info">
+                                    <div class="client-avatar">
+                                        {{ contract.user.first_name|first|default:contract.user.username|first|upper }}
+                                    </div>
+                                    <div class="client-details">
+                                        <h6>{{ contract.user.get_full_name|default:contract.user.username }}</h6>
+                                        <small>{{ contract.user.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <!-- Tipo de Contrato -->
+                            <td>
+                                <span class="contract-type-badge">
+                                    {{ contract.contract_type.name }}
+                                </span>
+                            </td>
+                            
+                            <!-- Data -->
+                            <td>
+                                <div>
+                                    <strong>{{ contract.created_at|date:"d/m/Y" }}</strong><br>
+                                    <small class="text-muted">{{ contract.created_at|date:"H:i" }}</small>
+                                </div>
+                            </td>
+                            
+                            <!-- Status -->
+                            <td>
+                                {% if contract.status == 'paid' %}
+                                    <span class="status-badge status-paid">
+                                        <i class="fas fa-check-circle me-1"></i>Pago
+                                    </span>
+                                {% elif contract.status == 'pending' %}
+                                    <span class="status-badge status-pending">
+                                        <i class="fas fa-clock me-1"></i>Pendente
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-cancelled">
+                                        <i class="fas fa-times-circle me-1"></i>Cancelado
+                                    </span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Valor -->
+                            <td>
+                                <div class="price-value">
+                                    R$ {{ contract.contract_type.price|floatformat:0 }}
+                                </div>
+                            </td>
+                            
+                            <!-- Ações -->
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'adminpanel:contract_detail_admin' contract.id %}" 
+                                       class="btn-action btn-view" 
+                                       title="Ver Detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    
+                                    {% if contract.status == 'paid' and contract.pdf_file %}
+                                        <a href="{{ contract.pdf_file.url }}" 
+                                           class="btn-action btn-download" 
+                                           title="Download PDF"
+                                           target="_blank">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <!-- Paginação -->
+                {% if page_obj.has_other_pages %}
+                <div class="pagination-wrapper">
+                    <nav aria-label="Navegação da página">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}">
+                                        <i class="fas fa-angle-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}">
+                                        <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            {% else %}
+                <!-- Estado Vazio -->
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-file-contract fa-4x text-muted"></i>
+                    </div>
+                    <h4 class="text-muted">Nenhum contrato encontrado</h4>
+                    <p class="text-muted mb-4">
+                        {% if current_search or current_type or current_status or current_date %}
+                            Tente ajustar os filtros de busca.
+                        {% else %}
+                            Ainda não há contratos cadastrados no sistema.
+                        {% endif %}
+                    </p>
+                    {% if current_search or current_type or current_status or current_date %}
+                        <a href="{% url 'adminpanel:contracts_management' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-times me-2"></i>Limpar Filtros
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form on filter change
+    const filterSelects = document.querySelectorAll('.filter-select');
+    filterSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+    
+    // Enter key submit for search
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.form.submit();
+            }
+        });
+    }
+    
+    // Tooltips for action buttons
+    const tooltips = document.querySelectorAll('[title]');
+    tooltips.forEach(element => {
+        new bootstrap.Tooltip(element);
+    });
+});
+</script>
+{% endblock %}

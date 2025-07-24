@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ contract_type.name }} - Contrato</title>
+</head>
+<body>
+    <div class="header">
+        <div class="title">{{ contract_type.name }}</div>
+        <div class="subtitle">Contrato Nº {{ contract.id }}/{{ contract.created_at.year }}</div>
+    </div>
+
+    <div class="parties">
+        <div class="section-title">Partes Contratantes</div>
+        <p><strong>CONTRATANTE:</strong> {{ contract.parte1_nome }}, {{ contract.parte1_cpf_cnpj }}, residente e domiciliado em {{ contract.parte1_endereco }}.</p>
+        <p><strong>CONTRATADO:</strong> {{ contract.parte2_nome }}, {{ contract.parte2_cpf_cnpj }}, residente e domiciliado em {{ contract.parte2_endereco }}.</p>
+    </div>
+
+    {% block contract_content %}
+    <div class="section">
+        <div class="section-title">Objeto do Contrato</div>
+        <div class="clause">
+            <span class="clause-number">CLÁUSULA PRIMEIRA - DO OBJETO:</span>
+            {{ contract.objeto_contrato }}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Condições Financeiras</div>
+        <div class="clause">
+            <span class="clause-number">CLÁUSULA SEGUNDA - DO VALOR:</span>
+            O valor total do presente contrato é de R$ {{ contract.valor|floatformat:2 }} ({{ contract.valor|floatformat:2 }} reais).
+        </div>
+        
+        <div class="clause">
+            <span class="clause-number">CLÁUSULA TERCEIRA - DA FORMA DE PAGAMENTO:</span>
+            {{ contract.forma_pagamento }}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Prazo</div>
+        <div class="clause">
+            <span class="clause-number">CLÁUSULA QUARTA - DO PRAZO:</span>
+            O presente contrato terá vigência de {{ contract.data_inicio|date:"d/m/Y" }} até {{ contract.data_fim|date:"d/m/Y" }}, {{ contract.prazo_vigencia }}.
+        </div>
+    </div>
+    {% endblock %}
+
+    <div class="section">
+        <div class="section-title">Disposições Gerais</div>
+        <div class="clause">
+            <span class="clause-number">CLÁUSULA QUINTA - DAS DISPOSIÇÕES GERAIS:</span>
+            Este contrato obriga as partes, seus herdeiros e sucessores a qualquer título, sendo regido pelas normas do Código Civil Brasileiro.
+        </div>
+        
+        <div class="clause">
+            <span class="clause-number">CLÁUSULA SEXTA - DO FORO:</span>
+            Fica eleito o foro da comarca de São Paulo/SP para dirimir quaisquer dúvidas ou questões oriundas do presente contrato.
+        </div>
+    </div>
+
+    <div class="signature-section">
+        <p class="text-center">E, por estarem assim justos e contratados, firmam o presente instrumento em duas vias de igual teor, juntamente com as testemunhas abaixo.</p>
+        
+        <p class="text-center">{{ contract.created_at.day }} de {{ contract.created_at|date:"F" }} de {{ contract.created_at.year }}</p>
+        
+        <div class="signature-line"></div>
+        <div class="signature-name">{{ contract.parte1_nome }}<br>CONTRATANTE</div>
+        
+        <div class="signature-line"></div>
+        <div class="signature-name">{{ contract.parte2_nome }}<br>CONTRATADO</div>
+        
+        <div class="signature-line"></div>
+        <div class="signature-name">TESTEMUNHA 1</div>
+        
+        <div class="signature-line"></div>
+        <div class="signature-name">TESTEMUNHA 2</div>
+    </div>
+</body>
+</html>
