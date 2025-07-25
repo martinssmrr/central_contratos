@@ -10,7 +10,7 @@ import io
 import os
 from datetime import datetime
 
-from .models import ContractType, Contract, Payment, CompraVendaImovel
+from .models import ContractType, Contract, Payment, CompraVendaImovel, ContratoLocacaoResidencial
 from .forms import (
     ContractForm, PrestacaoServicoForm, LocacaoForm, 
     CompraVendaForm, ConfissaoDividaForm, FreelancerForm, PaymentForm, CompraVendaImovelForm
@@ -99,6 +99,9 @@ def contract_form_view(request, slug):
     if slug == 'compra-venda':
         # Redirecionar para o formulário completo
         return redirect('contracts:compra_venda_completo')
+    elif slug == 'locacao-residencial':
+        # Redirecionar para o formulário de locação residencial
+        return redirect('contracts:locacao_residencial')
     else:
         template_name = 'contracts/contract_form.html'
     
@@ -320,4 +323,58 @@ def compra_venda_success_completo_view(request, pk):
     
     return render(request, 'contracts/compra_venda_success_completo.html', {
         'contrato': contrato
+    })
+
+
+@login_required
+def locacao_residencial_view(request):
+    """View para o formulário completo de locação residencial"""
+    from .forms import ContratoLocacaoResidencialForm
+    from .models import ContratoLocacaoResidencial
+    
+    if request.method == 'POST':
+        form = ContratoLocacaoResidencialForm(request.POST)
+        if form.is_valid():
+            contrato = form.save(commit=False)
+            contrato.user = request.user
+            contrato.save()
+            
+            messages.success(request, 'Contrato de locação residencial criado com sucesso!')
+            return redirect('contracts:locacao_residencial_success', pk=contrato.pk)
+    else:
+        form = ContratoLocacaoResidencialForm()
+    
+    return render(request, 'contracts/locacao_residencial_form.html', {
+        'form': form,
+        'titulo': 'Contrato de Locação Residencial'
+    })
+
+
+@login_required
+def locacao_residencial_detail_view(request, pk):
+    """Visualização detalhada do contrato de locação residencial"""
+    contrato = get_object_or_404(ContratoLocacaoResidencial, pk=pk, user=request.user)
+    
+    return render(request, 'contracts/locacao_residencial_detail.html', {
+        'contrato': contrato
+    })
+
+
+@login_required
+def locacao_residencial_success_view(request, pk):
+    """Página de sucesso após criação do contrato de locação residencial"""
+    contrato = get_object_or_404(ContratoLocacaoResidencial, pk=pk, user=request.user)
+    
+    return render(request, 'contracts/locacao_residencial_success.html', {
+        'contrato': contrato
+    })
+
+
+@login_required
+def meus_contratos_locacao_residencial_view(request):
+    """Lista dos contratos de locação residencial do usuário"""
+    contratos = ContratoLocacaoResidencial.objects.filter(user=request.user).order_by('-created_at')
+    
+    return render(request, 'contracts/meus_contratos_locacao_residencial.html', {
+        'contratos': contratos
     })

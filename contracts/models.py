@@ -400,3 +400,196 @@ class ContratoCompraVendaImovel(models.Model):
     @property
     def endereco_completo_imovel(self):
         return f"{self.imovel_endereco_rua}, {self.imovel_endereco_numero}, {self.imovel_endereco_bairro}, {self.imovel_endereco_cidade}/{self.imovel_endereco_estado}"
+
+
+class ContratoLocacaoResidencial(models.Model):
+    """Modelo para contratos de locação residencial completos"""
+    
+    # Opções para formulários
+    ESTADO_CIVIL_CHOICES = [
+        ('solteiro', 'Solteiro'),
+        ('casado', 'Casado'),
+        ('divorciado', 'Divorciado'),
+        ('viuvo', 'Viúvo'),
+        ('uniao_estavel', 'União Estável'),
+    ]
+    
+    ESTADO_CHOICES = [
+        ('AC', 'Acre'), ('AL', 'Alagoas'), ('AP', 'Amapá'), ('AM', 'Amazonas'),
+        ('BA', 'Bahia'), ('CE', 'Ceará'), ('DF', 'Distrito Federal'),
+        ('ES', 'Espírito Santo'), ('GO', 'Goiás'), ('MA', 'Maranhão'),
+        ('MT', 'Mato Grosso'), ('MS', 'Mato Grosso do Sul'), ('MG', 'Minas Gerais'),
+        ('PA', 'Pará'), ('PB', 'Paraíba'), ('PR', 'Paraná'), ('PI', 'Piauí'),
+        ('RJ', 'Rio de Janeiro'), ('RN', 'Rio Grande do Norte'), ('RS', 'Rio Grande do Sul'),
+        ('RO', 'Rondônia'), ('RR', 'Roraima'), ('SC', 'Santa Catarina'),
+        ('SP', 'São Paulo'), ('SE', 'Sergipe'), ('TO', 'Tocantins'),
+    ]
+    
+    TIPO_IMOVEL_CHOICES = [
+        ('apartamento', 'Apartamento'),
+        ('casa', 'Casa'),
+        ('chacara', 'Chácara'),
+        ('cobertura', 'Cobertura'),
+        ('duplex', 'Duplex'),
+        ('fazenda', 'Fazenda'),
+        ('flat', 'Flat'),
+        ('galpao', 'Galpão'),
+        ('kitnet', 'Kitnet'),
+        ('loft', 'Loft'),
+        ('mansao', 'Mansão'),
+        ('sitio', 'Sítio'),
+        ('sobrado', 'Sobrado'),
+        ('studio', 'Studio'),
+        ('terreno', 'Terreno'),
+    ]
+    
+    FORMA_PAGAMENTO_CHOICES = [
+        ('boleto', 'Boleto'),
+        ('pix', 'PIX'),
+        ('transferencia', 'Transferência Bancária'),
+    ]
+    
+    DIA_PAGAMENTO_CHOICES = [
+        (str(i), f"Dia {i}") for i in range(1, 32)
+    ]
+    
+    GARANTIA_CHOICES = [
+        ('caucao', 'Caução'),
+        ('fiador', 'Fiador/Avalista'),
+        ('seguro', 'Seguro Fiança'),
+    ]
+    
+    # Campos básicos
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Usuário')
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+    
+    # === DADOS DO PROPRIETÁRIO ===
+    proprietario_nome = models.CharField('Nome Completo', max_length=200)
+    proprietario_estado_civil = models.CharField('Estado Civil', max_length=20, choices=ESTADO_CIVIL_CHOICES)
+    proprietario_nacionalidade = models.CharField('Nacionalidade', max_length=100, default='Brasileira')
+    proprietario_profissao = models.CharField('Profissão', max_length=100)
+    proprietario_rg = models.CharField('RG', max_length=20)
+    proprietario_cpf = models.CharField('CPF', max_length=14)
+    
+    # Endereço do proprietário
+    proprietario_rua = models.CharField('Rua', max_length=200)
+    proprietario_numero = models.CharField('Número', max_length=10)
+    proprietario_bairro = models.CharField('Bairro', max_length=100)
+    proprietario_cidade = models.CharField('Cidade', max_length=100)
+    proprietario_estado = models.CharField('Estado', max_length=2, choices=ESTADO_CHOICES)
+    
+    # Dados do cônjuge (se casado)
+    proprietario_conjuge_nome = models.CharField('Nome do Cônjuge', max_length=200, blank=True)
+    proprietario_conjuge_nacionalidade = models.CharField('Nacionalidade do Cônjuge', max_length=100, blank=True)
+    proprietario_conjuge_profissao = models.CharField('Profissão do Cônjuge', max_length=100, blank=True)
+    proprietario_conjuge_rg = models.CharField('RG do Cônjuge', max_length=20, blank=True)
+    proprietario_conjuge_cpf = models.CharField('CPF do Cônjuge', max_length=14, blank=True)
+    
+    # === DADOS DO LOCATÁRIO ===
+    locatario_nome = models.CharField('Nome Completo', max_length=200)
+    locatario_estado_civil = models.CharField('Estado Civil', max_length=20, choices=ESTADO_CIVIL_CHOICES)
+    locatario_nacionalidade = models.CharField('Nacionalidade', max_length=100, default='Brasileira')
+    locatario_profissao = models.CharField('Profissão', max_length=100)
+    locatario_rg = models.CharField('RG', max_length=20)
+    locatario_cpf = models.CharField('CPF', max_length=14)
+    
+    # Endereço do locatário
+    locatario_rua = models.CharField('Rua', max_length=200)
+    locatario_numero = models.CharField('Número', max_length=10)
+    locatario_bairro = models.CharField('Bairro', max_length=100)
+    locatario_cidade = models.CharField('Cidade', max_length=100)
+    locatario_estado = models.CharField('Estado', max_length=2, choices=ESTADO_CHOICES)
+    
+    # Dados do cônjuge (se casado)
+    locatario_conjuge_nome = models.CharField('Nome do Cônjuge', max_length=200, blank=True)
+    locatario_conjuge_nacionalidade = models.CharField('Nacionalidade do Cônjuge', max_length=100, blank=True)
+    locatario_conjuge_profissao = models.CharField('Profissão do Cônjuge', max_length=100, blank=True)
+    locatario_conjuge_rg = models.CharField('RG do Cônjuge', max_length=20, blank=True)
+    locatario_conjuge_cpf = models.CharField('CPF do Cônjuge', max_length=14, blank=True)
+    
+    # === DADOS DO IMÓVEL ===
+    imovel_tipo = models.CharField('Tipo do Imóvel', max_length=20, choices=TIPO_IMOVEL_CHOICES)
+    
+    # Endereço do imóvel
+    imovel_rua = models.CharField('Rua', max_length=200)
+    imovel_numero = models.CharField('Número', max_length=10)
+    imovel_bairro = models.CharField('Bairro', max_length=100)
+    imovel_cidade = models.CharField('Cidade', max_length=100)
+    imovel_estado = models.CharField('Estado', max_length=2, choices=ESTADO_CHOICES)
+    
+    # Dados registrais do imóvel (opcionais)
+    imovel_matricula = models.CharField('Número da Matrícula', max_length=50, blank=True)
+    imovel_cartorio = models.CharField('Cartório onde foi Registrado', max_length=200, blank=True)
+    imovel_iptu = models.CharField('Número do IPTU', max_length=50, blank=True)
+    imovel_conta_agua = models.CharField('Número da Conta de Água', max_length=50, blank=True)
+    imovel_conta_luz = models.CharField('Número da Conta de Luz', max_length=50, blank=True)
+    
+    # === DETALHES DA LOCAÇÃO ===
+    valor_aluguel = models.DecimalField('Valor do Aluguel', max_digits=12, decimal_places=2)
+    valor_aluguel_extenso = models.CharField('Valor por Extenso', max_length=500)
+    forma_pagamento = models.CharField('Forma de Pagamento', max_length=20, choices=FORMA_PAGAMENTO_CHOICES)
+    dia_pagamento = models.CharField('Dia de Pagamento', max_length=2, choices=DIA_PAGAMENTO_CHOICES)
+    conta_bancaria = models.CharField('Conta Bancária para Transferência', max_length=200, blank=True)
+    
+    # Datas da locação
+    data_inicio = models.DateField('Data de Início da Locação')
+    data_termino = models.DateField('Data de Término da Locação')
+    
+    # Garantia da locação
+    tipo_garantia = models.CharField('Tipo de Garantia', max_length=20, choices=GARANTIA_CHOICES)
+    
+    # Caução (se aplicável)
+    valor_caucao = models.DecimalField('Valor da Caução', max_digits=12, decimal_places=2, blank=True, null=True)
+    
+    # Fiador (se aplicável)
+    fiador_nome = models.CharField('Nome do Fiador', max_length=200, blank=True)
+    fiador_estado_civil = models.CharField('Estado Civil do Fiador', max_length=20, choices=ESTADO_CIVIL_CHOICES, blank=True)
+    fiador_nacionalidade = models.CharField('Nacionalidade do Fiador', max_length=100, blank=True)
+    fiador_profissao = models.CharField('Profissão do Fiador', max_length=100, blank=True)
+    fiador_rg = models.CharField('RG do Fiador', max_length=20, blank=True)
+    fiador_cpf = models.CharField('CPF do Fiador', max_length=14, blank=True)
+    
+    # Endereço do fiador
+    fiador_rua = models.CharField('Rua do Fiador', max_length=200, blank=True)
+    fiador_numero = models.CharField('Número do Fiador', max_length=10, blank=True)
+    fiador_bairro = models.CharField('Bairro do Fiador', max_length=100, blank=True)
+    fiador_cidade = models.CharField('Cidade do Fiador', max_length=100, blank=True)
+    fiador_estado = models.CharField('Estado do Fiador', max_length=2, choices=ESTADO_CHOICES, blank=True)
+    
+    # Seguro Fiança (se aplicável)
+    seguro_nome_seguradora = models.CharField('Nome da Seguradora', max_length=200, blank=True)
+    seguro_prazo = models.CharField('Prazo do Seguro', max_length=100, blank=True)
+    seguro_valor = models.DecimalField('Valor do Seguro', max_digits=12, decimal_places=2, blank=True, null=True)
+    
+    # Observações
+    observacoes = models.TextField('Observações', blank=True)
+    
+    class Meta:
+        verbose_name = 'Contrato de Locação Residencial'
+        verbose_name_plural = 'Contratos de Locação Residencial'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Locação - {self.proprietario_nome} → {self.locatario_nome} - {self.created_at.strftime('%d/%m/%Y')}"
+    
+    def get_absolute_url(self):
+        return reverse('contracts:locacao_residencial_detail', kwargs={'pk': self.pk})
+    
+    @property
+    def endereco_completo_proprietario(self):
+        return f"{self.proprietario_rua}, {self.proprietario_numero}, {self.proprietario_bairro}, {self.proprietario_cidade}/{self.proprietario_estado}"
+    
+    @property
+    def endereco_completo_locatario(self):
+        return f"{self.locatario_rua}, {self.locatario_numero}, {self.locatario_bairro}, {self.locatario_cidade}/{self.locatario_estado}"
+    
+    @property
+    def endereco_completo_imovel(self):
+        return f"{self.imovel_rua}, {self.imovel_numero}, {self.imovel_bairro}, {self.imovel_cidade}/{self.imovel_estado}"
+    
+    @property
+    def endereco_completo_fiador(self):
+        if self.fiador_rua:
+            return f"{self.fiador_rua}, {self.fiador_numero}, {self.fiador_bairro}, {self.fiador_cidade}/{self.fiador_estado}"
+        return ""

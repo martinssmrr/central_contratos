@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, HTML, Row, Column, Div
+import re
 from .models import Contract, CompraVendaImovel, ContratoCompraVendaImovel, ESTADO_CHOICES, ESTADO_CIVIL_CHOICES, TIPO_IMOVEL_CHOICES, FORMA_PAGAMENTO_CHOICES
 
 class ContractForm(ModelForm):
@@ -725,3 +726,292 @@ class ContratoCompraVendaImovelForm(ModelForm):
             raise forms.ValidationError('Quantidade de parcelas deve ser maior que zero.')
         
         return quantidade_parcelas
+
+
+class ContratoLocacaoResidencialForm(ModelForm):
+    """Formulário para contratos de locação residencial"""
+    
+    class Meta:
+        from .models import ContratoLocacaoResidencial
+        model = ContratoLocacaoResidencial
+        fields = [
+            # Proprietário
+            'proprietario_nome', 'proprietario_estado_civil', 'proprietario_nacionalidade',
+            'proprietario_profissao', 'proprietario_rg', 'proprietario_cpf',
+            'proprietario_rua', 'proprietario_numero', 'proprietario_bairro',
+            'proprietario_cidade', 'proprietario_estado',
+            'proprietario_conjuge_nome', 'proprietario_conjuge_nacionalidade',
+            'proprietario_conjuge_profissao', 'proprietario_conjuge_rg', 'proprietario_conjuge_cpf',
+            
+            # Locatário
+            'locatario_nome', 'locatario_estado_civil', 'locatario_nacionalidade',
+            'locatario_profissao', 'locatario_rg', 'locatario_cpf',
+            'locatario_rua', 'locatario_numero', 'locatario_bairro',
+            'locatario_cidade', 'locatario_estado',
+            'locatario_conjuge_nome', 'locatario_conjuge_nacionalidade',
+            'locatario_conjuge_profissao', 'locatario_conjuge_rg', 'locatario_conjuge_cpf',
+            
+            # Imóvel
+            'imovel_tipo', 'imovel_rua', 'imovel_numero', 'imovel_bairro',
+            'imovel_cidade', 'imovel_estado', 'imovel_matricula', 'imovel_cartorio',
+            'imovel_iptu', 'imovel_conta_agua', 'imovel_conta_luz',
+            
+            # Detalhes da locação
+            'valor_aluguel', 'valor_aluguel_extenso', 'forma_pagamento',
+            'dia_pagamento', 'conta_bancaria', 'data_inicio', 'data_termino',
+            
+            # Garantia
+            'tipo_garantia', 'valor_caucao',
+            'fiador_nome', 'fiador_estado_civil', 'fiador_nacionalidade',
+            'fiador_profissao', 'fiador_rg', 'fiador_cpf',
+            'fiador_rua', 'fiador_numero', 'fiador_bairro',
+            'fiador_cidade', 'fiador_estado',
+            'seguro_nome_seguradora', 'seguro_prazo', 'seguro_valor',
+            
+            # Observações
+            'observacoes',
+        ]
+        
+        widgets = {
+            # Proprietário
+            'proprietario_nome': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome completo do proprietário'
+            }),
+            'proprietario_estado_civil': forms.Select(attrs={'class': 'form-select'}),
+            'proprietario_nacionalidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Ex: Brasileira'
+            }),
+            'proprietario_profissao': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Profissão'
+            }),
+            'proprietario_rg': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': '00.000.000-0'
+            }),
+            'proprietario_cpf': forms.TextInput(attrs={
+                'class': 'form-control cpf-mask', 'placeholder': '000.000.000-00'
+            }),
+            'proprietario_rua': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome da rua'
+            }),
+            'proprietario_numero': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número'
+            }),
+            'proprietario_bairro': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Bairro'
+            }),
+            'proprietario_cidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Cidade'
+            }),
+            'proprietario_estado': forms.Select(attrs={'class': 'form-select'}),
+            
+            # Cônjuge do proprietário
+            'proprietario_conjuge_nome': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome completo do cônjuge'
+            }),
+            'proprietario_conjuge_nacionalidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Ex: Brasileira'
+            }),
+            'proprietario_conjuge_profissao': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Profissão'
+            }),
+            'proprietario_conjuge_rg': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': '00.000.000-0'
+            }),
+            'proprietario_conjuge_cpf': forms.TextInput(attrs={
+                'class': 'form-control cpf-mask', 'placeholder': '000.000.000-00'
+            }),
+            
+            # Locatário
+            'locatario_nome': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome completo do locatário'
+            }),
+            'locatario_estado_civil': forms.Select(attrs={'class': 'form-select'}),
+            'locatario_nacionalidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Ex: Brasileira'
+            }),
+            'locatario_profissao': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Profissão'
+            }),
+            'locatario_rg': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': '00.000.000-0'
+            }),
+            'locatario_cpf': forms.TextInput(attrs={
+                'class': 'form-control cpf-mask', 'placeholder': '000.000.000-00'
+            }),
+            'locatario_rua': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome da rua'
+            }),
+            'locatario_numero': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número'
+            }),
+            'locatario_bairro': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Bairro'
+            }),
+            'locatario_cidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Cidade'
+            }),
+            'locatario_estado': forms.Select(attrs={'class': 'form-select'}),
+            
+            # Cônjuge do locatário
+            'locatario_conjuge_nome': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome completo do cônjuge'
+            }),
+            'locatario_conjuge_nacionalidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Ex: Brasileira'
+            }),
+            'locatario_conjuge_profissao': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Profissão'
+            }),
+            'locatario_conjuge_rg': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': '00.000.000-0'
+            }),
+            'locatario_conjuge_cpf': forms.TextInput(attrs={
+                'class': 'form-control cpf-mask', 'placeholder': '000.000.000-00'
+            }),
+            
+            # Imóvel
+            'imovel_tipo': forms.Select(attrs={'class': 'form-select'}),
+            'imovel_rua': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome da rua'
+            }),
+            'imovel_numero': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número'
+            }),
+            'imovel_bairro': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Bairro'
+            }),
+            'imovel_cidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Cidade'
+            }),
+            'imovel_estado': forms.Select(attrs={'class': 'form-select'}),
+            'imovel_matricula': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número da matrícula (opcional)'
+            }),
+            'imovel_cartorio': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome do cartório (opcional)'
+            }),
+            'imovel_iptu': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número do IPTU (opcional)'
+            }),
+            'imovel_conta_agua': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número da conta de água (opcional)'
+            }),
+            'imovel_conta_luz': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número da conta de luz (opcional)'
+            }),
+            
+            # Detalhes da locação
+            'valor_aluguel': forms.NumberInput(attrs={
+                'class': 'form-control', 'placeholder': '0,00', 'step': '0.01'
+            }),
+            'valor_aluguel_extenso': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Valor por extenso'
+            }),
+            'forma_pagamento': forms.Select(attrs={'class': 'form-select'}),
+            'dia_pagamento': forms.Select(attrs={'class': 'form-select'}),
+            'conta_bancaria': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Dados da conta bancária'
+            }),
+            'data_inicio': forms.DateInput(attrs={
+                'class': 'form-control', 'type': 'date'
+            }),
+            'data_termino': forms.DateInput(attrs={
+                'class': 'form-control', 'type': 'date'
+            }),
+            
+            # Garantia
+            'tipo_garantia': forms.Select(attrs={'class': 'form-select'}),
+            'valor_caucao': forms.NumberInput(attrs={
+                'class': 'form-control', 'placeholder': '0,00', 'step': '0.01'
+            }),
+            
+            # Fiador
+            'fiador_nome': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome completo do fiador'
+            }),
+            'fiador_estado_civil': forms.Select(attrs={'class': 'form-select'}),
+            'fiador_nacionalidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Ex: Brasileira'
+            }),
+            'fiador_profissao': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Profissão'
+            }),
+            'fiador_rg': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': '00.000.000-0'
+            }),
+            'fiador_cpf': forms.TextInput(attrs={
+                'class': 'form-control cpf-mask', 'placeholder': '000.000.000-00'
+            }),
+            'fiador_rua': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome da rua'
+            }),
+            'fiador_numero': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Número'
+            }),
+            'fiador_bairro': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Bairro'
+            }),
+            'fiador_cidade': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Cidade'
+            }),
+            'fiador_estado': forms.Select(attrs={'class': 'form-select'}),
+            
+            # Seguro
+            'seguro_nome_seguradora': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Nome da seguradora'
+            }),
+            'seguro_prazo': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Prazo do seguro'
+            }),
+            'seguro_valor': forms.NumberInput(attrs={
+                'class': 'form-control', 'placeholder': '0,00', 'step': '0.01'
+            }),
+            
+            # Observações
+            'observacoes': forms.Textarea(attrs={
+                'class': 'form-control', 'rows': 4, 'placeholder': 'Observações adicionais'
+            }),
+        }
+    
+    def clean_proprietario_cpf(self):
+        cpf = self.cleaned_data.get('proprietario_cpf')
+        if cpf:
+            # Remove formatação
+            cpf = re.sub(r'[^\d]', '', cpf)
+            if len(cpf) != 11:
+                raise forms.ValidationError('CPF deve ter 11 dígitos.')
+        return cpf
+    
+    def clean_locatario_cpf(self):
+        cpf = self.cleaned_data.get('locatario_cpf')
+        if cpf:
+            # Remove formatação
+            cpf = re.sub(r'[^\d]', '', cpf)
+            if len(cpf) != 11:
+                raise forms.ValidationError('CPF deve ter 11 dígitos.')
+        return cpf
+    
+    def clean_fiador_cpf(self):
+        cpf = self.cleaned_data.get('fiador_cpf')
+        if cpf:
+            # Remove formatação
+            cpf = re.sub(r'[^\d]', '', cpf)
+            if len(cpf) != 11:
+                raise forms.ValidationError('CPF deve ter 11 dígitos.')
+        return cpf
+    
+    def clean_valor_aluguel(self):
+        valor = self.cleaned_data.get('valor_aluguel')
+        if valor and valor <= 0:
+            raise forms.ValidationError('O valor do aluguel deve ser maior que zero.')
+        return valor
+    
+    def clean_data_termino(self):
+        data_inicio = self.cleaned_data.get('data_inicio')
+        data_termino = self.cleaned_data.get('data_termino')
+        
+        if data_inicio and data_termino:
+            if data_termino <= data_inicio:
+                raise forms.ValidationError('A data de término deve ser posterior à data de início.')
+        
+        return data_termino

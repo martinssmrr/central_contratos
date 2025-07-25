@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContractType, Contract, Payment, CompraVendaImovel, ContratoCompraVendaImovel
+from .models import ContractType, Contract, Payment, CompraVendaImovel, ContratoCompraVendaImovel, ContratoLocacaoResidencial
 
 @admin.register(ContractType)
 class ContractTypeAdmin(admin.ModelAdmin):
@@ -210,5 +210,111 @@ class ContratoCompraVendaImovelAdmin(admin.ModelAdmin):
             readonly.extend([
                 'proprietario_nome', 'comprador_nome', 'valor_total', 
                 'imovel_endereco_rua', 'forma_pagamento'
+            ])
+        return readonly
+
+
+@admin.register(ContratoLocacaoResidencial)
+class ContratoLocacaoResidencialAdmin(admin.ModelAdmin):
+    """Admin para contratos de locação residencial"""
+    
+    list_display = [
+        'proprietario_nome', 'locatario_nome', 'imovel_tipo', 
+        'valor_aluguel', 'data_inicio', 'data_termino', 'created_at'
+    ]
+    
+    list_filter = [
+        'imovel_tipo', 'forma_pagamento', 'tipo_garantia', 
+        'data_inicio', 'data_termino', 'created_at'
+    ]
+    
+    search_fields = [
+        'proprietario_nome', 'locatario_nome', 'proprietario_cpf', 
+        'locatario_cpf', 'imovel_rua', 'imovel_cidade'
+    ]
+    
+    readonly_fields = ['created_at', 'updated_at']
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('user', 'created_at', 'updated_at')
+        }),
+        ('Proprietário', {
+            'fields': (
+                'proprietario_nome', 'proprietario_estado_civil', 'proprietario_nacionalidade',
+                'proprietario_profissao', 'proprietario_rg', 'proprietario_cpf',
+                'proprietario_rua', 'proprietario_numero', 'proprietario_bairro',
+                'proprietario_cidade', 'proprietario_estado'
+            )
+        }),
+        ('Cônjuge do Proprietário', {
+            'fields': (
+                'proprietario_conjuge_nome', 'proprietario_conjuge_nacionalidade',
+                'proprietario_conjuge_profissao', 'proprietario_conjuge_rg', 
+                'proprietario_conjuge_cpf'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Locatário', {
+            'fields': (
+                'locatario_nome', 'locatario_estado_civil', 'locatario_nacionalidade',
+                'locatario_profissao', 'locatario_rg', 'locatario_cpf',
+                'locatario_rua', 'locatario_numero', 'locatario_bairro',
+                'locatario_cidade', 'locatario_estado'
+            )
+        }),
+        ('Cônjuge do Locatário', {
+            'fields': (
+                'locatario_conjuge_nome', 'locatario_conjuge_nacionalidade',
+                'locatario_conjuge_profissao', 'locatario_conjuge_rg', 
+                'locatario_conjuge_cpf'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Imóvel', {
+            'fields': (
+                'imovel_tipo', 'imovel_rua', 'imovel_numero', 'imovel_bairro',
+                'imovel_cidade', 'imovel_estado', 'imovel_matricula', 
+                'imovel_cartorio', 'imovel_iptu', 'imovel_conta_agua', 'imovel_conta_luz'
+            )
+        }),
+        ('Detalhes da Locação', {
+            'fields': (
+                'valor_aluguel', 'valor_aluguel_extenso', 'forma_pagamento',
+                'dia_pagamento', 'conta_bancaria', 'data_inicio', 'data_termino'
+            )
+        }),
+        ('Garantia', {
+            'fields': (
+                'tipo_garantia', 'valor_caucao'
+            )
+        }),
+        ('Fiador/Avalista', {
+            'fields': (
+                'fiador_nome', 'fiador_estado_civil', 'fiador_nacionalidade',
+                'fiador_profissao', 'fiador_rg', 'fiador_cpf',
+                'fiador_rua', 'fiador_numero', 'fiador_bairro',
+                'fiador_cidade', 'fiador_estado'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Seguro Fiança', {
+            'fields': (
+                'seguro_nome_seguradora', 'seguro_prazo', 'seguro_valor'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Observações', {
+            'fields': ('observacoes',)
+        }),
+    )
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(self.readonly_fields)
+        if obj and not request.user.is_superuser:
+            # Para usuários não superusuários, tornar alguns campos apenas leitura
+            readonly.extend([
+                'proprietario_nome', 'locatario_nome', 'valor_aluguel', 
+                'imovel_rua', 'forma_pagamento'
             ])
         return readonly

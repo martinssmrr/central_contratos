@@ -21,4 +21,10 @@ urlpatterns = [
     path('compra-venda-completo/', views.contrato_compra_venda_completo_view, name='compra_venda_completo'),
     path('compra-venda-completo-detalhes/<int:pk>/', views.compra_venda_detail_completo_view, name='compra_venda_detail_completo'),
     path('compra-venda-completo-sucesso/<int:pk>/', views.compra_venda_success_completo_view, name='compra_venda_success_completo'),
+    
+    # URLs para locação residencial
+    path('locacao-residencial/', views.locacao_residencial_view, name='locacao_residencial'),
+    path('locacao-residencial-detalhes/<int:pk>/', views.locacao_residencial_detail_view, name='locacao_residencial_detail'),
+    path('locacao-residencial-sucesso/<int:pk>/', views.locacao_residencial_success_view, name='locacao_residencial_success'),
+    path('meus-contratos-locacao-residencial/', views.meus_contratos_locacao_residencial_view, name='meus_contratos_locacao_residencial'),
 ]
