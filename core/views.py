@@ -51,8 +51,16 @@ def contact_view(request):
     })
 
 def terms_view(request):
-    """Termos de uso"""
-    return render(request, 'core/terms.html')
+    """Página de Termos de Uso"""
+    context = {
+        'last_updated': '25 de julho de 2025',
+        'company_name': 'Central de Contratos Ltda.',
+        'company_cnpj': '00.000.000/0001-00',
+        'company_address': 'Rua dos Contratos, 123 - Centro, São Paulo - SP, CEP: 01234-567',
+        'legal_email': 'legal@centralcontratos.com.br',
+        'support_phone': '(11) 3000-0000',
+    }
+    return render(request, 'terms.html', context)
 
 def privacy_view(request):
     """Política de privacidade"""

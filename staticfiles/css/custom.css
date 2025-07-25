@@ -383,45 +383,83 @@ section.py-5.bg-light .container {
 
 /* Feature icons enhancement */
 .py-5 .feature-icon {
-    background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05)) !important;
-    border: 2px solid rgba(244, 98, 58, 0.1);
+    background: #f4623a !important;
+    border: 2px solid #f4623a !important;
+    color: white !important;
     transition: all 0.3s ease;
+    transform: scale(1);
 }
 
+.py-5 .feature-icon i {
+    color: white !important;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effects for feature icons */
 .py-5 .card:hover .feature-icon {
     background: linear-gradient(135deg, #f4623a, #e4552f) !important;
     border-color: #f4623a;
     transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(244, 98, 58, 0.3);
 }
 
 .py-5 .card:hover .feature-icon i {
-    color: white !important;
+    transform: rotate(5deg);
 }
 
 /* Contract icons enhancement */
 .py-5 .contract-icon {
-    background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05)) !important;
-    border: 2px solid rgba(244, 98, 58, 0.1);
+    background: #f4623a !important;
+    border: 2px solid #f4623a !important;
+    color: white !important;
     transition: all 0.3s ease;
+    transform: scale(1);
 }
 
+.py-5 .contract-icon i {
+    color: white !important;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effects for contract icons */
 .py-5 .card:hover .contract-icon {
     background: linear-gradient(135deg, #f4623a, #e4552f) !important;
     border-color: #f4623a;
     transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(244, 98, 58, 0.3);
 }
 
 .py-5 .card:hover .contract-icon i {
-    color: white !important;
+    transform: rotate(5deg);
+}
+
+/* Enhanced card hover effects for row g-4 */
+.py-5 .row.g-4 .card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.py-5 .row.g-4 .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-color: rgba(244, 98, 58, 0.2);
+}
+
+.py-5 .row.g-4 .card:hover .card-body {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(244, 98, 58, 0.02));
+}
+
+.py-5 .row.g-4 .card:hover h5 {
+    color: #f4623a !important;
+    transition: color 0.3s ease;
 }
 
 /* Step numbers enhancement */
 .py-5 .step-number {
-    background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05)) !important;
-    border: 2px solid rgba(244, 98, 58, 0.1);
-    color: #f4623a !important;
+    background: #f4623a !important;
+    border: 2px solid #f4623a !important;
+    color: white !important;
     font-weight: 700;
-    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
@@ -430,20 +468,20 @@ section.py-5.bg-light .container {
     content: '';
     position: absolute;
     top: 0;
-    left: -100%;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #f4623a, #e4552f);
-    transition: left 0.3s ease;
+    background: #f4623a;
     z-index: 0;
 }
 
 .py-5 .step-number span {
     position: relative;
     z-index: 2;
-    transition: color 0.3s ease;
+    color: white !important;
 }
 
+/* Comentado: removido hover dos step-numbers
 .py-5 .step-number:hover:before {
     left: 0;
 }
@@ -456,6 +494,7 @@ section.py-5.bg-light .container {
     border-color: #f4623a;
     transform: scale(1.1);
 }
+*/
 
 /* Enhanced styling for col-lg-6 text content */
 .col-lg-6 .display-4,
@@ -719,17 +758,20 @@ section.py-5.bg-light .container {
 .hero-section .col-lg-6 h6 {
     -webkit-text-fill-color: white;
     background: none;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7), 1px 1px 3px rgba(244, 98, 58, 0.3);
+    font-weight: 800;
 }
 
 .hero-section .col-lg-6 p,
 .hero-section .col-lg-6 .lead {
     background: rgba(0, 0, 0, 0.3);
-    -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    padding: 1.2rem;
+    border-radius: 8px;
 }
 
 /* Additional styling for content inside col-lg-6 */
@@ -3332,5 +3374,612 @@ section.py-5.bg-light .container {
     to {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+
+/* Enhanced styling for py-5 bg-primary text-white sections */
+.py-5.bg-primary.text-white {
+    background: linear-gradient(135deg, #f4623a 0%, #e4552f 100%) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.py-5.bg-primary.text-white::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%), 
+                linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%), 
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.py-5.bg-primary.text-white * {
+    position: relative;
+    z-index: 2;
+}
+
+.py-5.bg-primary.text-white h1,
+.py-5.bg-primary.text-white h2,
+.py-5.bg-primary.text-white h3,
+.py-5.bg-primary.text-white h4,
+.py-5.bg-primary.text-white h5,
+.py-5.bg-primary.text-white h6 {
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+}
+
+.py-5.bg-primary.text-white .display-1,
+.py-5.bg-primary.text-white .display-2,
+.py-5.bg-primary.text-white .display-3,
+.py-5.bg-primary.text-white .display-4,
+.py-5.bg-primary.text-white .display-5,
+.py-5.bg-primary.text-white .display-6 {
+    color: white !important;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+    font-weight: 800 !important;
+    letter-spacing: 1px;
+}
+
+.py-5.bg-primary.text-white p,
+.py-5.bg-primary.text-white .lead {
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    font-weight: 400;
+    line-height: 1.7;
+    font-size: 1.1rem;
+}
+
+.py-5.bg-primary.text-white .lead {
+    font-size: 1.3rem !important;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+.py-5.bg-primary.text-white .btn {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.py-5.bg-primary.text-white .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.py-5.bg-primary.text-white .btn-light {
+    background: rgba(255, 255, 255, 0.95);
+    color: #f4623a !important;
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.py-5.bg-primary.text-white .btn-light:hover {
+    background: white;
+    color: #e4552f !important;
+    border-color: white;
+}
+
+.py-5.bg-primary.text-white .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: white;
+}
+
+.py-5.bg-primary.text-white .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.95);
+    color: #f4623a !important;
+    border-color: white;
+}
+
+/* ========================================
+   Terms of Use Page Styles
+   ======================================== */
+
+/* Terms Hero Section */
+.terms-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.terms-hero:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="terms-pattern" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="2" fill="%23f4623a" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23terms-pattern)"/></svg>') repeat;
+}
+
+.terms-hero .hero-content {
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.terms-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: #f4623a;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.terms-hero .hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.terms-hero .hero-subtitle {
+    font-size: 1.1rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Terms Card */
+.terms-card {
+    border: 1px solid rgba(244, 98, 58, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.terms-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+}
+
+.terms-card .card-body {
+    padding: 3rem;
+}
+
+/* Terms Navigation */
+.terms-navigation {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(244, 98, 58, 0.1);
+}
+
+.terms-nav-link {
+    color: #f4623a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    display: block;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.terms-nav-link:hover,
+.terms-nav-link.active {
+    color: #e4552f;
+    text-decoration: none;
+    transform: translateX(5px);
+}
+
+.terms-nav-link:before {
+    content: '';
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 2px;
+    background: #f4623a;
+    transition: width 0.3s ease;
+}
+
+.terms-nav-link:hover:before,
+.terms-nav-link.active:before {
+    width: 10px;
+}
+
+/* Terms Sections */
+.terms-section {
+    margin-bottom: 4rem;
+    scroll-margin-top: 100px;
+}
+
+.section-title {
+    color: #333;
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #f4623a;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-number {
+    background: #f4623a;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.subsection-title {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin: 2rem 0 1rem;
+    position: relative;
+    padding-left: 20px;
+}
+
+.subsection-title:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    border-radius: 2px;
+}
+
+.section-content {
+    line-height: 1.7;
+    color: #333;
+}
+
+.section-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.section-content ul,
+.section-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.section-content li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+/* Service Items */
+.service-item {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: #fff;
+    border: 1px solid rgba(244, 98, 58, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(244, 98, 58, 0.15);
+    border-color: rgba(244, 98, 58, 0.3);
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.service-item h6 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.service-item p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Responsibility Grid */
+.responsibility-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.responsibility-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(244, 98, 58, 0.05), rgba(244, 98, 58, 0.02));
+    border-radius: 10px;
+    border-left: 4px solid #f4623a;
+}
+
+.responsibility-item i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* License Grid */
+.license-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.license-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.license-item.permitted {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+    border-left: 4px solid #28a745;
+}
+
+.license-item.prohibited {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+    border-left: 4px solid #dc3545;
+}
+
+.license-item i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Payment Methods */
+.payment-methods {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #f4623a;
+}
+
+.payment-method i {
+    font-size: 1.5rem;
+    color: #f4623a;
+    flex-shrink: 0;
+}
+
+/* Refund Policy */
+.refund-policy {
+    margin: 2rem 0;
+}
+
+.refund-condition {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.refund-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.refund-icon.success {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+
+.refund-icon.warning {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+}
+
+.refund-icon.danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.refund-content h6 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.refund-content p {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Notification Methods */
+.notification-methods {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.notification-method {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(244, 98, 58, 0.05), rgba(244, 98, 58, 0.02));
+    border-radius: 10px;
+    border-left: 4px solid #f4623a;
+}
+
+.notification-method i {
+    font-size: 1.2rem;
+    color: #f4623a;
+    flex-shrink: 0;
+}
+
+/* Contact Grid */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.contact-item {
+    text-align: center;
+    padding: 2rem;
+    background: #fff;
+    border: 1px solid rgba(244, 98, 58, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(244, 98, 58, 0.15);
+    border-color: rgba(244, 98, 58, 0.3);
+}
+
+.contact-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.contact-info h6 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.contact-info p {
+    color: #f4623a;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.contact-info small {
+    color: #6c757d;
+}
+
+/* Legal Footer */
+.legal-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(244, 98, 58, 0.1);
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.back-to-top a {
+    width: 50px;
+    height: 50px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    border: none;
+    box-shadow: 0 4px 15px rgba(244, 98, 58, 0.3);
+    transition: all 0.3s ease;
+}
+
+.back-to-top a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(244, 98, 58, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .terms-hero .hero-title {
+        font-size: 2rem;
+    }
+    
+    .terms-card .card-body {
+        padding: 2rem 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .back-to-top {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    .back-to-top a {
+        width: 45px;
+        height: 45px;
     }
 }
