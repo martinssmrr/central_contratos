@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContractType, Contract, Payment
+from .models import ContractType, Contract, Payment, CompraVendaImovel, ContratoCompraVendaImovel
 
 @admin.register(ContractType)
 class ContractTypeAdmin(admin.ModelAdmin):
@@ -47,3 +47,168 @@ class PaymentAdmin(admin.ModelAdmin):
     search_fields = ['contract__parte1_nome', 'contract__parte2_nome', 'transaction_id']
     readonly_fields = ['created_at']
     date_hierarchy = 'payment_date'
+
+
+@admin.register(CompraVendaImovel)
+class CompraVendaImovelAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'user', 'imovel_tipo', 'valor_total', 'forma_pagamento', 'status', 'created_at']
+    list_filter = ['status', 'imovel_tipo', 'forma_pagamento', 'created_at']
+    search_fields = ['proprietario_nome', 'comprador_nome', 'imovel_rua', 'user__username']
+    readonly_fields = ['created_at', 'updated_at']
+    date_hierarchy = 'created_at'
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('user', 'status')
+        }),
+        ('Proprietário', {
+            'fields': (
+                'proprietario_nome', 'proprietario_estado_civil', 'proprietario_nacionalidade', 
+                'proprietario_profissao', 'proprietario_rg', 'proprietario_cpf'
+            )
+        }),
+        ('Endereço do Proprietário', {
+            'fields': (
+                'proprietario_rua', 'proprietario_numero', 'proprietario_bairro', 
+                'proprietario_cidade', 'proprietario_estado', 'proprietario_cep'
+            )
+        }),
+        ('Cônjuge do Proprietário', {
+            'fields': (
+                'proprietario_conjuge_nome', 'proprietario_conjuge_nacionalidade', 
+                'proprietario_conjuge_profissao', 'proprietario_conjuge_rg', 'proprietario_conjuge_cpf'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Comprador', {
+            'fields': (
+                'comprador_nome', 'comprador_estado_civil', 'comprador_nacionalidade', 
+                'comprador_profissao', 'comprador_rg', 'comprador_cpf'
+            )
+        }),
+        ('Endereço do Comprador', {
+            'fields': (
+                'comprador_rua', 'comprador_numero', 'comprador_bairro', 
+                'comprador_cidade', 'comprador_estado', 'comprador_cep'
+            )
+        }),
+        ('Cônjuge do Comprador', {
+            'fields': (
+                'comprador_conjuge_nome', 'comprador_conjuge_nacionalidade', 
+                'comprador_conjuge_profissao', 'comprador_conjuge_rg', 'comprador_conjuge_cpf'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Imóvel', {
+            'fields': (
+                'imovel_tipo', 'imovel_rua', 'imovel_numero', 'imovel_bairro', 
+                'imovel_cidade', 'imovel_estado', 'imovel_cep'
+            )
+        }),
+        ('Dados Registrais do Imóvel', {
+            'fields': (
+                'imovel_matricula', 'imovel_cartorio', 'imovel_iptu', 
+                'imovel_area_territorial', 'imovel_area_construida'
+            )
+        }),
+        ('Detalhes da Venda', {
+            'fields': (
+                'valor_total', 'valor_extenso', 'forma_pagamento', 'data_pagamento', 
+                'conta_bancaria', 'data_entrega'
+            )
+        }),
+        ('Parcelamento', {
+            'fields': ('quantidade_parcelas', 'datas_parcelas'),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj))
+        if obj and obj.status == 'assinado':
+            # Se o contrato já foi assinado, tornar a maioria dos campos apenas leitura
+            readonly.extend([
+                'proprietario_nome', 'comprador_nome', 'valor_total', 'imovel_rua'
+            ])
+        return readonly
+
+
+@admin.register(ContratoCompraVendaImovel)
+class ContratoCompraVendaImovelAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'user', 'status', 'valor_total', 'forma_pagamento', 'created_at']
+    list_filter = ['status', 'forma_pagamento', 'proprietario_estado_civil', 'comprador_estado_civil', 'imovel_tipo', 'created_at']
+    search_fields = ['proprietario_nome', 'comprador_nome', 'user__username', 'imovel_endereco_rua']
+    readonly_fields = ['created_at', 'updated_at']
+    date_hierarchy = 'created_at'
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('user', 'status')
+        }),
+        ('Proprietário', {
+            'fields': (
+                'proprietario_nome', 'proprietario_estado_civil', 'proprietario_nacionalidade',
+                'proprietario_profissao', 'proprietario_rg', 'proprietario_cpf',
+                'proprietario_endereco_rua', 'proprietario_endereco_numero', 'proprietario_endereco_bairro',
+                'proprietario_endereco_cidade', 'proprietario_endereco_estado', 'proprietario_endereco_cep'
+            )
+        }),
+        ('Cônjuge do Proprietário', {
+            'fields': (
+                'proprietario_conjuge_nome', 'proprietario_conjuge_nacionalidade',
+                'proprietario_conjuge_profissao', 'proprietario_conjuge_rg', 'proprietario_conjuge_cpf'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Comprador', {
+            'fields': (
+                'comprador_nome', 'comprador_estado_civil', 'comprador_nacionalidade',
+                'comprador_profissao', 'comprador_rg', 'comprador_cpf',
+                'comprador_endereco_rua', 'comprador_endereco_numero', 'comprador_endereco_bairro',
+                'comprador_endereco_cidade', 'comprador_endereco_estado', 'comprador_endereco_cep'
+            )
+        }),
+        ('Cônjuge do Comprador', {
+            'fields': (
+                'comprador_conjuge_nome', 'comprador_conjuge_nacionalidade',
+                'comprador_conjuge_profissao', 'comprador_conjuge_rg', 'comprador_conjuge_cpf'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Imóvel', {
+            'fields': (
+                'imovel_tipo', 'imovel_matricula', 'imovel_cartorio', 'imovel_iptu',
+                'imovel_endereco_rua', 'imovel_endereco_numero', 'imovel_endereco_bairro',
+                'imovel_endereco_cidade', 'imovel_endereco_estado', 'imovel_endereco_cep',
+                'imovel_area_territorial', 'imovel_area_construida'
+            )
+        }),
+        ('Detalhes da Venda', {
+            'fields': (
+                'valor_total', 'valor_extenso', 'forma_pagamento', 'data_pagamento',
+                'data_entrega', 'conta_bancaria'
+            )
+        }),
+        ('Parcelamento', {
+            'fields': ('quantidade_parcelas', 'datas_parcelas'),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj))
+        if obj and obj.status == 'assinado':
+            # Se o contrato já foi assinado, tornar a maioria dos campos apenas leitura
+            readonly.extend([
+                'proprietario_nome', 'comprador_nome', 'valor_total', 
+                'imovel_endereco_rua', 'forma_pagamento'
+            ])
+        return readonly

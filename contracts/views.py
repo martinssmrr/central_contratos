@@ -10,10 +10,10 @@ import io
 import os
 from datetime import datetime
 
-from .models import ContractType, Contract, Payment
+from .models import ContractType, Contract, Payment, CompraVendaImovel
 from .forms import (
     ContractForm, PrestacaoServicoForm, LocacaoForm, 
-    CompraVendaForm, ConfissaoDividaForm, FreelancerForm, PaymentForm
+    CompraVendaForm, ConfissaoDividaForm, FreelancerForm, PaymentForm, CompraVendaImovelForm
 )
 # from .utils import generate_contract_pdf
 
@@ -96,8 +96,9 @@ def contract_form_view(request, slug):
         form = form_class()
     
     # Selecionar template específico baseado no tipo de contrato
-    if slug == 'compra_venda':
-        template_name = 'contracts/compra_venda_form.html'
+    if slug == 'compra-venda':
+        # Redirecionar para o formulário completo
+        return redirect('contracts:compra_venda_completo')
     else:
         template_name = 'contracts/contract_form.html'
     
@@ -193,3 +194,130 @@ def user_contracts_view(request):
     }
     
     return render(request, 'contracts/user_contracts.html', context)
+
+
+@login_required
+def compra_venda_imovel_view(request):
+    """Formulário para contrato de compra e venda de imóvel"""
+    if request.method == 'POST':
+        form = CompraVendaImovelForm(request.POST)
+        if form.is_valid():
+            contrato = form.save(commit=False)
+            contrato.user = request.user
+            contrato.save()
+            
+            messages.success(request, 
+                'Contrato de compra e venda criado com sucesso! '
+                'Você pode visualizá-lo na área "Meus Contratos".'
+            )
+            return redirect('contracts:compra_venda_success', pk=contrato.pk)
+        else:
+            messages.error(request, 
+                'Há erros no formulário. Por favor, verifique os campos destacados.'
+            )
+    else:
+        form = CompraVendaImovelForm()
+    
+    return render(request, 'contracts/compra_venda_imovel_form.html', {
+        'form': form,
+        'title': 'Contrato de Compra e Venda de Imóvel'
+    })
+
+
+@login_required
+def compra_venda_success_view(request, pk):
+    """Página de sucesso após criação do contrato"""
+    contrato = get_object_or_404(CompraVendaImovel, pk=pk, user=request.user)
+    
+    return render(request, 'contracts/compra_venda_success.html', {
+        'contrato': contrato
+    })
+
+
+@login_required
+def compra_venda_detail_view(request, pk):
+    """Visualização detalhada do contrato de compra e venda"""
+    contrato = get_object_or_404(CompraVendaImovel, pk=pk, user=request.user)
+    
+    return render(request, 'contracts/compra_venda_detail.html', {
+        'contrato': contrato
+    })
+
+
+@login_required
+def meus_contratos_compra_venda_view(request):
+    """Lista dos contratos de compra e venda do usuário"""
+    contratos = CompraVendaImovel.objects.filter(user=request.user).order_by('-created_at')
+    
+    return render(request, 'contracts/meus_contratos_compra_venda.html', {
+        'contratos': contratos
+    })
+
+
+@login_required
+def contrato_compra_venda_completo_view(request):
+    """View para o formulário completo de compra e venda de imóvel"""
+    from .forms import ContratoCompraVendaImovelForm
+    from .models import ContratoCompraVendaImovel
+    
+    if request.method == 'POST':
+        form = ContratoCompraVendaImovelForm(request.POST)
+        if form.is_valid():
+            contrato = form.save(commit=False)
+            contrato.user = request.user
+            
+            # Processar datas das parcelas se for pagamento parcelado
+            if contrato.forma_pagamento == 'parcelado':
+                datas_parcelas = []
+                parcela_count = 1
+                
+                while f'data_parcela_{parcela_count}' in request.POST:
+                    data_parcela = request.POST.get(f'data_parcela_{parcela_count}')
+                    if data_parcela:
+                        datas_parcelas.append(data_parcela)
+                    parcela_count += 1
+                
+                contrato.datas_parcelas = datas_parcelas
+            
+            contrato.save()
+            
+            messages.success(request, 
+                'Contrato de compra e venda criado com sucesso! '
+                'Você pode visualizá-lo na área "Meus Contratos".'
+            )
+            return redirect('contracts:compra_venda_detail_completo', pk=contrato.pk)
+        else:
+            messages.error(request, 
+                'Há erros no formulário. Por favor, verifique os campos destacados.'
+            )
+    else:
+        form = ContratoCompraVendaImovelForm()
+    
+    return render(request, 'contracts/compra_venda_completo_form.html', {
+        'form': form,
+        'title': 'Contrato de Compra e Venda de Imóvel Completo'
+    })
+
+
+@login_required
+def compra_venda_detail_completo_view(request, pk):
+    """Visualização detalhada do contrato completo"""
+    from .models import ContratoCompraVendaImovel
+    
+    contrato = get_object_or_404(ContratoCompraVendaImovel, pk=pk, user=request.user)
+    
+    return render(request, 'contracts/compra_venda_detail_completo.html', {
+        'contrato': contrato
+    })
+
+
+@login_required 
+def compra_venda_success_completo_view(request, pk):
+    """Página de sucesso após criação do contrato completo"""
+    from .models import ContratoCompraVendaImovel
+    
+    contrato = get_object_or_404(ContratoCompraVendaImovel, pk=pk, user=request.user)
+    
+    return render(request, 'contracts/compra_venda_success_completo.html', {
+        'contrato': contrato
+    })
