@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Logout - Central de Contratos{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            {% if user.is_authenticated %}
+                <!-- Confirmação de logout -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4">
+                            <i class="fas fa-sign-out-alt text-warning logout-icon"></i>
+                        </div>
+                        
+                        <h2 class="card-title mb-3">Confirmar Logout</h2>
+                        
+                        <p class="text-muted mb-4">
+                            Tem certeza que deseja sair da sua conta?
+                        </p>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-danger btn-lg">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Sim, Sair da Conta
+                                </button>
+                                <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Logout realizado -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4">
+                            <i class="fas fa-check-circle text-success logout-icon"></i>
+                        </div>
+                        
+                        <h2 class="card-title mb-3 text-success">Logout Realizado</h2>
+                        
+                        <p class="text-muted mb-4 lead">
+                            Você saiu da sua conta com sucesso.
+                            <br>
+                            Obrigado por usar nossa plataforma!
+                        </p>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'core:home' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-home me-2"></i>Voltar para Página Inicial
+                            </a>
+                            <a href="{% url 'users:login' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Fazer Login Novamente
+                            </a>
+                        </div>
+                        
+                        <div class="mt-4 pt-3 border-top">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Sua sessão foi encerrada com segurança
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Links adicionais -->
+                <div class="text-center mt-4">
+                    <p class="text-muted">
+                        Precisa de ajuda? 
+                        <a href="{% url 'core:contact' %}" class="text-primary text-decoration-none">
+                            Entre em contato conosco
+                        </a>
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.logout-icon {
+    font-size: 4rem;
+    animation: scaleIn 0.8s ease-out;
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
+{% endblock %}

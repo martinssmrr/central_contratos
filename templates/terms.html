@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Termos de Uso - Central de Contratos{% endblock %}
+
+{% block content %}
+<!-- Terms Hero Section -->
+<section class="py-5 terms-hero">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto hero-content">
+                <div class="terms-icon mb-4">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h1 class="hero-title">Termos de Uso</h1>
+                <p class="hero-subtitle">
+                    Leia atentamente nossos termos e condições de uso da plataforma Central de Contratos.
+                    <br><strong>Última atualização:</strong> {{ last_updated }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Terms Content -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card terms-card">
+                    <div class="card-body">
+                        <!-- Navegação Interna -->
+                        <div class="terms-navigation mb-5">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-list me-2"></i>Índice de Conteúdo
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#introducao" class="terms-nav-link">1. Introdução</a></li>
+                                        <li><a href="#aceitacao" class="terms-nav-link">2. Aceitação dos Termos</a></li>
+                                        <li><a href="#servicos" class="terms-nav-link">3. Descrição dos Serviços</a></li>
+                                        <li><a href="#responsabilidades" class="terms-nav-link">4. Responsabilidades do Usuário</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#propriedade" class="terms-nav-link">5. Propriedade Intelectual</a></li>
+                                        <li><a href="#pagamento" class="terms-nav-link">6. Política de Pagamento</a></li>
+                                        <li><a href="#alteracoes" class="terms-nav-link">7. Alterações nos Termos</a></li>
+                                        <li><a href="#contato" class="terms-nav-link">8. Contato Legal</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 1. Introdução -->
+                        <div class="terms-section" id="introducao">
+                            <h3 class="section-title">
+                                <span class="section-number">1</span>
+                                Introdução
+                            </h3>
+                            <div class="section-content">
+                                <p>Bem-vindo à <strong>Central de Contratos</strong>, uma plataforma digital especializada na criação e personalização de contratos jurídicos online. Estes Termos de Uso estabelecem as condições gerais de utilização de nossos serviços.</p>
+                                
+                                <p>A Central de Contratos é operada por <strong>{{ company_name }}</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº <strong>{{ company_cnpj }}</strong>, com sede em <strong>{{ company_address }}</strong>.</p>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Importante:</strong> Ao utilizar nossa plataforma, você declara ter lido, compreendido e concordado com todos os termos aqui estabelecidos.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Aceitação dos Termos -->
+                        <div class="terms-section" id="aceitacao">
+                            <h3 class="section-title">
+                                <span class="section-number">2</span>
+                                Aceitação dos Termos
+                            </h3>
+                            <div class="section-content">
+                                <p>O acesso e uso dos serviços da Central de Contratos implicam na <strong>aceitação integral</strong> destes Termos de Uso e das demais políticas aplicáveis.</p>
+                                
+                                <h5 class="subsection-title">2.1. Capacidade Legal</h5>
+                                <p>Para utilizar nossos serviços, você deve:</p>
+                                <ul>
+                                    <li>Ser maior de 18 anos ou possuir capacidade civil plena</li>
+                                    <li>Ter autorização legal para contratar em nome de pessoa jurídica (quando aplicável)</li>
+                                    <li>Não estar impedido legalmente de celebrar contratos</li>
+                                </ul>
+                                
+                                <h5 class="subsection-title">2.2. Registro de Aceitação</h5>
+                                <p>O aceite destes termos é registrado automaticamente em nosso sistema quando você:</p>
+                                <ul>
+                                    <li>Cria uma conta na plataforma</li>
+                                    <li>Realiza o primeiro acesso aos serviços</li>
+                                    <li>Efetua qualquer pagamento pelos serviços</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 3. Descrição dos Serviços -->
+                        <div class="terms-section" id="servicos">
+                            <h3 class="section-title">
+                                <span class="section-number">3</span>
+                                Descrição dos Serviços
+                            </h3>
+                            <div class="section-content">
+                                <p>A Central de Contratos oferece uma plataforma digital para criação, personalização e geração de contratos jurídicos, incluindo:</p>
+                                
+                                <div class="row g-4 my-4">
+                                    <div class="col-md-6">
+                                        <div class="service-item">
+                                            <div class="service-icon">
+                                                <i class="fas fa-handshake"></i>
+                                            </div>
+                                            <h6>Contratos de Compra e Venda</h6>
+                                            <p>Documentos para transações comerciais de bens móveis e imóveis.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="service-item">
+                                            <div class="service-icon">
+                                                <i class="fas fa-home"></i>
+                                            </div>
+                                            <h6>Contratos de Locação</h6>
+                                            <p>Contratos residenciais e comerciais com cláusulas personalizáveis.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="service-item">
+                                            <div class="service-icon">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <h6>Prestação de Serviços</h6>
+                                            <p>Contratos profissionais para diversos tipos de serviços.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="service-item">
+                                            <div class="service-icon">
+                                                <i class="fas fa-money-check-alt"></i>
+                                            </div>
+                                            <h6>Confissão de Dívida</h6>
+                                            <p>Documentos para formalização de débitos e parcelamentos.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="subsection-title">3.1. Funcionalidades da Plataforma</h5>
+                                <ul>
+                                    <li><strong>Formulários Interativos:</strong> Preenchimento guiado para personalização</li>
+                                    <li><strong>Geração Automática:</strong> Criação instantânea de documentos em PDF</li>
+                                    <li><strong>Validação Jurídica:</strong> Templates baseados na legislação vigente</li>
+                                    <li><strong>Armazenamento Seguro:</strong> Histórico de contratos na sua conta</li>
+                                    <li><strong>Suporte Técnico:</strong> Assistência para dúvidas sobre a plataforma</li>
+                                </ul>
+                                
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Importante:</strong> Nossos serviços <strong>NÃO incluem</strong> consultoria jurídica personalizada. Para questões específicas, recomendamos consultar um advogado.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Responsabilidades do Usuário -->
+                        <div class="terms-section" id="responsabilidades">
+                            <h3 class="section-title">
+                                <span class="section-number">4</span>
+                                Responsabilidades do Usuário
+                            </h3>
+                            <div class="section-content">
+                                <h5 class="subsection-title">4.1. Uso Adequado da Plataforma</h5>
+                                <p>Ao utilizar nossos serviços, você se compromete a:</p>
+                                <ul>
+                                    <li>Fornecer informações <strong>verdadeiras e atualizadas</strong></li>
+                                    <li>Utilizar a plataforma apenas para <strong>fins legais</strong></li>
+                                    <li>Não violar direitos de terceiros</li>
+                                    <li>Manter a segurança de sua conta e senha</li>
+                                    <li>Não tentar acessar áreas restritas do sistema</li>
+                                </ul>
+                                
+                                <h5 class="subsection-title">4.2. Responsabilidade pelos Contratos</h5>
+                                <p>O usuário é <strong>integralmente responsável</strong> por:</p>
+                                <div class="responsibility-grid">
+                                    <div class="responsibility-item">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        <span>Veracidade das informações inseridas nos formulários</span>
+                                    </div>
+                                    <div class="responsibility-item">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        <span>Adequação do tipo de contrato às suas necessidades</span>
+                                    </div>
+                                    <div class="responsibility-item">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        <span>Conformidade com a legislação aplicável</span>
+                                    </div>
+                                    <div class="responsibility-item">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        <span>Execução e cumprimento das obrigações contratuais</span>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="subsection-title">4.3. Uso Proibido</h5>
+                                <p>É <strong>expressamente proibido</strong>:</p>
+                                <ul>
+                                    <li>Usar a plataforma para atividades ilegais ou fraudulentas</li>
+                                    <li>Tentar burlar sistemas de segurança</li>
+                                    <li>Reproduzir, modificar ou distribuir o conteúdo sem autorização</li>
+                                    <li>Utilizar scripts, bots ou outras ferramentas automatizadas</li>
+                                    <li>Interferir no funcionamento normal da plataforma</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 5. Propriedade Intelectual -->
+                        <div class="terms-section" id="propriedade">
+                            <h3 class="section-title">
+                                <span class="section-number">5</span>
+                                Propriedade Intelectual
+                            </h3>
+                            <div class="section-content">
+                                <h5 class="subsection-title">5.1. Direitos da Central de Contratos</h5>
+                                <p>Todos os direitos de propriedade intelectual sobre a plataforma são de titularidade exclusiva da Central de Contratos, incluindo:</p>
+                                <ul>
+                                    <li>Código-fonte e arquitetura do sistema</li>
+                                    <li>Design, layout e interface</li>
+                                    <li>Templates e modelos de contratos</li>
+                                    <li>Textos, imagens e conteúdo editorial</li>
+                                    <li>Marcas, logotipos e identidade visual</li>
+                                </ul>
+                                
+                                <h5 class="subsection-title">5.2. Licença de Uso</h5>
+                                <p>Concedemos ao usuário uma licença <strong>limitada, não exclusiva e revogável</strong> para:</p>
+                                <div class="license-grid">
+                                    <div class="license-item permitted">
+                                        <i class="fas fa-check text-success"></i>
+                                        <span>Acessar e utilizar a plataforma conforme os termos</span>
+                                    </div>
+                                    <div class="license-item permitted">
+                                        <i class="fas fa-check text-success"></i>
+                                        <span>Gerar contratos para uso pessoal ou comercial legítimo</span>
+                                    </div>
+                                    <div class="license-item prohibited">
+                                        <i class="fas fa-times text-danger"></i>
+                                        <span>Revender, distribuir ou sublicenciar nossos serviços</span>
+                                    </div>
+                                    <div class="license-item prohibited">
+                                        <i class="fas fa-times text-danger"></i>
+                                        <span>Realizar engenharia reversa ou copiar funcionalidades</span>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="subsection-title">5.3. Direitos sobre Contratos Gerados</h5>
+                                <p>Os contratos gerados pela plataforma são de <strong>propriedade do usuário</strong> que os criou, podendo utilizá-los livremente para os fins pretendidos.</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. Política de Pagamento -->
+                        <div class="terms-section" id="pagamento">
+                            <h3 class="section-title">
+                                <span class="section-number">6</span>
+                                Política de Pagamento e Reembolso
+                            </h3>
+                            <div class="section-content">
+                                <h5 class="subsection-title">6.1. Formas de Pagamento</h5>
+                                <p>Aceitamos as seguintes formas de pagamento:</p>
+                                <div class="payment-methods">
+                                    <div class="payment-method">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>Cartões de Crédito (Visa, Mastercard, Elo)</span>
+                                    </div>
+                                    <div class="payment-method">
+                                        <i class="fab fa-pix"></i>
+                                        <span>PIX (confirmação instantânea)</span>
+                                    </div>
+                                    <div class="payment-method">
+                                        <i class="fas fa-barcode"></i>
+                                        <span>Boleto Bancário (confirmação em até 3 dias úteis)</span>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="subsection-title">6.2. Política de Preços</h5>
+                                <ul>
+                                    <li>Os preços são exibidos em <strong>Reais (BRL)</strong> com impostos inclusos</li>
+                                    <li>Preços podem variar conforme o tipo e complexidade do contrato</li>
+                                    <li>Ofertas promocionais têm validade limitada</li>
+                                    <li>Não há taxas ocultas ou valores adicionais não informados</li>
+                                </ul>
+                                
+                                <h5 class="subsection-title">6.3. Política de Reembolso</h5>
+                                <div class="refund-policy">
+                                    <div class="refund-condition">
+                                        <div class="refund-icon success">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="refund-content">
+                                            <h6>Reembolso Integral (7 dias)</h6>
+                                            <p>Garantimos reembolso integral se solicitado em até 7 dias após a compra, sem uso do serviço.</p>
+                                        </div>
+                                    </div>
+                                    <div class="refund-condition">
+                                        <div class="refund-icon warning">
+                                            <i class="fas fa-exclamation"></i>
+                                        </div>
+                                        <div class="refund-content">
+                                            <h6>Reembolso Parcial</h6>
+                                            <p>Após geração do contrato, reembolso de 50% se solicitado em até 3 dias por problemas técnicos comprovados.</p>
+                                        </div>
+                                    </div>
+                                    <div class="refund-condition">
+                                        <div class="refund-icon danger">
+                                            <i class="fas fa-times"></i>
+                                        </div>
+                                        <div class="refund-content">
+                                            <h6>Sem Reembolso</h6>
+                                            <p>Não há reembolso após 7 dias da compra ou se o contrato já foi utilizado para fins legais.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7. Alterações nos Termos -->
+                        <div class="terms-section" id="alteracoes">
+                            <h3 class="section-title">
+                                <span class="section-number">7</span>
+                                Alterações nos Termos
+                            </h3>
+                            <div class="section-content">
+                                <p>A Central de Contratos reserva-se o direito de <strong>modificar estes Termos de Uso</strong> a qualquer tempo, visando:</p>
+                                <ul>
+                                    <li>Adequação a mudanças na legislação</li>
+                                    <li>Melhoria dos serviços oferecidos</li>
+                                    <li>Correção de inconsistências ou ambiguidades</li>
+                                    <li>Inclusão de novos recursos ou funcionalidades</li>
+                                </ul>
+                                
+                                <h5 class="subsection-title">7.1. Notificação de Alterações</h5>
+                                <p>Alterações serão comunicadas através de:</p>
+                                <div class="notification-methods">
+                                    <div class="notification-method">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>E-mail para o endereço cadastrado</span>
+                                    </div>
+                                    <div class="notification-method">
+                                        <i class="fas fa-bell"></i>
+                                        <span>Notificação no painel da plataforma</span>
+                                    </div>
+                                    <div class="notification-method">
+                                        <i class="fas fa-globe"></i>
+                                        <span>Aviso na página inicial do site</span>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="subsection-title">7.2. Vigência das Alterações</h5>
+                                <p>As alterações entrarão em vigor <strong>30 dias após a notificação</strong>, salvo mudanças exigidas por lei, que podem ter vigência imediata.</p>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    O uso continuado da plataforma após as alterações constitui <strong>aceitação automática</strong> dos novos termos.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 8. Contato Legal -->
+                        <div class="terms-section" id="contato">
+                            <h3 class="section-title">
+                                <span class="section-number">8</span>
+                                Contato para Questões Legais
+                            </h3>
+                            <div class="section-content">
+                                <p>Para questões relacionadas a estes Termos de Uso, entre em contato através dos canais oficiais:</p>
+                                
+                                <div class="contact-grid">
+                                    <div class="contact-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="contact-info">
+                                            <h6>E-mail Jurídico</h6>
+                                            <p>{{ legal_email }}</p>
+                                            <small>Resposta em até 48h úteis</small>
+                                        </div>
+                                    </div>
+                                    <div class="contact-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="contact-info">
+                                            <h6>Telefone</h6>
+                                            <p>{{ support_phone }}</p>
+                                            <small>Seg-Sex: 9h às 18h</small>
+                                        </div>
+                                    </div>
+                                    <div class="contact-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div class="contact-info">
+                                            <h6>Endereço</h6>
+                                            <p>{{ company_address }}</p>
+                                            <small>Sede administrativa</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="subsection-title">8.1. Foro e Legislação</h5>
+                                <p>Estes Termos de Uso são regidos pela <strong>legislação brasileira</strong>. Fica eleito o foro da comarca de <strong>São Paulo/SP</strong> para dirimir quaisquer controvérsias decorrentes deste documento.</p>
+                                
+                                <div class="legal-footer">
+                                    <hr class="my-4">
+                                    <p class="text-center text-muted mb-0">
+                                        <small>
+                                            <strong>Central de Contratos</strong> - Termos de Uso<br>
+                                            Documento válido a partir de {{ last_updated }}<br>
+                                            Versão 1.0
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <a href="#" class="btn btn-primary rounded-circle" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for navigation links
+    document.querySelectorAll('.terms-nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const headerOffset = 100; // Ajuste para header fixo
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Back to top functionality
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        backToTop.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // Highlight current section in navigation
+    const sections = document.querySelectorAll('.terms-section');
+    const navLinks = document.querySelectorAll('.terms-nav-link');
+    
+    window.addEventListener('scroll', function() {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 150;
+            if (window.pageYOffset >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

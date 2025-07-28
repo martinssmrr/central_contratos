@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meu Perfil - Central de Contratos{% endblock %}
+
+{% block content %}
+<!-- Profile Hero Section -->
+<section class="profile-hero py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="hero-title">Meu Perfil</h1>
+                <p class="hero-subtitle">Gerencie suas informações pessoais e acompanhe seus contratos</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <a href="{% url 'users:edit_profile' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-edit me-2"></i>Editar Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Profile Content -->
+<section class="profile-content py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar com informações do usuário -->
+            <div class="col-lg-4 mb-4">
+                <div class="profile-card card shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="profile-avatar mb-3">
+                            {% if profile.avatar %}
+                                <img src="{{ profile.avatar.url }}" alt="Avatar" class="rounded-circle">
+                            {% else %}
+                                <div class="avatar-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <h4 class="profile-name">{{ profile.get_full_name }}</h4>
+                        <p class="profile-email text-muted">{{ user.email }}</p>
+                        {% if profile.is_verified %}
+                            <span class="badge bg-success mb-3">
+                                <i class="fas fa-check-circle me-1"></i>Conta Verificada
+                            </span>
+                        {% else %}
+                            <span class="badge bg-warning mb-3">
+                                <i class="fas fa-clock me-1"></i>Verificação Pendente
+                            </span>
+                        {% endif %}
+                        <p class="profile-since text-muted">
+                            <i class="fas fa-calendar me-1"></i>
+                            Membro desde {{ user.date_joined|date:"d/m/Y" }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="stats-card card shadow-sm mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Estatísticas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ total_contracts }}</div>
+                            <div class="stat-label">Total de Contratos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ paid_contracts }}</div>
+                            <div class="stat-label">Contratos Pagos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ pending_contracts }}</div>
+                            <div class="stat-label">Contratos Pendentes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo principal -->
+            <div class="col-lg-8">
+                <!-- Informações Pessoais -->
+                <div class="info-section card shadow-sm mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-user me-2"></i>Informações Pessoais</h5>
+                        <a href="{% url 'users:edit_profile' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-edit me-1"></i>Editar
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label>Nome Completo</label>
+                                    <p>{{ profile.get_full_name|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label>E-mail</label>
+                                    <p>{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label>Telefone</label>
+                                    <p>{{ profile.phone|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label>CPF/CNPJ</label>
+                                    <p>{{ profile.cpf_cnpj|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label>Data de Nascimento</label>
+                                    <p>{{ profile.birth_date|date:"d/m/Y"|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label>Data de Cadastro</label>
+                                    <p>{{ user.date_joined|date:"d/m/Y H:i" }}</p>
+                                </div>
+                            </div>
+                            {% if profile.address %}
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <label>Endereço</label>
+                                    <p>{{ profile.address }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contratos Recentes -->
+                <div class="contracts-section card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-file-contract me-2"></i>Contratos Recentes</h5>
+                        <a href="{% url 'contracts:catalog' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Novo Contrato
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_contracts %}
+                            <div class="contracts-list">
+                                {% for contract in recent_contracts %}
+                                    <div class="contract-item">
+                                        <div class="contract-info">
+                                            <h6 class="contract-title">{{ contract.contract_type.name }}</h6>
+                                            <p class="contract-meta">
+                                                <span class="contract-date">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    {{ contract.created_at|date:"d/m/Y H:i" }}
+                                                </span>
+                                                <span class="contract-price">
+                                                    <i class="fas fa-dollar-sign me-1"></i>
+                                                    R$ {{ contract.contract_type.price }}
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div class="contract-status">
+                                            {% if contract.status == 'pending' %}
+                                                <span class="badge bg-warning">
+                                                    <i class="fas fa-clock me-1"></i>Pendente
+                                                </span>
+                                            {% elif contract.status == 'paid' %}
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check me-1"></i>Pago
+                                                </span>
+                                            {% elif contract.status == 'cancelled' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-times me-1"></i>Cancelado
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="contract-actions">
+                                            {% if contract.status == 'paid' and contract.pdf_file %}
+                                                <a href="{{ contract.pdf_file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </a>
+                                            {% elif contract.status == 'pending' %}
+                                                <a href="#" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-credit-card me-1"></i>Pagar
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Link para ver todos os contratos -->
+                            <div class="text-center mt-4">
+                                <a href="#" class="btn btn-outline-secondary">
+                                    <i class="fas fa-list me-1"></i>Ver Todos os Contratos
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="empty-state text-center py-4">
+                                <i class="fas fa-file-contract fa-3x text-muted mb-3"></i>
+                                <h6>Nenhum contrato encontrado</h6>
+                                <p class="text-muted">Você ainda não possui contratos. Que tal criar o primeiro?</p>
+                                <a href="{% url 'contracts:catalog' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Criar Primeiro Contrato
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Actions -->
+<section class="quick-actions py-4 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-3">
+                <a href="{% url 'users:edit_profile' %}" class="action-link">
+                    <div class="action-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h6>Editar Perfil</h6>
+                    <p class="text-muted">Atualize suas informações</p>
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="{% url 'contracts:catalog' %}" class="action-link">
+                    <div class="action-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h6>Novo Contrato</h6>
+                    <p class="text-muted">Crie um novo contrato</p>
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="#" class="action-link">
+                    <div class="action-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h6>Histórico</h6>
+                    <p class="text-muted">Veja todos os contratos</p>
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="{% url 'core:contact' %}" class="action-link">
+                    <div class="action-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h6>Suporte</h6>
+                    <p class="text-muted">Entre em contato</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

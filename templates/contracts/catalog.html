@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Catálogo de Contratos - Central de Contratos{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="catalog-hero py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold text-dark mb-4">Catálogo de Contratos</h1>
+                    <p class="lead text-muted mb-4">
+                        Escolha entre nossos modelos jurídicos profissionais, 
+                        criados por especialistas e validados por advogados.
+                    </p>
+                    <div class="stats-row d-flex justify-content-center gap-4 mt-4">
+                        <div class="stat-item text-center">
+                            <div class="stat-number h3 text-primary fw-bold">{{ contract_types|length }}</div>
+                            <div class="stat-label small text-muted">Modelos</div>
+                        </div>
+                        <div class="stat-item text-center">
+                            <div class="stat-number h3 text-primary fw-bold">100%</div>
+                            <div class="stat-label small text-muted">Jurídicos</div>
+                        </div>
+                        <div class="stat-item text-center">
+                            <div class="stat-number h3 text-primary fw-bold">5min</div>
+                            <div class="stat-label small text-muted">Para criar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contracts Grid -->
+<section class="contracts-grid py-5">
+    <div class="container">
+        <div class="row g-3">
+            {% for contract_type in contract_types %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="contract-card h-100">
+                    <!-- Card Image/Icon -->
+                    <div class="card-image-wrapper">
+                        {% if contract_type.image %}
+                            <img src="{{ contract_type.image.url }}" class="card-image" alt="{{ contract_type.name }}">
+                        {% else %}
+                            <div class="card-icon-placeholder">
+                                {% if contract_type.slug == 'prestacao_servico' %}
+                                    <i class="fas fa-handshake"></i>
+                                {% elif contract_type.slug == 'locacao_residencial' %}
+                                    <i class="fas fa-home"></i>
+                                {% elif contract_type.slug == 'locacao_comercial' %}
+                                    <i class="fas fa-building"></i>
+                                {% elif contract_type.slug == 'compra_venda' %}
+                                    <i class="fas fa-exchange-alt"></i>
+                                {% elif contract_type.slug == 'confissao_divida' %}
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                {% elif contract_type.slug == 'freelancer' %}
+                                    <i class="fas fa-laptop-code"></i>
+                                {% else %}
+                                    <i class="fas fa-file-contract"></i>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <div class="card-overlay">
+                            <span class="badge-category">Jurídico</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Content -->
+                    <div class="card-content">
+                        <div class="card-header-section">
+                            <h3 class="card-title">{{ contract_type.name }}</h3>
+                            <p class="card-description">
+                                {{ contract_type.description|truncatewords:15 }}
+                            </p>
+                        </div>
+
+                        <div class="card-footer-section">
+                            <div class="price-section">
+                                <div class="price-wrapper">
+                                    <span class="price-main">R$ {{ contract_type.price|floatformat:0 }}</span>
+                                    <span class="price-suffix">único</span>
+                                </div>
+                                <div class="price-features">
+                                    <span class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        Personalização completa
+                                    </span>
+                                    <span class="feature-item">
+                                        <i class="fas fa-download"></i>
+                                        Download em PDF
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="action-section">
+                                {% if user.is_authenticated %}
+                                    <a href="{{ contract_type.get_absolute_url }}" class="btn-primary-custom">
+                                        <span class="btn-text">Personalizar Contrato</span>
+                                        <i class="fas fa-arrow-right btn-icon"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'users:login' %}?next={{ contract_type.get_absolute_url }}" class="btn-outline-custom">
+                                        <span class="btn-text">Fazer Login</span>
+                                        <i class="fas fa-sign-in-alt btn-icon"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <h3 class="empty-title">Nenhum contrato disponível</h3>
+                    <p class="empty-description">Em breve teremos contratos disponíveis para você.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section for Non-Authenticated Users -->
+{% if not user.is_authenticated %}
+<section class="cta-section py-5 bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="cta-content">
+                    <h2 class="cta-title text-white mb-3">Pronto para criar seu contrato?</h2>
+                    <p class="cta-description text-white-50 mb-4">
+                        Crie sua conta gratuita e tenha acesso a todos os nossos modelos profissionais.
+                    </p>
+                    <div class="cta-actions">
+                        <a href="{% url 'users:register' %}" class="btn-white-custom me-3">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Criar Conta Grátis
+                        </a>
+                        <a href="{% url 'users:login' %}" class="btn-outline-white-custom">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            Já tenho conta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

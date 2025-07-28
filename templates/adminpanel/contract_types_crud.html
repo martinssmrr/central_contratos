@@ -1,0 +1,937 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block title %}Gestão de Tipos de Contrato - Painel Admin{% endblock %}
+
+{% block breadcrumb_items %}<li class="breadcrumb-item active">Tipos de Contrato</li>{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #f4623a;
+        --secondary-color: #2c3e50;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --light-gray: #f8f9fa;
+        --dark-gray: #6c757d;
+    }
+
+    .admin-header {
+        background: linear-gradient(135deg, var(--primary-color), #e4552f);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .admin-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200"><polygon fill="rgba(255,255,255,0.1)" points="1000,200 0,200 0,0 1000,50"/></svg>');
+        background-size: cover;
+    }
+
+    .admin-header > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, var(--secondary-color), #34495e);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        transition: transform 0.6s ease;
+    }
+
+    .stat-card:hover::before {
+        transform: scale(2);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+    }
+
+    .create-form {
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .create-form:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 8px 25px rgba(244, 98, 58, 0.1);
+    }
+
+    .form-control, .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(244, 98, 58, 0.1);
+        outline: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), #e4552f);
+        border: none;
+        border-radius: 25px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(244, 98, 58, 0.3);
+    }
+
+    .contract-type-card {
+        background: white;
+        border-radius: 20px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .contract-type-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .contract-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: var(--success-color);
+        color: white;
+    }
+
+    .status-inactive {
+        background: var(--danger-color);
+        color: white;
+    }
+
+    .price-display {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 1rem 0;
+    }
+
+    .contracts-count {
+        background: var(--light-gray);
+        color: var(--dark-gray);
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .filters-section {
+        background: var(--light-gray);
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .modal-content {
+        border-radius: 20px;
+        border: none;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-color), #e4552f);
+        color: white;
+        border: none;
+    }
+
+    .color-input {
+        width: 60px;
+        height: 40px;
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        cursor: pointer;
+    }
+
+    .pagination .page-link {
+        border-radius: 10px;
+        margin: 0 2px;
+        border: none;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .pagination .page-link:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--dark-gray);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .delete-icon-large {
+        font-size: 3rem;
+    }
+
+    .inline-form {
+        display: inline;
+    }
+
+    @media (max-width: 768px) {
+        .admin-header {
+            padding: 1.5rem 0;
+        }
+        
+        .create-form {
+            padding: 1.5rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-card {
+            padding: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-2">
+                    <i class="fas fa-tags me-3"></i>Gestão de Tipos de Contrato
+                </h1>
+                <p class="mb-0 opacity-75">
+                    Crie, edite e gerencie categorias de contratos que aparecerão no catálogo
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{% url 'adminpanel:admin_panel' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar ao Painel
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Estatísticas -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_types }}</div>
+            <div class="stat-label">Total de Tipos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ active_types }}</div>
+            <div class="stat-label">Tipos Ativos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_contracts }}</div>
+            <div class="stat-label">Contratos Criados</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ categories|length }}</div>
+            <div class="stat-label">Categorias</div>
+        </div>
+    </div>
+
+    <!-- Mensagens -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {% if message.tags == 'error' %}
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                {% elif message.tags == 'success' %}
+                    <i class="fas fa-check-circle me-2"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                {% else %}
+                    <i class="fas fa-info-circle me-2"></i>
+                {% endif %}
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Formulário de Criação -->
+    <div class="create-form">
+        <h3 class="text-center mb-4">
+            <i class="fas fa-plus-circle me-2"></i>Criar Novo Tipo de Contrato
+        </h3>
+        
+        <form method="post" action="{% url 'adminpanel:contract_type_create' %}" id="createForm">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label fw-bold">
+                        <i class="fas fa-tag me-1"></i>Nome do Tipo
+                    </label>
+                    <input type="text" class="form-control" id="name" name="name" required 
+                           placeholder="Ex: Construção Civil" title="Nome único do tipo de contrato">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="category" class="form-label fw-bold">
+                        <i class="fas fa-folder me-1"></i>Categoria
+                    </label>
+                    <select class="form-select" name="category" required title="Categoria para organização">
+                        <option value="">Selecione uma categoria</option>
+                        {% for category in categories %}
+                            <option value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="icon" class="form-label fw-bold">
+                        <i class="fas fa-icons me-1"></i>Ícone (FontAwesome)
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-star" id="icon-preview"></i>
+                        </span>
+                        <input type="text" class="form-control" id="icon" name="icon" 
+                               placeholder="fas fa-hammer" title="Classe CSS do FontAwesome">
+                    </div>
+                    <div class="form-text">
+                        Exemplos: fas fa-hammer, fas fa-home, fas fa-car
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="color" class="form-label fw-bold">
+                        <i class="fas fa-palette me-1"></i>Cor
+                    </label>
+                    <div class="input-group">
+                        <input type="color" class="color-input" id="color" name="color" 
+                               value="#f4623a" title="Cor para o tipo de contrato">
+                        <input type="text" class="form-control" id="color-text" 
+                               placeholder="#f4623a" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="order" class="form-label fw-bold">
+                        <i class="fas fa-sort me-1"></i>Ordem de Exibição
+                    </label>
+                    <input type="number" class="form-control" id="order" name="order" 
+                           min="0" value="0" title="Ordem para exibição (menor primeiro)">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="base_price" class="form-label fw-bold">
+                        <i class="fas fa-dollar-sign me-1"></i>Preço Base (R$)
+                    </label>
+                    <input type="number" class="form-control" id="base_price" name="base_price" 
+                           step="0.01" min="0" required placeholder="0.00" title="Preço base do contrato">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-toggle-on me-1"></i>Status
+                    </label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
+                        <label class="form-check-label" for="is_active">Ativo no catálogo</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label fw-bold">
+                    <i class="fas fa-align-left me-1"></i>Descrição
+                </label>
+                <textarea class="form-control" id="description" name="description" rows="3" 
+                          placeholder="Descreva este tipo de contrato..." title="Descrição detalhada"></textarea>
+            </div>
+            
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg" title="Criar novo tipo de contrato">
+                    <i class="fas fa-save me-2"></i>Criar Tipo de Contrato
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-section">
+        <h4 class="mb-3">
+            <i class="fas fa-filter me-2"></i>Filtros de Pesquisa
+        </h4>
+        
+        <form method="get" class="row g-3" id="filterForm">
+            <div class="col-md-4">
+                <label for="search" class="form-label fw-bold">Buscar por nome</label>
+                <input type="text" class="form-control" id="search" name="search" 
+                       value="{{ search }}" placeholder="Digite o nome..." title="Buscar tipos de contrato">
+            </div>
+            <div class="col-md-3">
+                <label for="category_filter" class="form-label fw-bold">Categoria</label>
+                <select class="form-select" name="category" title="Filtrar por categoria">
+                    <option value="">Todas as categorias</option>
+                    {% for category in categories %}
+                        <option value="{{ category }}" {% if category_filter == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="status_filter" class="form-label fw-bold">Status</label>
+                <select class="form-select" name="status" title="Filtrar por status">
+                    <option value="">Todos</option>
+                    <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Ativos</option>
+                    <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inativos</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100" title="Aplicar filtros">
+                    <i class="fas fa-search me-2"></i>Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de Tipos de Contrato -->
+    <div class="row">
+        {% for contract_type in contract_types %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="contract-type-card h-100">
+                    <div class="card-body p-4">
+                        <!-- Status Badge -->
+                        <div class="status-badge {% if contract_type.is_active %}status-active{% else %}status-inactive{% endif %}">
+                            {{ contract_type.is_active|yesno:"Ativo,Inativo" }}
+                        </div>
+
+                        <!-- Ícone e Cor -->
+                        {% if contract_type.icon %}
+                            <div class="contract-icon mb-3" data-color="{{ contract_type.color|default:'#f4623a' }}">
+                                <i class="{{ contract_type.icon }}"></i>
+                            </div>
+                        {% else %}
+                            <div class="contract-icon mb-3" data-color="{{ contract_type.color|default:'#f4623a' }}">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                        {% endif %}
+
+                        <h5 class="card-title fw-bold mb-2">{{ contract_type.name }}</h5>
+                        
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-folder me-1"></i>{{ contract_type.category }}
+                        </p>
+
+                        {% if contract_type.description %}
+                            <p class="card-text text-muted small mb-3">{{ contract_type.description|truncatewords:15 }}</p>
+                        {% endif %}
+
+                        <div class="price-display mb-3">
+                            R$ {{ contract_type.base_price|floatformat:2 }}
+                        </div>
+
+                        <div class="contracts-count">
+                            <i class="fas fa-file-alt me-1"></i>
+                            {{ contract_type.contracts_count }} contrato{{ contract_type.contracts_count|pluralize }}
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" 
+                                    data-bs-target="#editModal" data-contract-id="{{ contract_type.id }}"
+                                    title="Editar tipo de contrato">
+                                <i class="fas fa-edit me-1"></i>Editar
+                            </button>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal" data-contract-id="{{ contract_type.id }}"
+                                    data-contract-name="{{ contract_type.name }}" title="Excluir tipo de contrato">
+                                <i class="fas fa-trash me-1"></i>Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h4 class="mt-3">Nenhum tipo de contrato encontrado</h4>
+                    <p class="text-muted">
+                        {% if search or category_filter or status_filter %}
+                            Tente ajustar os filtros de pesquisa ou criar um novo tipo.
+                        {% else %}
+                            Comece criando seu primeiro tipo de contrato acima.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if page_obj.has_other_pages %}
+        <nav aria-label="Paginação dos tipos de contrato">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search %}&search={{ search }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+                           title="Primeira página">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}"
+                           title="Página anterior">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for page_num in page_obj.paginator.page_range %}
+                    {% if page_num == page_obj.number %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_num }}{% if search %}&search={{ search }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}"
+                               title="Página {{ page_num }}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}"
+                           title="Próxima página">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}"
+                           title="Última página">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+<!-- Modal de Edição -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">
+                    <i class="fas fa-edit me-2"></i>Editar Tipo de Contrato
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar" title="Fechar modal"></button>
+            </div>
+            <form id="editForm" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" id="edit_id" name="contract_type_id">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_name" class="form-label fw-bold">Nome do Tipo *</label>
+                            <input type="text" class="form-control" id="edit_name" name="name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_category" class="form-label fw-bold">Categoria</label>
+                            <input type="text" class="form-control" id="edit_category" name="category">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="edit_icon" class="form-label fw-bold">Ícone</label>
+                            <input type="text" class="form-control" id="edit_icon" name="icon" placeholder="fas fa-hammer">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="edit_color" class="form-label fw-bold">Cor</label>
+                            <input type="color" class="form-control color-input" id="edit_color" name="color">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="edit_order" class="form-label fw-bold">Ordem</label>
+                            <input type="number" class="form-control" id="edit_order" name="order" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_base_price" class="form-label fw-bold">Preço Base (R$) *</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="edit_base_price" name="base_price" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch mt-4">
+                                <input class="form-check-input" type="checkbox" id="edit_is_active" name="is_active">
+                                <label class="form-check-label fw-bold" for="edit_is_active">
+                                    Ativo no catálogo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_description" class="form-label fw-bold">Descrição</label>
+                        <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" title="Cancelar edição">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" title="Salvar alterações">
+                        <i class="fas fa-save me-2"></i>Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar" title="Fechar modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-trash-alt text-danger delete-icon-large"></i>
+                </div>
+                <h5>Tem certeza que deseja excluir?</h5>
+                <p class="text-muted">
+                    O tipo de contrato <strong id="delete_contract_name"></strong> será removido permanentemente.
+                    Esta ação não pode ser desfeita.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" title="Cancelar exclusão">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <form id="deleteForm" method="post" class="inline-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger" title="Confirmar exclusão">
+                        <i class="fas fa-trash me-2"></i>Sim, Excluir
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Aplicar cores aos ícones de tipos de contrato
+    const contractIcons = document.querySelectorAll('.contract-icon[data-color]');
+    contractIcons.forEach(icon => {
+        const color = icon.getAttribute('data-color');
+        if (color) {
+            icon.style.backgroundColor = color;
+        }
+    });
+
+    // Preview do ícone em tempo real
+    const iconInput = document.getElementById('icon');
+    const iconPreview = document.getElementById('icon-preview');
+    
+    if (iconInput && iconPreview) {
+        iconInput.addEventListener('input', function() {
+            const iconClass = this.value || 'fas fa-star';
+            iconPreview.className = iconClass;
+        });
+    }
+
+    // Sincronização do color picker com o campo de texto
+    const colorInput = document.getElementById('color');
+    const colorText = document.getElementById('color-text');
+    
+    if (colorInput && colorText) {
+        colorInput.addEventListener('input', function() {
+            colorText.value = this.value;
+        });
+        
+        // Inicializar com valor padrão
+        colorText.value = colorInput.value;
+    }
+
+    // Configuração do modal de edição
+    const editModal = document.getElementById('editModal');
+    if (editModal) {
+        editModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const contractId = button.getAttribute('data-contract-id');
+            
+            if (contractId) {
+                loadContractTypeData(contractId);
+            }
+        });
+    }
+
+    // Configuração do modal de exclusão
+    const deleteModal = document.getElementById('deleteModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const contractId = button.getAttribute('data-contract-id');
+            const contractName = button.getAttribute('data-contract-name');
+            
+            document.getElementById('delete_contract_name').textContent = contractName;
+            document.getElementById('deleteForm').action = 
+                `/adminpanel/contract-types/${contractId}/delete/`;
+        });
+    }
+
+    // Auto-submit dos filtros com delay
+    let filterTimeout;
+    const filterInputs = document.querySelectorAll('#filterForm input, #filterForm select');
+    
+    filterInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(() => {
+                if (this.type !== 'submit') {
+                    document.getElementById('filterForm').submit();
+                }
+            }, 500);
+        });
+    });
+
+    // Validação do formulário de criação
+    const createForm = document.getElementById('createForm');
+    if (createForm) {
+        createForm.addEventListener('submit', function(e) {
+            const name = document.getElementById('name').value.trim();
+            const basePrice = document.getElementById('base_price').value;
+            
+            if (!name) {
+                e.preventDefault();
+                alert('Por favor, informe o nome do tipo de contrato.');
+                document.getElementById('name').focus();
+                return false;
+            }
+            
+            if (!basePrice || parseFloat(basePrice) < 0) {
+                e.preventDefault();
+                alert('Por favor, informe um preço base válido.');
+                document.getElementById('base_price').focus();
+                return false;
+            }
+        });
+    }
+});
+
+// Função para carregar dados do tipo de contrato no modal de edição
+async function loadContractTypeData(contractId) {
+    try {
+        const response = await fetch(`/adminpanel/contract-types/${contractId}/data/`);
+        
+        if (!response.ok) {
+            throw new Error('Erro ao carregar dados');
+        }
+        
+        const data = await response.json();
+        
+        // Preencher os campos do modal
+        document.getElementById('edit_id').value = data.id;
+        document.getElementById('edit_name').value = data.name;
+        document.getElementById('edit_base_price').value = data.base_price;
+        document.getElementById('edit_category').value = data.category || '';
+        document.getElementById('edit_description').value = data.description || '';
+        document.getElementById('edit_is_active').checked = data.is_active;
+        document.getElementById('edit_icon').value = data.icon || '';
+        document.getElementById('edit_color').value = data.color || '#f4623a';
+        document.getElementById('edit_order').value = data.order || 0;
+        
+        // Configurar action do formulário
+        document.getElementById('editForm').action = 
+            `/adminpanel/contract-types/${contractId}/edit/`;
+            
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        alert('Erro ao carregar os dados do tipo de contrato. Tente novamente.');
+    }
+}
+
+// Função para mostrar mensagens de feedback
+function showMessage(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container');
+    const firstCard = container.querySelector('.stats-grid');
+    
+    if (firstCard) {
+        firstCard.parentNode.insertBefore(alertDiv, firstCard.nextSibling);
+    }
+    
+    // Auto-remover após 5 segundos
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// Atalhos de teclado
+document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + N para focar no campo de nome
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        const nameField = document.getElementById('name');
+        if (nameField) {
+            nameField.focus();
+        }
+    }
+    
+    // Escape para fechar modals
+    if (e.key === 'Escape') {
+        const openModals = document.querySelectorAll('.modal.show');
+        openModals.forEach(modal => {
+            const bsModal = bootstrap.Modal.getInstance(modal);
+            if (bsModal) {
+                bsModal.hide();
+            }
+        });
+    }
+});
+
+// Função para atualizar contadores em tempo real (se implementar WebSocket)
+function updateStats(stats) {
+    document.querySelector('.stat-card:nth-child(1) .stat-number').textContent = stats.total_types;
+    document.querySelector('.stat-card:nth-child(2) .stat-number').textContent = stats.active_types;
+    document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = stats.total_contracts;
+}
+</script>
+{% endblock %}

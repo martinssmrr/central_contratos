@@ -1,0 +1,510 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{ title }} - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #f4623a;
+        --secondary-color: #2c3e50;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --light-gray: #f8f9fa;
+        --dark-gray: #6c757d;
+    }
+
+    .form-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 2rem;
+        margin: 2rem 0;
+    }
+
+    .form-header {
+        text-align: center;
+        padding: 1.5rem 0;
+        border-bottom: 2px solid var(--light-gray);
+        margin-bottom: 2rem;
+    }
+
+    .form-header h2 {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .card-section {
+        background: var(--light-gray);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .card-section legend {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(244, 98, 58, 0.25);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .required-field::after {
+        content: ' *';
+        color: var(--danger-color);
+        font-weight: bold;
+    }
+
+    .form-actions {
+        text-align: center;
+        padding: 2rem 0;
+        border-top: 2px solid var(--light-gray);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), #e4552f);
+        border: none;
+        padding: 1rem 2.5rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(244, 98, 58, 0.4);
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid var(--dark-gray);
+        color: var(--dark-gray);
+        padding: 1rem 2.5rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background: var(--dark-gray);
+        color: white;
+    }
+
+    .progress-indicator {
+        background: var(--light-gray);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .progress-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        padding: 0.5rem;
+    }
+
+    .progress-step.active {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .progress-step::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #ddd;
+        z-index: -1;
+    }
+
+    .progress-step:last-child::after {
+        display: none;
+    }
+
+    .alert {
+        border-radius: 8px;
+        border: none;
+        padding: 1rem 1.5rem;
+    }
+
+    .alert-danger {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger-color);
+        border-left: 4px solid var(--danger-color);
+    }
+
+    .help-text {
+        font-size: 0.875rem;
+        color: var(--dark-gray);
+        margin-top: 0.25rem;
+    }
+
+    .floating-save {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+    }
+
+    .conjuge-section {
+        background: rgba(244, 98, 58, 0.05);
+        border: 2px dashed var(--primary-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .conjuge-section h6 {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .parcelamento-section {
+        background: rgba(39, 174, 96, 0.05);
+        border: 2px dashed var(--success-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .parcela-item {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    @media (max-width: 768px) {
+        .form-container {
+            margin: 1rem;
+            padding: 1rem;
+        }
+        
+        .card-section {
+            padding: 1rem;
+        }
+        
+        .progress-steps {
+            flex-direction: column;
+        }
+        
+        .progress-step::after {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="form-container">
+                <!-- Indicador de Progresso -->
+                <div class="progress-indicator">
+                    <ul class="progress-steps">
+                        <li class="progress-step active">
+                            <i class="fas fa-user-tie me-2"></i>Proprietário
+                        </li>
+                        <li class="progress-step">
+                            <i class="fas fa-user-check me-2"></i>Comprador
+                        </li>
+                        <li class="progress-step">
+                            <i class="fas fa-home me-2"></i>Imóvel
+                        </li>
+                        <li class="progress-step">
+                            <i class="fas fa-dollar-sign me-2"></i>Venda
+                        </li>
+                    </ul>
+                </div>
+
+                {% crispy form %}
+                
+                <!-- Botão de salvamento flutuante -->
+                <div class="floating-save d-none d-lg-block">
+                    <button type="button" class="btn btn-success rounded-circle" onclick="salvarRascunho()" title="Salvar Rascunho">
+                        <i class="fas fa-save"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Função para mostrar/esconder campos do cônjuge
+    function toggleConjugeFields(estadoCivilField, conjugeSection) {
+        const estadoCivil = document.getElementById(estadoCivilField);
+        const section = document.getElementById(conjugeSection);
+        
+        if (estadoCivil && section) {
+            function toggleFields() {
+                if (estadoCivil.value === 'casado' || estadoCivil.value === 'uniao_estavel') {
+                    section.style.display = 'block';
+                    section.classList.add('conjuge-section');
+                } else {
+                    section.style.display = 'none';
+                    section.classList.remove('conjuge-section');
+                    // Limpar campos do cônjuge quando esconder
+                    const inputs = section.querySelectorAll('input, select');
+                    inputs.forEach(input => input.value = '');
+                }
+            }
+            
+            estadoCivil.addEventListener('change', toggleFields);
+            toggleFields(); // Executar na inicialização
+        }
+    }
+    
+    // Aplicar para proprietário e comprador
+    toggleConjugeFields('id_proprietario_estado_civil', 'proprietario-conjuge-section');
+    toggleConjugeFields('id_comprador_estado_civil', 'comprador-conjuge-section');
+    
+    // Função para mostrar/esconder campos de parcelamento
+    const formaPagamento = document.getElementById('id_forma_pagamento');
+    const parcelamentoSection = document.getElementById('parcelamento-section');
+    
+    if (formaPagamento && parcelamentoSection) {
+        function toggleParcelamento() {
+            if (formaPagamento.value === 'parcelado') {
+                parcelamentoSection.style.display = 'block';
+                parcelamentoSection.classList.add('parcelamento-section');
+            } else {
+                parcelamentoSection.style.display = 'none';
+                parcelamentoSection.classList.remove('parcelamento-section');
+                // Limpar campos de parcelamento
+                const quantidadeParcelas = document.getElementById('id_quantidade_parcelas');
+                if (quantidadeParcelas) quantidadeParcelas.value = '';
+                clearParcelasContainer();
+            }
+        }
+        
+        formaPagamento.addEventListener('change', toggleParcelamento);
+        toggleParcelamento(); // Executar na inicialização
+    }
+    
+    // Gerar campos de datas das parcelas
+    const quantidadeParcelas = document.getElementById('id_quantidade_parcelas');
+    const datasParcelasContainer = document.getElementById('datas-parcelas-container');
+    
+    if (quantidadeParcelas && datasParcelasContainer) {
+        quantidadeParcelas.addEventListener('change', function() {
+            generateParcelasFields(this.value);
+        });
+    }
+    
+    function generateParcelasFields(quantidade) {
+        if (!datasParcelasContainer) return;
+        
+        clearParcelasContainer();
+        
+        if (quantidade && quantidade > 0) {
+            for (let i = 1; i <= quantidade; i++) {
+                const parcelaDiv = document.createElement('div');
+                parcelaDiv.className = 'parcela-item';
+                parcelaDiv.innerHTML = `
+                    <label for="parcela_${i}" class="form-label">Data da ${i}ª Parcela:</label>
+                    <input type="date" id="parcela_${i}" name="parcela_${i}" class="form-control" style="max-width: 200px;">
+                `;
+                datasParcelasContainer.appendChild(parcelaDiv);
+            }
+        }
+    }
+    
+    function clearParcelasContainer() {
+        if (datasParcelasContainer) {
+            datasParcelasContainer.innerHTML = '';
+        }
+    }
+    
+    // Máscaras para CPF e CEP
+    function aplicarMascaras() {
+        // CPF
+        const cpfFields = document.querySelectorAll('input[id*="cpf"]');
+        cpfFields.forEach(field => {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                e.target.value = value;
+            });
+        });
+        
+        // CEP
+        const cepFields = document.querySelectorAll('input[id*="cep"]');
+        cepFields.forEach(field => {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                e.target.value = value;
+            });
+        });
+        
+        // RG
+        const rgFields = document.querySelectorAll('input[id*="rg"]');
+        rgFields.forEach(field => {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,1})$/, '$1-$2');
+                e.target.value = value;
+            });
+        });
+    }
+    
+    aplicarMascaras();
+    
+    // Converter valor para extenso (simplificado)
+    const valorTotal = document.getElementById('id_valor_total');
+    const valorExtenso = document.getElementById('id_valor_extenso');
+    
+    if (valorTotal && valorExtenso) {
+        valorTotal.addEventListener('blur', function() {
+            if (this.value) {
+                // Esta é uma implementação básica - pode ser melhorada
+                const valor = parseFloat(this.value);
+                if (valor) {
+                    valorExtenso.value = `${valor.toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    })} (${numeroParaExtenso(valor)})`;
+                }
+            }
+        });
+    }
+    
+    // Função simplificada para converter número em extenso
+    function numeroParaExtenso(valor) {
+        // Esta é uma implementação básica
+        // Em produção, use uma biblioteca específica
+        const valorInt = Math.floor(valor);
+        const centavos = Math.round((valor - valorInt) * 100);
+        
+        if (valorInt === 0) return 'zero reais';
+        
+        // Implementação muito básica - apenas para demonstração
+        const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
+        const especiais = ['dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+        const dezenas = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+        const centenas = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
+        
+        // Muito simplificado - apenas para valores pequenos
+        if (valorInt < 10) {
+            return unidades[valorInt] + ' real' + (valorInt > 1 ? 's' : '');
+        } else if (valorInt < 20) {
+            return especiais[valorInt - 10] + ' reais';
+        } else if (valorInt < 100) {
+            const dez = Math.floor(valorInt / 10);
+            const uni = valorInt % 10;
+            return dezenas[dez] + (uni > 0 ? ' e ' + unidades[uni] : '') + ' reais';
+        } else {
+            return 'valor em extenso'; // Placeholder para valores maiores
+        }
+    }
+    
+    // Indicador de progresso visual
+    function updateProgressIndicator() {
+        const sections = document.querySelectorAll('.card-section');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        
+        // Observer para seções visíveis
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionIndex = Array.from(sections).indexOf(entry.target);
+                    progressSteps.forEach((step, index) => {
+                        step.classList.toggle('active', index <= sectionIndex);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        sections.forEach(section => observer.observe(section));
+    }
+    
+    updateProgressIndicator();
+});
+
+// Função para salvar rascunho (placeholder)
+function salvarRascunho() {
+    // Implementar salvamento de rascunho via AJAX
+    alert('Funcionalidade de rascunho será implementada em breve!');
+}
+
+// Validação em tempo real
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.compra-venda-form');
+    if (form) {
+        const inputs = form.querySelectorAll('input[required], select[required]');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+        });
+    }
+});
+
+function validateField(field) {
+    const isValid = field.checkValidity();
+    const parent = field.closest('.form-group');
+    
+    if (parent) {
+        parent.classList.remove('has-error', 'has-success');
+        
+        if (field.value.trim() !== '') {
+            parent.classList.add(isValid ? 'has-success' : 'has-error');
+        }
+    }
+}
+</script>
+{% endblock %}

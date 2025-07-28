@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Contrato de Locação Criado - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .success-card {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+    }
+    
+    .success-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+    
+    .contract-info {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    
+    .actions-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .btn-action {
+        margin: 0.5rem;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border: none;
+    }
+    
+    .btn-secondary-custom {
+        background: #6c757d;
+        color: white;
+        border: none;
+    }
+    
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">✅</div>
+        <h1>Contrato Criado com Sucesso!</h1>
+        <p class="mb-0">Seu contrato de locação residencial foi gerado e está pronto para uso.</p>
+    </div>
+    
+    <div class="contract-info">
+        <h3 class="mb-3">📋 Informações do Contrato</h3>
+        
+        <div class="info-row">
+            <strong>Proprietário:</strong>
+            <span>{{ contrato.proprietario_nome }}</span>
+        </div>
+        
+        <div class="info-row">
+            <strong>Locatário:</strong>
+            <span>{{ contrato.locatario_nome }}</span>
+        </div>
+        
+        <div class="info-row">
+            <strong>Tipo do Imóvel:</strong>
+            <span>{{ contrato.get_imovel_tipo_display }}</span>
+        </div>
+        
+        <div class="info-row">
+            <strong>Endereço do Imóvel:</strong>
+            <span>{{ contrato.endereco_completo_imovel }}</span>
+        </div>
+        
+        <div class="info-row">
+            <strong>Valor do Aluguel:</strong>
+            <span>R$ {{ contrato.valor_aluguel|floatformat:2 }}</span>
+        </div>
+        
+        <div class="info-row">
+            <strong>Período:</strong>
+            <span>{{ contrato.data_inicio|date:"d/m/Y" }} até {{ contrato.data_termino|date:"d/m/Y" }}</span>
+        </div>
+        
+        <div class="info-row">
+            <strong>Tipo de Garantia:</strong>
+            <span>{{ contrato.get_tipo_garantia_display }}</span>
+        </div>
+        
+        <div class="info-row">
+            <strong>Criado em:</strong>
+            <span>{{ contrato.created_at|date:"d/m/Y às H:i" }}</span>
+        </div>
+    </div>
+    
+    <div class="actions-card">
+        <h4 class="mb-3">🎯 Próximos Passos</h4>
+        
+        <a href="{% url 'contracts:locacao_residencial_detail' contrato.pk %}" class="btn btn-action btn-primary-custom">
+            👁️ Visualizar Contrato Completo
+        </a>
+        
+        <a href="{% url 'contracts:meus_contratos_locacao_residencial' %}" class="btn btn-action btn-secondary-custom">
+            📁 Meus Contratos de Locação
+        </a>
+        
+        <a href="{% url 'contracts:catalog' %}" class="btn btn-action btn-secondary-custom">
+            ➕ Criar Novo Contrato
+        </a>
+        
+        <div class="mt-4">
+            <p class="text-muted">
+                <small>
+                    💡 <strong>Dica:</strong> Você pode acessar este contrato a qualquer momento 
+                    através da seção "Meus Contratos" no menu principal.
+                </small>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
