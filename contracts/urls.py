@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import cart_views, checkout_views
 
 app_name = 'contracts'
 
@@ -10,6 +11,17 @@ urlpatterns = [
     path('detail/<int:pk>/', views.contract_detail_view, name='contract_detail'),
     path('download/<int:pk>/', views.download_contract_view, name='download_contract'),
     path('my-contracts/', views.user_contracts_view, name='user_contracts'),
+    
+    # URLs do carrinho de compras
+    path('cart/', cart_views.cart_view, name='cart'),
+    path('cart/add/<int:contract_id>/', cart_views.cart_add, name='cart_add'),
+    path('cart/remove/<int:contract_id>/', cart_views.cart_remove, name='cart_remove'),
+    path('cart/clear/', cart_views.cart_clear, name='cart_clear'),
+    path('cart/data/', cart_views.get_cart_data, name='cart_data'),
+    
+    # URLs do checkout
+    path('checkout/', checkout_views.checkout_view, name='checkout'),
+    path('checkout/success/', checkout_views.checkout_success_view, name='checkout_success'),
     
     # URLs específicas para compra e venda de imóvel
     path('compra-venda-imovel/', views.compra_venda_imovel_view, name='compra_venda_imovel'),

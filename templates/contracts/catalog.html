@@ -98,17 +98,29 @@
                             </div>
 
                             <div class="action-section">
-                                {% if user.is_authenticated %}
-                                    <a href="{{ contract_type.get_absolute_url }}" class="btn-primary-custom">
-                                        <span class="btn-text">Personalizar Contrato</span>
-                                        <i class="fas fa-arrow-right btn-icon"></i>
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'users:login' %}?next={{ contract_type.get_absolute_url }}" class="btn-outline-custom">
-                                        <span class="btn-text">Fazer Login</span>
-                                        <i class="fas fa-sign-in-alt btn-icon"></i>
-                                    </a>
-                                {% endif %}
+                                <div class="d-flex gap-2">
+                                    <!-- Botão Adicionar ao Carrinho -->
+                                    <form method="post" action="{% url 'contracts:cart_add' contract_type.id %}" class="cart-form flex-grow-1">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-outline-custom w-100">
+                                            <i class="fas fa-shopping-cart me-2"></i>
+                                            <span class="btn-text">Adicionar</span>
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- Botão Personalizar/Login -->
+                                    {% if user.is_authenticated %}
+                                        <a href="{{ contract_type.get_absolute_url }}" class="btn-primary-custom flex-grow-1">
+                                            <span class="btn-text">Personalizar</span>
+                                            <i class="fas fa-arrow-right btn-icon"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'users:login' %}?next={{ contract_type.get_absolute_url }}" class="btn-primary-custom flex-grow-1">
+                                            <span class="btn-text">Fazer Login</span>
+                                            <i class="fas fa-sign-in-alt btn-icon"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -156,4 +168,144 @@
     </div>
 </section>
 {% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Funcionalidade do carrinho de compras
+document.querySelectorAll('.cart-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        // Mostrar loading
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adicionando...';
+        submitBtn.disabled = true;
+        
+        // Fazer requisição AJAX
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar sucesso temporariamente
+                submitBtn.innerHTML = '<i class="fas fa-check me-2"></i>Adicionado!';
+                submitBtn.classList.remove('btn-outline-custom');
+                submitBtn.classList.add('btn-success');
+                
+                // Atualizar badge do carrinho
+                updateCartBadge(data.cart_items);
+                
+                // Mostrar toast/notificação
+                showToast(data.message, 'success');
+                
+                // Voltar ao estado normal após 2 segundos
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.classList.remove('btn-success');
+                    submitBtn.classList.add('btn-outline-custom');
+                    submitBtn.disabled = false;
+                }, 2000);
+            } else {
+                // Mostrar erro
+                showToast(data.message || 'Erro ao adicionar ao carrinho', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            showToast('Erro ao adicionar ao carrinho. Tente novamente.', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+});
+
+// Função para atualizar badge do carrinho
+function updateCartBadge(itemCount) {
+    const badge = document.getElementById('cart-badge');
+    if (badge) {
+        if (itemCount > 0) {
+            badge.textContent = itemCount;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+// Função para mostrar notificações toast
+function showToast(message, type = 'info') {
+    // Criar toast element
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} toast-notification`;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    toast.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
+        </div>
+    `;
+    
+    // Adicionar ao DOM
+    document.body.appendChild(toast);
+    
+    // Remover automaticamente após 5 segundos
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.remove();
+        }
+    }, 5000);
+}
+
+// Carregar quantidade atual do carrinho ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('{% url "contracts:cart_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            updateCartBadge(data.total_items);
+        })
+        .catch(error => {
+            console.log('Erro ao carregar dados do carrinho:', error);
+        });
+});
+
+// Adicionar CSS para animação
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .toast-notification {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+    }
+`;
+document.head.appendChild(style);
+</script>
 {% endblock %}

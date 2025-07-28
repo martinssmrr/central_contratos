@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Carrinho de Compras - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-hero {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cart-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="cart-pattern" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="2" fill="%23f4623a" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23cart-pattern)"/></svg>') repeat;
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    .cart-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: #f4623a;
+        font-size: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: #6c757d;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .cart-item {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+    }
+    
+    .cart-item:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+    
+    .contract-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #f4623a, #e4552f);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .contract-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .contract-description {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #f4623a;
+    }
+    
+    .remove-btn {
+        background: #dc3545;
+        border: none;
+        color: white;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .remove-btn:hover {
+        background: #c82333;
+        transform: scale(1.05);
+    }
+    
+    .empty-cart {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+    
+    .empty-cart-icon {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    .cart-summary {
+        background: linear-gradient(135deg, #f4623a, #e4552f);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 25px rgba(244, 98, 58, 0.3);
+    }
+    
+    .summary-item {
+        display: flex;
+        justify-content: between;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .summary-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .total-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .checkout-btn {
+        background: white;
+        color: #f4623a;
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .checkout-btn:hover {
+        background: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .continue-shopping {
+        color: #f4623a;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .continue-shopping:hover {
+        color: #e4552f;
+        text-decoration: underline;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .cart-item {
+            margin-bottom: 1rem;
+        }
+        
+        .contract-details {
+            margin-top: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Cart Hero Section -->
+<section class="py-5 cart-hero">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto hero-content">
+                <div class="cart-icon mb-4">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h1 class="hero-title">Carrinho de Compras</h1>
+                <p class="hero-subtitle">
+                    Revise seus contratos antes de finalizar a compra.
+                    <br><strong>{{ total_items }} item{{ total_items|pluralize }}</strong> no carrinho
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cart Content -->
+<section class="py-5 bg-light">
+    <div class="container">
+        {% if cart %}
+        <div class="row">
+            <!-- Cart Items -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2 text-primary"></i>
+                            Seus Contratos
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        {% for item in cart %}
+                        <div class="cart-item p-4 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center">
+                                        <div class="contract-icon me-3">
+                                            <i class="{{ item.contract.icon|default:'fas fa-file-contract' }}"></i>
+                                        </div>
+                                        <div class="contract-details">
+                                            <h6 class="contract-name">{{ item.contract.name }}</h6>
+                                            <p class="contract-description mb-0">
+                                                {{ item.contract.description|truncatewords:15 }}
+                                            </p>
+                                            <small class="text-muted">
+                                                <i class="fas fa-tag me-1"></i>{{ item.contract.category|default:"Contrato Jurídico" }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-center">
+                                    <div class="quantity">
+                                        <small class="text-muted">Quantidade</small>
+                                        <div class="fw-bold">{{ item.quantity }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <div class="price mb-2">
+                                        R$ {{ item.total_price|floatformat:2 }}
+                                    </div>
+                                    <form method="post" action="{% url 'contracts:cart_remove' item.contract.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn remove-btn btn-sm">
+                                            <i class="fas fa-trash me-1"></i>Remover
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Cart Actions -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'contracts:catalog' %}" class="continue-shopping">
+                        <i class="fas fa-arrow-left me-2"></i>Continuar Comprando
+                    </a>
+                    
+                    <form method="post" action="{% url 'contracts:cart_clear' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger" 
+                                onclick="return confirm('Tem certeza que deseja limpar o carrinho?')">
+                            <i class="fas fa-trash-alt me-2"></i>Limpar Carrinho
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Cart Summary -->
+            <div class="col-lg-4">
+                <div class="cart-summary sticky-top">
+                    <h5 class="mb-4">
+                        <i class="fas fa-calculator me-2"></i>Resumo do Pedido
+                    </h5>
+                    
+                    <div class="summary-item">
+                        <span>Subtotal ({{ total_items }} item{{ total_items|pluralize }}):</span>
+                        <span>R$ {{ total_price|floatformat:2 }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span>Taxa de processamento:</span>
+                        <span>Grátis</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="total-price">Total:</span>
+                        <span class="total-price">R$ {{ total_price|floatformat:2 }}</span>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'contracts:checkout' %}" class="checkout-btn btn">
+                            <i class="fas fa-credit-card me-2"></i>Finalizar Compra
+                        </a>
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        <small class="text-white-50">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Compra 100% segura e protegida
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Empty Cart -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <h4>Seu carrinho está vazio</h4>
+                            <p class="mb-4">Que tal começar adicionando alguns contratos?</p>
+                            <a href="{% url 'contracts:catalog' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i>Explorar Contratos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Adicionar funcionalidade AJAX para remoção de itens
+document.querySelectorAll('.remove-btn').forEach(button => {
+    button.parentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (confirm('Tem certeza que deseja remover este item?')) {
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Recarregar a página para atualizar o carrinho
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                // Se AJAX falhar, submeter o form normalmente
+                this.submit();
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

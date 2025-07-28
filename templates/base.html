@@ -42,6 +42,16 @@
                         <a class="nav-link" href="{% url 'core:contact' %}">Contato</a>
                     </li>
                     
+                    <!-- Carrinho de Compras -->
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{% url 'contracts:cart' %}">
+                            <i class="fas fa-shopping-cart me-1"></i>Carrinho
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-badge" style="display: none;">
+                                0
+                            </span>
+                        </a>
+                    </li>
+                    
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">

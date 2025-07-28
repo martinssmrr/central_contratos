@@ -1,0 +1,512 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Compra Realizada - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-hero {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .success-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="success-pattern" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="2" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23success-pattern)"/></svg>') repeat;
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    .success-icon {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        font-size: 3rem;
+        animation: bounceIn 1s ease-out 0.5s both;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.8s ease-out 0.3s both;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        line-height: 1.6;
+        margin: 0;
+        animation: fadeInUp 0.8s ease-out 0.6s both;
+    }
+    
+    .success-card {
+        border: 1px solid rgba(40, 167, 69, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: relative;
+        animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+    
+    .success-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+    }
+    
+    .order-details {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .detail-value {
+        color: #28a745;
+        font-weight: 500;
+    }
+    
+    .contract-item {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .contract-item:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-color: #28a745;
+    }
+    
+    .contract-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+    
+    .contract-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .contract-status {
+        color: #28a745;
+        font-weight: 500;
+    }
+    
+    .next-steps {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .step-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+    }
+    
+    .step-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .step-number {
+        width: 35px;
+        height: 35px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .action-btn {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #f4623a, #e4552f);
+        color: white;
+    }
+    
+    .btn-primary-custom:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(244, 98, 58, 0.3);
+    }
+    
+    .btn-outline-custom {
+        background: white;
+        color: #28a745;
+        border: 2px solid #28a745;
+    }
+    
+    .btn-outline-custom:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .payment-info {
+        background: linear-gradient(135deg, #ffc107, #ff8700);
+        color: #333;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+    
+    .payment-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .action-btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Success Hero Section -->
+<section class="py-5 success-hero">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto hero-content">
+                <div class="success-icon mb-4">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 class="hero-title">Compra Realizada com Sucesso!</h1>
+                <p class="hero-subtitle">
+                    Obrigado por escolher a Central de Contratos, {{ customer_name|default:"" }}!
+                    <br>Seus contratos estão sendo processados e em breve estarão disponíveis para download.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Content -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card success-card">
+                    <div class="card-body p-4">
+                        <!-- Order Summary -->
+                        <div class="order-details">
+                            <h5 class="text-success mb-4">
+                                <i class="fas fa-receipt me-2"></i>Detalhes do Pedido
+                            </h5>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    <i class="fas fa-hashtag me-2"></i>Número de Contratos:
+                                </span>
+                                <span class="detail-value">{{ contracts.count }}</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    <i class="fas fa-user me-2"></i>Cliente:
+                                </span>
+                                <span class="detail-value">{{ customer_name }}</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    <i class="fas fa-envelope me-2"></i>E-mail:
+                                </span>
+                                <span class="detail-value">{{ customer_email }}</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    <i class="fas fa-credit-card me-2"></i>Método de Pagamento:
+                                </span>
+                                <span class="detail-value">
+                                    {% if payment_method == 'pix' %}PIX
+                                    {% elif payment_method == 'credit_card' %}Cartão de Crédito
+                                    {% elif payment_method == 'debit_card' %}Cartão de Débito
+                                    {% elif payment_method == 'boleto' %}Boleto Bancário
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    <i class="fas fa-money-bill-wave me-2"></i>Valor Total:
+                                </span>
+                                <span class="detail-value h5 mb-0">R$ {{ total_amount|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Contracts List -->
+                        <div class="mb-4">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-file-contract me-2"></i>Contratos Adquiridos
+                            </h6>
+                            
+                            {% for contract in contracts %}
+                            <div class="contract-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="contract-icon">
+                                        <i class="{{ contract.contract_type.icon|default:'fas fa-file-contract' }}"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="contract-name">{{ contract.contract_type.name }}</div>
+                                        <div class="contract-status">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Status: Processando
+                                        </div>
+                                        <small class="text-muted">
+                                            Pedido #{{ contract.id }} - {{ contract.created_at|date:"d/m/Y H:i" }}
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="fw-bold text-success">R$ {{ contract.valor|floatformat:2 }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Payment Information -->
+                        {% if payment_method == 'boleto' %}
+                        <div class="payment-info">
+                            <div class="d-flex align-items-center">
+                                <div class="payment-icon">
+                                    <i class="fas fa-barcode"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Atenção - Pagamento via Boleto</h6>
+                                    <p class="mb-0">O boleto para pagamento será enviado por e-mail em até 30 minutos. Prazo de vencimento: 3 dias úteis.</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% elif payment_method == 'pix' %}
+                        <div class="payment-info" style="background: linear-gradient(135deg, #00B7AB, #00A699); color: white;">
+                            <div class="d-flex align-items-center">
+                                <div class="payment-icon">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Pagamento PIX Pendente</h6>
+                                    <p class="mb-0">Aguardando confirmação do pagamento. Processamento em até 2 horas após confirmação.</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Next Steps -->
+                <div class="next-steps">
+                    <h5 class="mb-4">
+                        <i class="fas fa-list-ol me-2"></i>Próximos Passos
+                    </h5>
+                    
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Processamento do Pagamento</strong>
+                            <p class="mb-0">Seu pagamento será processado e confirmado em breve.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Preparação dos Contratos</strong>
+                            <p class="mb-0">Após a confirmação do pagamento, seus contratos serão preparados em formato PDF.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div>
+                            <strong>Disponibilização para Download</strong>
+                            <p class="mb-0">Você receberá um e-mail com os links para download de seus contratos.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div>
+                            <strong>Suporte Completo</strong>
+                            <p class="mb-0">Nossa equipe está disponível para esclarecer dúvidas sobre seus contratos.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'contracts:user_contracts' %}" class="action-btn btn-primary-custom">
+                        <i class="fas fa-file-alt me-2"></i>Meus Contratos
+                    </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'contracts:catalog' %}" class="action-btn btn-outline-custom">
+                        <i class="fas fa-shopping-cart me-2"></i>Comprar Mais Contratos
+                    </a>
+                    
+                    <a href="{% url 'core:contact' %}" class="action-btn btn-outline-custom">
+                        <i class="fas fa-headset me-2"></i>Falar com Suporte
+                    </a>
+                </div>
+                
+                <!-- Additional Information -->
+                <div class="text-center mt-4">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Importante:</strong> Mantenha este número de confirmação para futura referência. 
+                        Em caso de dúvidas, entre em contato com nosso suporte informando os números dos contratos.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh page after 5 minutes to check payment status
+setTimeout(function() {
+    if (confirm('Deseja verificar o status do pagamento?')) {
+        location.reload();
+    }
+}, 300000); // 5 minutes
+
+// Copy contract numbers to clipboard
+function copyContractNumbers() {
+    const numbers = [{% for contract in contracts %}'{{ contract.id }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+    const text = 'Contratos: ' + numbers.join(', ');
+    
+    navigator.clipboard.writeText(text).then(function() {
+        alert('Números dos contratos copiados!');
+    });
+}
+
+// Add copy button functionality if needed
+document.addEventListener('DOMContentLoaded', function() {
+    // Additional success page interactions can be added here
+    console.log('Checkout success page loaded');
+});
+</script>
+{% endblock %}
