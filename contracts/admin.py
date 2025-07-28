@@ -1,13 +1,48 @@
 from django.contrib import admin
-from .models import ContractType, Contract, Payment, CompraVendaImovel, ContratoCompraVendaImovel, ContratoLocacaoResidencial
+from .models import Category, ContractType, Contract, Payment, CompraVendaImovel, ContratoCompraVendaImovel, ContratoLocacaoResidencial
 
-@admin.register(ContractType)
-class ContractTypeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price', 'is_active', 'created_at']
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'icon', 'color', 'order', 'is_active', 'get_contracts_count', 'created_at']
     list_filter = ['is_active', 'created_at']
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ['created_at', 'updated_at', 'get_contracts_count']
+    list_editable = ['order', 'is_active']
+    ordering = ['order', 'name']
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('name', 'slug', 'description')
+        }),
+        ('Aparência', {
+            'fields': ('icon', 'color', 'order')
+        }),
+        ('Status', {
+            'fields': ('is_active',)
+        }),
+        ('Estatísticas', {
+            'fields': ('get_contracts_count',),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+    
+    def get_contracts_count(self, obj):
+        return obj.get_contracts_count()
+    get_contracts_count.short_description = 'Tipos de Contrato'
+
+@admin.register(ContractType)
+class ContractTypeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'category', 'price', 'is_active', 'created_at']
+    list_filter = ['category', 'is_active', 'created_at']
+    search_fields = ['name', 'description']
+    prepopulated_fields = {'slug': ('name',)}
     readonly_fields = ['created_at']
+    list_editable = ['is_active']
 
 @admin.register(Contract)
 class ContractAdmin(admin.ModelAdmin):

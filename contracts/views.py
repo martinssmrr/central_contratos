@@ -10,7 +10,7 @@ import io
 import os
 from datetime import datetime
 
-from .models import ContractType, Contract, Payment, CompraVendaImovel, ContratoLocacaoResidencial
+from .models import Category, ContractType, Contract, Payment, CompraVendaImovel, ContratoLocacaoResidencial
 from .forms import (
     ContractForm, PrestacaoServicoForm, LocacaoForm, 
     CompraVendaForm, ConfissaoDividaForm, FreelancerForm, PaymentForm, CompraVendaImovelForm
@@ -19,9 +19,43 @@ from .forms import (
 
 def catalog_view(request):
     """Exibe o catálogo de contratos disponíveis"""
-    contract_types = ContractType.objects.filter(is_active=True)
+    # Obter parâmetro de categoria
+    category_slug = request.GET.get('category')
+    
+    # Obter todas as categorias ativas
+    categories = Category.objects.filter(is_active=True)
+    
+    # Filtrar contratos por categoria se especificada
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug, is_active=True)
+        contract_types = ContractType.objects.filter(
+            category=category, 
+            is_active=True
+        )
+        current_category = category
+    else:
+        contract_types = ContractType.objects.filter(is_active=True)
+        current_category = None
+    
     return render(request, 'contracts/catalog.html', {
-        'contract_types': contract_types
+        'contract_types': contract_types,
+        'categories': categories,
+        'current_category': current_category,
+    })
+
+def catalog_category_view(request, slug):
+    """Exibe contratos de uma categoria específica"""
+    category = get_object_or_404(Category, slug=slug, is_active=True)
+    contract_types = ContractType.objects.filter(
+        category=category, 
+        is_active=True
+    )
+    categories = Category.objects.filter(is_active=True)
+    
+    return render(request, 'contracts/catalog.html', {
+        'contract_types': contract_types,
+        'categories': categories,
+        'current_category': category,
     })
 
 @login_required

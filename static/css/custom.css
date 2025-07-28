@@ -931,7 +931,7 @@ section.py-5.bg-light .container {
 /* Card Image/Icon */
 .card-image-wrapper {
     position: relative;
-    height: 160px; /* Reduzido de 200px para 160px */
+    height: 140px; /* Reduzido de 160px para 140px */
     overflow: hidden;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
@@ -952,7 +952,7 @@ section.py-5.bg-light .container {
     align-items: center;
     justify-content: center;
     height: 100%;
-    font-size: 2.5rem; /* Reduzido de 3rem para 2.5rem */
+    font-size: 2.2rem; /* Reduzido de 2.5rem para 2.2rem */
     color: #f4623a;
     background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(228, 85, 47, 0.1));
 }
@@ -985,14 +985,16 @@ section.py-5.bg-light .container {
 
 /* Card Content */
 .card-content {
-    padding: 1.25rem; /* Reduzido de 1.5rem para 1.25rem */
+    padding: 1.125rem; /* Reduzido de 1.25rem para 1.125rem */
     display: flex;
     flex-direction: column;
-    height: calc(100% - 160px); /* Ajustado para nova altura da imagem */
+    height: calc(100% - 140px); /* Ajustado para nova altura da imagem */
+    min-height: 280px; /* Garantir altura mínima para os botões */
 }
 
 .card-header-section {
-    margin-bottom: 1rem; /* Reduzido de 1.5rem para 1rem */
+    margin-bottom: 0.875rem; /* Reduzido de 1rem para 0.875rem */
+    flex-shrink: 0; /* Evitar compressão desta seção */
 }
 
 .card-title {
@@ -1017,15 +1019,17 @@ section.py-5.bg-light .container {
 
 .card-footer-section {
     margin-top: auto;
+    flex-shrink: 0; /* Garantir que esta seção não seja comprimida */
 }
 
 /* Price Section */
 .price-section {
-    margin-bottom: 1rem; /* Reduzido de 1.5rem para 1rem */
-    padding: 0.875rem; /* Reduzido de 1rem para 0.875rem */
+    margin-bottom: 0.875rem; /* Reduzido de 1rem para 0.875rem */
+    padding: 0.75rem; /* Reduzido de 0.875rem para 0.75rem */
     background: linear-gradient(135deg, rgba(244, 98, 58, 0.05), rgba(244, 98, 58, 0.02));
-    border-radius: 10px; /* Reduzido de 12px para 10px */
+    border-radius: 8px; /* Reduzido de 10px para 8px */
     border: 1px solid rgba(244, 98, 58, 0.1);
+    flex-shrink: 0; /* Evitar compressão */
 }
 
 .price-wrapper {
@@ -1073,15 +1077,16 @@ section.py-5.bg-light .container {
     justify-content: space-between;
     background: linear-gradient(135deg, #f4623a, #e4552f);
     color: white;
-    padding: 0.75rem 1.25rem; /* Reduzido de 0.875rem 1.5rem para 0.75rem 1.25rem */
-    border-radius: 10px; /* Reduzido de 12px para 10px */
+    padding: 0.65rem 1rem; /* Reduzido de 0.75rem 1.25rem para 0.65rem 1rem */
+    border-radius: 8px; /* Reduzido de 10px para 8px */
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem; /* Adicionado para reduzir o tamanho da fonte */
+    font-size: 0.85rem; /* Reduzido de 0.9rem para 0.85rem */
     transition: all 0.3s ease;
     border: none;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0; /* Evitar compressão do botão */
 }
 
 .btn-primary-custom:hover {
@@ -1112,13 +1117,14 @@ section.py-5.bg-light .container {
     justify-content: space-between;
     background: transparent;
     color: #f4623a;
-    padding: 0.75rem 1.25rem; /* Reduzido de 0.875rem 1.5rem para 0.75rem 1.25rem */
-    border-radius: 10px; /* Reduzido de 12px para 10px */
+    padding: 0.65rem 1rem; /* Reduzido de 0.75rem 1.25rem para 0.65rem 1rem */
+    border-radius: 8px; /* Reduzido de 10px para 8px */
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem; /* Adicionado para reduzir o tamanho da fonte */
+    font-size: 0.85rem; /* Reduzido de 0.9rem para 0.85rem */
     transition: all 0.3s ease;
     border: 2px solid #f4623a;
+    flex-shrink: 0; /* Evitar compressão do botão */
 }
 
 .btn-outline-custom:hover {
@@ -1131,17 +1137,90 @@ section.py-5.bg-light .container {
 .btn-text {
     position: relative;
     z-index: 2;
-    color: black;
+    white-space: nowrap; /* Evitar quebra de texto */
 }
 
 .btn-icon {
-    font-size: 0.875rem;
+    font-size: 0.8rem; /* Reduzido de 0.875rem para 0.8rem */
     transition: transform 0.3s ease;
+}
+
+/* Action Section */
+.action-section {
+    flex-shrink: 0; /* Garantir que a seção de ação não seja comprimida */
+}
+
+.action-section .d-flex {
+    gap: 0.5rem !important; /* Garantir espaçamento adequado entre botões */
 }
 
 .btn-primary-custom:hover .btn-icon,
 .btn-outline-custom:hover .btn-icon {
     transform: translateX(4px);
+}
+
+/* Category Filter Buttons */
+.categories-filter {
+    background: #fff;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.category-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    background: #fff;
+    color: #6c757d;
+    text-decoration: none;
+    border: 2px solid #e9ecef;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-filter-btn:hover {
+    color: var(--category-color, #f4623a);
+    border-color: var(--category-color, #f4623a);
+    background: rgba(244, 98, 58, 0.05);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-filter-btn.active {
+    background: var(--category-color, #f4623a);
+    color: white;
+    border-color: var(--category-color, #f4623a);
+    box-shadow: 0 4px 15px rgba(244, 98, 58, 0.3);
+}
+
+.category-filter-btn.active:hover {
+    color: white;
+    background: var(--category-color, #f4623a);
+    transform: translateY(-2px);
+}
+
+.category-filter-btn .badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: inherit;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.category-filter-btn:not(.active) .badge {
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+.category-filter-btn.active .badge {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
 }
 
 /* Empty State */
@@ -1259,8 +1338,42 @@ section.py-5.bg-light .container {
         gap: 2rem !important;
     }
     
+    .categories-filter {
+        padding: 1rem 0;
+    }
+    
+    .category-filter-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .category-filter-btn .badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
     .card-content {
-        padding: 1.25rem;
+        padding: 1rem;
+        min-height: 260px; /* Ajustar altura mínima para mobile */
+    }
+    
+    .card-image-wrapper {
+        height: 120px; /* Reduzir altura da imagem em mobile */
+    }
+    
+    .card-title {
+        font-size: 1rem;
+    }
+    
+    .price-main {
+        font-size: 1.3rem;
+    }
+    
+    .btn-primary-custom,
+    .btn-outline-custom {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
     }
     
     .cta-title {
@@ -1286,29 +1399,41 @@ section.py-5.bg-light .container {
     }
     
     .card-image-wrapper {
-        height: 140px; /* Ainda menor em mobile */
+        height: 120px; /* Ainda menor em mobile */
     }
     
     .card-content {
-        height: calc(100% - 140px);
-        padding: 1rem;
+        height: calc(100% - 120px);
+        padding: 0.875rem;
+        min-height: 240px; /* Altura mínima menor para mobile */
     }
     
     .price-section {
-        padding: 0.75rem;
-        margin-bottom: 1rem;
+        padding: 0.65rem;
+        margin-bottom: 0.75rem;
     }
     
     .price-main {
-        font-size: 1.4rem; /* Ligeiramente menor em mobile */
+        font-size: 1.25rem; /* Menor em mobile */
     }
     
     .card-title {
-        font-size: 1rem; /* Menor em mobile */
+        font-size: 0.95rem; /* Menor em mobile */
+        margin-bottom: 0.4rem;
     }
     
     .card-description {
         font-size: 0.8rem;
+    }
+    
+    .btn-primary-custom,
+    .btn-outline-custom {
+        padding: 0.55rem 0.7rem;
+        font-size: 0.75rem;
+    }
+    
+    .action-section .d-flex {
+        gap: 0.3rem !important;
     }
 }
 

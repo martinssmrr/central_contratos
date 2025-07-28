@@ -6,6 +6,7 @@ app_name = 'contracts'
 
 urlpatterns = [
     path('catalog/', views.catalog_view, name='catalog'),
+    path('catalog/categoria/<slug:slug>/', views.catalog_category_view, name='catalog_category'),
     path('form/<slug:slug>/', views.contract_form_view, name='contract_form'),
     path('payment/<int:contract_id>/', views.payment_view, name='payment'),
     path('detail/<int:pk>/', views.contract_detail_view, name='contract_detail'),

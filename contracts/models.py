@@ -45,6 +45,51 @@ FORMA_PAGAMENTO_CHOICES = [
     ('financiado', 'Financiado')
 ]
 
+
+class Category(models.Model):
+    """Categorias de contratos"""
+    name = models.CharField('Nome', max_length=100, unique=True)
+    slug = models.SlugField('Slug', max_length=100, unique=True, blank=True)
+    description = models.TextField('Descrição', blank=True)
+    icon = models.CharField('Ícone FontAwesome', max_length=50, default='fas fa-folder', 
+                           help_text='Ex: fas fa-building, fas fa-handshake')
+    color = models.CharField('Cor', max_length=7, default='#f4623a', 
+                           help_text='Cor em hexadecimal (ex: #f4623a)')
+    order = models.PositiveIntegerField('Ordem de Exibição', default=0, 
+                                      help_text='Menor número aparece primeiro')
+    is_active = models.BooleanField('Ativo', default=True)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Categoria'
+        verbose_name_plural = 'Categorias'
+        ordering = ['order', 'name']
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('contracts:catalog_category', kwargs={'slug': self.slug})
+    
+    def get_contracts_count(self):
+        """Retorna o número de tipos de contrato nesta categoria"""
+        return self.contract_types.filter(is_active=True).count()
+    
+    def save(self, *args, **kwargs):
+        """Auto-gerar slug se não fornecido"""
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+            # Garantir unicidade do slug
+            original_slug = self.slug
+            counter = 1
+            while Category.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
+        super().save(*args, **kwargs)
+
+
 class ContractType(models.Model):
     """Tipos de contratos disponíveis"""
     name = models.CharField('Nome', max_length=100, unique=True)
@@ -52,7 +97,8 @@ class ContractType(models.Model):
     description = models.TextField('Descrição')
     price = models.DecimalField('Preço', max_digits=10, decimal_places=2)
     image = models.ImageField('Imagem', upload_to='contract_types/', blank=True, null=True)
-    category = models.CharField('Categoria', max_length=50, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Categoria', 
+                                related_name='contract_types', null=True, blank=True)
     is_active = models.BooleanField('Ativo', default=True)
     icon = models.CharField('Ícone FontAwesome', max_length=50, default='fas fa-file-contract', 
                            help_text='Ex: fas fa-file-contract, fas fa-building')
