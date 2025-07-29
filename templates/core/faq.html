@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - Central de Contratos{% endblock %}
+
+{% block meta_description %}{{ page_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.faq-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.faq-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.faq-hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.faq-hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.faq-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.faq-stat {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.faq-stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    display: block;
+}
+
+.faq-stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.faq-content {
+    padding: 4rem 0;
+    background-color: #f8f9fa;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.faq-question {
+    padding: 1.5rem 2rem;
+    background: linear-gradient(45deg, #f4623a, #ff7f50);
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+    background: linear-gradient(45deg, #e55532, #ff6b42);
+}
+
+.faq-question:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(244, 98, 58, 0.3);
+}
+
+.faq-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.faq-icon.active {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    padding: 0 2rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    background: white;
+}
+
+.faq-answer.active {
+    padding: 2rem;
+    max-height: 500px;
+}
+
+.faq-answer-content {
+    color: #555;
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.faq-answer-content p {
+    margin-bottom: 1rem;
+}
+
+.faq-answer-content p:last-child {
+    margin-bottom: 0;
+}
+
+.no-faqs {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.no-faqs-icon {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 1rem;
+}
+
+.no-faqs h3 {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.no-faqs p {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.faq-search {
+    margin-bottom: 3rem;
+}
+
+.faq-search-input {
+    border: 2px solid #e9ecef;
+    border-radius: 50px;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.faq-search-input:focus {
+    border-color: #f4623a;
+    box-shadow: 0 0 0 3px rgba(244, 98, 58, 0.1);
+    outline: none;
+}
+
+.faq-help-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.faq-help-box h4 {
+    margin-bottom: 1rem;
+}
+
+.faq-help-box p {
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.btn-help {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-help:hover {
+    background: rgba(255,255,255,0.3);
+    color: white;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .faq-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .faq-hero p {
+        font-size: 1rem;
+    }
+    
+    .faq-stats {
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 300px;
+        margin: 2rem auto 0;
+    }
+    
+    .faq-question {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .faq-answer.active {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="faq-section">
+    <div class="container">
+        <div class="faq-hero">
+            <h1><i class="fas fa-question-circle me-3"></i>{{ page_title }}</h1>
+            <p>{{ page_description }}</p>
+            
+            {% if total_faqs > 0 %}
+            <div class="faq-stats">
+                <div class="faq-stat">
+                    <span class="faq-stat-number">{{ total_faqs }}</span>
+                    <span class="faq-stat-label">Pergunta{% if total_faqs != 1 %}s{% endif %} Disponíve{% if total_faqs == 1 %}l{% else %}is{% endif %}</span>
+                </div>
+                <div class="faq-stat">
+                    <span class="faq-stat-number"><i class="fas fa-clock"></i></span>
+                    <span class="faq-stat-label">Respostas Instantâneas</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Content -->
+<section class="faq-content">
+    <div class="container">
+        <div class="faq-container">
+            
+            {% if faqs %}
+                <!-- Search Box -->
+                <div class="faq-search">
+                    <input 
+                        type="text" 
+                        class="form-control faq-search-input" 
+                        id="faqSearch"
+                        placeholder="🔍 Digite sua pergunta para buscar nas FAQs..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <!-- FAQ Items -->
+                <div class="faq-list">
+                    {% for faq in faqs %}
+                    <div class="faq-item" data-faq-item>
+                        <button class="faq-question" onclick="toggleFAQ({{ forloop.counter }})">
+                            <span data-faq-question>{{ faq.pergunta }}</span>
+                            <i class="fas fa-chevron-down faq-icon" id="icon-{{ forloop.counter }}"></i>
+                        </button>
+                        <div class="faq-answer" id="answer-{{ forloop.counter }}">
+                            <div class="faq-answer-content" data-faq-answer>
+                                {{ faq.resposta|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Nenhum resultado encontrado (inicialmente oculto) -->
+                <div class="no-faqs" id="noResults" style="display: none;">
+                    <div class="no-faqs-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Nenhuma pergunta encontrada</h3>
+                    <p>Não encontramos FAQs que correspondam à sua busca. Tente usar outras palavras-chave.</p>
+                </div>
+                
+            {% else %}
+                <!-- Nenhuma FAQ cadastrada -->
+                <div class="no-faqs">
+                    <div class="no-faqs-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3>Nenhuma pergunta frequente cadastrada no momento.</h3>
+                    <p>Estamos preparando as perguntas mais comuns para ajudar você. Volte em breve!</p>
+                </div>
+            {% endif %}
+            
+            <!-- Help Box -->
+            <div class="faq-help-box">
+                <h4><i class="fas fa-headset me-2"></i>Não encontrou sua resposta?</h4>
+                <p>Nossa equipe está sempre pronta para ajudar! Entre em contato conosco.</p>
+                <a href="{% url 'core:contact' %}" class="btn-help">
+                    <i class="fas fa-envelope me-2"></i>Fale Conosco
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Função para toggle das FAQs
+function toggleFAQ(index) {
+    const answer = document.getElementById(`answer-${index}`);
+    const icon = document.getElementById(`icon-${index}`);
+    
+    // Fechar todas as outras FAQs
+    document.querySelectorAll('.faq-answer.active').forEach(item => {
+        if (item.id !== `answer-${index}`) {
+            item.classList.remove('active');
+        }
+    });
+    
+    document.querySelectorAll('.faq-icon.active').forEach(item => {
+        if (item.id !== `icon-${index}`) {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Toggle da FAQ atual
+    answer.classList.toggle('active');
+    icon.classList.toggle('active');
+}
+
+// Função de busca em tempo real
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('faqSearch');
+    const faqItems = document.querySelectorAll('[data-faq-item]');
+    const noResults = document.getElementById('noResults');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('[data-faq-question]').textContent.toLowerCase();
+                const answer = item.querySelector('[data-faq-answer]').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                    // Fechar FAQ se estiver aberta
+                    const answerDiv = item.querySelector('.faq-answer');
+                    const icon = item.querySelector('.faq-icon');
+                    answerDiv.classList.remove('active');
+                    icon.classList.remove('active');
+                }
+            });
+            
+            // Mostrar/ocultar mensagem de "nenhum resultado"
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 && searchTerm !== '' ? 'block' : 'none';
+            }
+        });
+    }
+    
+    // Permitir navegação por teclado
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            // Fechar todas as FAQs abertas
+            document.querySelectorAll('.faq-answer.active').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.faq-icon.active').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+    });
+});
+
+// Animação suave ao carregar a página
+window.addEventListener('load', function() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach((item, index) => {
+        setTimeout(() => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'all 0.5s ease';
+            
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, 50);
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.cache import cache
 from contracts.models import ContractType
+from .models import FAQ
 from .forms import ContactForm
 
 def home_view(request):
@@ -49,6 +50,20 @@ def contact_view(request):
     return render(request, 'core/contact.html', {
         'form': form
     })
+
+def faq_view(request):
+    """Página de FAQs (Perguntas Frequentes)"""
+    # Buscar FAQs ativas ordenadas
+    faqs = FAQ.objects.filter(ativa=True).order_by('ordem', 'criado_em')
+    
+    context = {
+        'faqs': faqs,
+        'total_faqs': faqs.count(),
+        'page_title': 'Perguntas Frequentes',
+        'page_description': 'Encontre respostas para as dúvidas mais comuns sobre nossos serviços.'
+    }
+    
+    return render(request, 'core/faq.html', context)
 
 def terms_view(request):
     """Página de Termos de Uso"""
