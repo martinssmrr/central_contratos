@@ -30,16 +30,24 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:home' %}">Início</a>
+                        <a class="nav-link" href="{% url 'core:home' %}">
+                            <i class="fas fa-home me-1"></i>Início
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contracts:catalog' %}">Catálogo</a>
+                        <a class="nav-link" href="{% url 'contracts:catalog' %}">
+                            <i class="fas fa-folder-open me-1"></i>Catálogo
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:about' %}">Sobre</a>
+                        <a class="nav-link" href="{% url 'core:about' %}">
+                            <i class="fas fa-info-circle me-1"></i>Sobre
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:contact' %}">Contato</a>
+                        <a class="nav-link" href="{% url 'core:contact' %}">
+                            <i class="fas fa-envelope me-1"></i>Contato
+                        </a>
                     </li>
                     
                     <!-- Carrinho de Compras -->
@@ -72,10 +80,14 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:login' %}">Entrar</a>
+                            <a class="nav-link" href="{% url 'users:login' %}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Entrar
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-light ms-2" href="{% url 'users:register' %}">Criar Conta</a>
+                            <a class="btn btn-outline-light ms-2" href="{% url 'users:register' %}">
+                                <i class="fas fa-user-plus me-1"></i>Criar Conta
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
@@ -111,16 +123,26 @@
                 <div class="col-md-2">
                     <h6>Links Úteis</h6>
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'core:about' %}" class="text-muted text-decoration-none">Sobre</a></li>
-                        <li><a href="{% url 'contracts:catalog' %}" class="text-muted text-decoration-none">Catálogo</a></li>
-                        <li><a href="{% url 'core:contact' %}" class="text-muted text-decoration-none">Contato</a></li>
+                        <li><a href="{% url 'core:about' %}" class="text-muted text-decoration-none">
+                            <i class="fas fa-info-circle me-1"></i>Sobre
+                        </a></li>
+                        <li><a href="{% url 'contracts:catalog' %}" class="text-muted text-decoration-none">
+                            <i class="fas fa-folder-open me-1"></i>Catálogo
+                        </a></li>
+                        <li><a href="{% url 'core:contact' %}" class="text-muted text-decoration-none">
+                            <i class="fas fa-envelope me-1"></i>Contato
+                        </a></li>
                     </ul>
                 </div>
                 <div class="col-md-2">
                     <h6>Legal</h6>
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'core:terms' %}" class="text-muted text-decoration-none">Termos de Uso</a></li>
-                        <li><a href="{% url 'core:privacy' %}" class="text-muted text-decoration-none">Privacidade</a></li>
+                        <li><a href="{% url 'core:terms' %}" class="text-muted text-decoration-none">
+                            <i class="fas fa-file-text me-1"></i>Termos de Uso
+                        </a></li>
+                        <li><a href="{% url 'core:privacy' %}" class="text-muted text-decoration-none">
+                            <i class="fas fa-shield-alt me-1"></i>Privacidade
+                        </a></li>
                         <li><a href="{% url 'core:faq' %}" class="text-muted text-decoration-none">
                             <i class="fas fa-question-circle me-1"></i>FAQ
                         </a></li>

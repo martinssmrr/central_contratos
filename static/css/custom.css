@@ -3558,7 +3558,6 @@ section.py-5.bg-light .container {
 
 .py-5.bg-primary.text-white p,
 .py-5.bg-primary.text-white .lead {
-    color: rgba(255, 255, 255, 0.95) !important;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     font-weight: 400;
     line-height: 1.7;
@@ -4106,5 +4105,178 @@ section.py-5.bg-light .container {
     .back-to-top a {
         width: 45px;
         height: 45px;
+    }
+}
+
+/* ========================================
+   Contact Page Improvements (Without Address)
+   ======================================== */
+
+/* Contact Information Cards - Enhanced Layout */
+.contact-info-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-info-card .contact-hours {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(244, 98, 58, 0.1);
+}
+
+.contact-info-card .contact-hours small {
+    color: #6c757d;
+    font-weight: 500;
+    background: rgba(244, 98, 58, 0.05);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+/* Enhanced WhatsApp styling */
+.contact-info-card .card-icon i.fa-whatsapp {
+    color: #25D366;
+}
+
+.contact-info-card:hover .card-icon i.fa-whatsapp {
+    color: #128C7E;
+}
+
+/* Contact sections spacing improvements */
+.contact-info-section {
+    padding: 4rem 0;
+}
+
+.contact-info-section .container {
+    max-width: 1000px;
+}
+
+/* Social Media Section Enhancement */
+.social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.social-link i {
+    font-size: 1.2rem;
+}
+
+/* FAQ Cards Enhancement */
+.faq-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid rgba(244, 98, 58, 0.05);
+}
+
+.faq-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(244, 98, 58, 0.1);
+}
+
+.faq-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.faq-card:hover .faq-icon {
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    transform: scale(1.1);
+}
+
+.faq-card:hover .faq-icon i {
+    color: white !important;
+}
+
+.faq-icon i {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.faq-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.faq-text {
+    color: #6c757d;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Contact Hero Section Updates */
+.contact-hero .hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.contact-hero .hero-content .lead {
+    font-size: 1.2rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .contact-hero .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .contact-icon-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .contact-icon-grid .icon-item {
+        padding: 1rem;
+    }
+    
+    .contact-form-card {
+        padding: 2rem;
+    }
+    
+    .social-links {
+        justify-content: center;
     }
 }

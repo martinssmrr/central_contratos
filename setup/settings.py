@@ -203,6 +203,19 @@ CONTACT_EMAIL = 'contato@centraldecontratos.com'
 # EMAIL_HOST_USER = 'your-email@gmail.com'
 # EMAIL_HOST_PASSWORD = 'your-app-password'
 
+# Mercado Pago Settings
+MERCADO_PAGO_ACCESS_TOKEN = config(
+    'MERCADO_PAGO_ACCESS_TOKEN', 
+    default='TEST-670245024946802-072912-dfb6ad5c56cb6035967f242ed3954945-2591616010'
+)
+MERCADO_PAGO_PUBLIC_KEY = config(
+    'MERCADO_PAGO_PUBLIC_KEY', 
+    default='TEST-904751a5-1896-435e-a6b3-2c283764c93a'
+)
+
+# URL base do projeto (importante para back_urls do Mercado Pago)
+BASE_URL = config('BASE_URL', default='http://127.0.0.1:8000')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

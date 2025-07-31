@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pagamento Pendente - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+.pending-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+    color: white;
+}
+
+.pending-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    color: #333;
+    backdrop-filter: blur(10px);
+}
+
+.pending-icon {
+    font-size: 4rem;
+    color: #ffc107;
+    margin-bottom: 1.5rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.pending-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ff8f00;
+    margin-bottom: 1rem;
+}
+
+.pending-subtitle {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.status-info {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1.5rem;
+    border-radius: 5px;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.status-info h5 {
+    color: #856404;
+    margin-bottom: 1rem;
+}
+
+.status-info p {
+    color: #856404;
+    margin-bottom: 0.5rem;
+}
+
+.timeline {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.timeline-icon.completed {
+    background: #28a745;
+    color: white;
+}
+
+.timeline-icon.current {
+    background: #ffc107;
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.timeline-icon.pending {
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+.timeline-content h6 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.timeline-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.btn-check {
+    background: linear-gradient(45deg, #17a2b8, #138496);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-check:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(23, 162, 184, 0.3);
+    color: white;
+}
+
+.btn-catalog {
+    background: linear-gradient(45deg, #6c757d, #5a6268);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-catalog:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+    color: white;
+}
+
+.auto-refresh {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #1976d2;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="pending-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="pending-card">
+                    <div class="pending-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    
+                    <h1 class="pending-title">Pagamento em Análise</h1>
+                    <p class="pending-subtitle">Seu pagamento está sendo processado e aguarda confirmação.</p>
+                    
+                    <div class="status-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>Status Atual</h5>
+                        <p><strong>Pagamento pendente:</strong> Aguardando confirmação do banco ou processador</p>
+                        <p><strong>Tempo estimado:</strong> Até 24 horas para cartão ou até 3 dias úteis para boleto</p>
+                        <p><strong>Próximos passos:</strong> Aguarde a confirmação. Você será notificado por email</p>
+                    </div>
+                    
+                    <div class="timeline">
+                        <h5 class="mb-3"><i class="fas fa-list-ol me-2"></i>Processo de Pagamento</h5>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Dados Enviados</h6>
+                                <p>Informações de pagamento transmitidas com segurança</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon current">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Em Análise</h6>
+                                <p>Aguardando confirmação do banco ou processador</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon pending">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Contrato Liberado</h6>
+                                <p>Após aprovação, seu contrato ficará disponível</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons mt-4">
+                        <a href="{% url 'contracts:user_contracts' %}" class="btn-check">
+                            <i class="fas fa-sync me-2"></i>Verificar Status
+                        </a>
+                        
+                        <a href="{% url 'contracts:catalog' %}" class="btn-catalog">
+                            <i class="fas fa-arrow-left me-2"></i>Voltar ao Catálogo
+                        </a>
+                    </div>
+                    
+                    <div class="auto-refresh">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        Esta página será atualizada automaticamente a cada 30 segundos para verificar mudanças no status do pagamento.
+                    </div>
+                    
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-envelope me-1"></i>
+                            Você receberá um email quando o pagamento for confirmado
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animação de entrada
+document.addEventListener('DOMContentLoaded', function() {
+    const card = document.querySelector('.pending-card');
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    
+    setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, 100);
+    
+    // Auto-refresh a cada 30 segundos
+    setInterval(function() {
+        // Verificar se há external_reference na URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const externalRef = urlParams.get('external_reference');
+        
+        if (externalRef) {
+            // Fazer uma requisição para verificar o status
+            fetch(`/contracts/payment/status/${externalRef}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_paid) {
+                        // Redirecionar para página de sucesso
+                        window.location.href = '{% url "contracts:payment_success" %}?external_reference=' + externalRef;
+                    }
+                })
+                .catch(error => console.log('Erro ao verificar status:', error));
+        }
+    }, 30000); // 30 segundos
+});
+</script>
+{% endblock %}

@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pagamento Falhou - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+.failure-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+}
+
+.failure-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    color: #333;
+    backdrop-filter: blur(10px);
+}
+
+.failure-icon {
+    font-size: 4rem;
+    color: #dc3545;
+    margin-bottom: 1.5rem;
+    animation: shake 0.8s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.failure-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.failure-subtitle {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.possible-causes {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1.5rem;
+    border-radius: 5px;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.possible-causes h5 {
+    color: #856404;
+    margin-bottom: 1rem;
+}
+
+.possible-causes ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.possible-causes li {
+    margin-bottom: 0.5rem;
+    color: #856404;
+}
+
+.btn-retry {
+    background: linear-gradient(45deg, #f4623a, #e4552f);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-retry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(244, 98, 58, 0.3);
+    color: white;
+}
+
+.btn-support {
+    background: linear-gradient(45deg, #6c757d, #5a6268);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-support:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+    color: white;
+}
+
+.support-info {
+    background: #d1ecf1;
+    border-left: 4px solid #17a2b8;
+    padding: 1.5rem;
+    border-radius: 5px;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.support-info h5 {
+    color: #0c5460;
+    margin-bottom: 1rem;
+}
+
+.support-info p {
+    color: #0c5460;
+    margin-bottom: 0.5rem;
+}
+
+.support-contact {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.support-contact strong {
+    color: #495057;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="failure-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="failure-card">
+                    <div class="failure-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    
+                    <h1 class="failure-title">Pagamento Não Aprovado</h1>
+                    <p class="failure-subtitle">Infelizmente, não foi possível processar seu pagamento.</p>
+                    
+                    <div class="possible-causes">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Possíveis Causas</h5>
+                        <ul>
+                            <li>Dados do cartão incorretos ou expirados</li>
+                            <li>Limite insuficiente no cartão</li>
+                            <li>Cartão bloqueado ou com restrições</li>
+                            <li>Problemas temporários com o processador de pagamento</li>
+                            <li>Cancelamento durante o processo</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-buttons mt-4">
+                        <a href="{% url 'contracts:catalog' %}" class="btn-retry">
+                            <i class="fas fa-redo me-2"></i>Tentar Novamente
+                        </a>
+                        
+                        <a href="{% url 'core:contact' %}" class="btn-support">
+                            <i class="fas fa-headset me-2"></i>Falar com Suporte
+                        </a>
+                    </div>
+                    
+                    <div class="support-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>O que Fazer Agora?</h5>
+                        <p><strong>1. Verificar dados:</strong> Confirme se os dados do cartão estão corretos</p>
+                        <p><strong>2. Verificar limite:</strong> Certifique-se de que há limite disponível</p>
+                        <p><strong>3. Tentar outro método:</strong> Use outro cartão ou método de pagamento</p>
+                        <p><strong>4. Aguardar:</strong> Se for problema temporário, tente novamente em alguns minutos</p>
+                        
+                        <div class="support-contact">
+                            <strong>Precisa de Ajuda?</strong><br>
+                            <i class="fas fa-envelope me-2"></i>contato@centralcontratos.com<br>
+                            <i class="fas fa-phone me-2"></i>(11) 9999-9999<br>
+                            <i class="fas fa-clock me-2"></i>Segunda a Sexta: 8h às 18h
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Seus dados estão seguros. Nenhuma cobrança foi realizada.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animação de entrada
+document.addEventListener('DOMContentLoaded', function() {
+    const card = document.querySelector('.failure-card');
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    
+    setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
+{% endblock %}

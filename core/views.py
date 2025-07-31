@@ -93,3 +93,7 @@ def privacy_view(request):
         }
     }
     return render(request, 'core/privacy.html', context)
+
+def payment_error_view(request):
+    """View para página de erro no pagamento"""
+    return render(request, 'core/payment_error.html')

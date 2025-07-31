@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.utils import timezone
 from django.urls import reverse
 # from weasyprint import HTML, CSS
@@ -412,3 +412,290 @@ def meus_contratos_locacao_residencial_view(request):
     return render(request, 'contracts/meus_contratos_locacao_residencial.html', {
         'contratos': contratos
     })
+
+
+# =====================================================================
+# VIEWS DO MERCADO PAGO
+# =====================================================================
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+@login_required
+def create_payment_preference(request, contract_id):
+    """Cria preferência de pagamento no Mercado Pago"""
+    contract = get_object_or_404(Contract, id=contract_id, user=request.user)
+    
+    try:
+        # Obter ou criar pagamento
+        payment, created = Payment.objects.get_or_create(
+            contract=contract,
+            defaults={
+                'amount': contract.contract_type.price,
+                'status': 'pending'
+            }
+        )
+        
+        from .mercado_pago import mercado_pago_service
+        
+        # Criar preferência
+        result = mercado_pago_service.create_preference(payment, request)
+        
+        if result['success']:
+            # Redirecionar para o checkout do Mercado Pago
+            checkout_url = result['sandbox_init_point']  # Para produção: result['init_point']
+            return redirect(checkout_url)
+        else:
+            messages.error(request, result['error'])
+            return redirect('contracts:contract_detail', pk=contract.id)
+            
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Erro ao criar preferência: {str(e)}")
+        messages.error(request, 'Erro ao processar pagamento. Tente novamente.')
+        return redirect('contracts:contract_detail', pk=contract.id)
+        return redirect('contracts:contract_detail', pk=contract.id)
+
+
+@login_required
+def payment_success(request):
+    """Página de sucesso do pagamento"""
+    payment_id = request.GET.get('payment_id')
+    status = request.GET.get('status')
+    external_reference = request.GET.get('external_reference')
+    contract_id = request.GET.get('contract_id')  # Para auto_return
+    collection_id = request.GET.get('collection_id')
+    
+    context = {
+        'payment_id': payment_id,
+        'status': status,
+        'external_reference': external_reference,
+        'contract_id': contract_id,
+        'collection_id': collection_id
+    }
+    
+    # Priorizar contract_id do auto_return, depois external_reference
+    target_contract_id = contract_id or external_reference
+    
+    # Buscar contrato se temos a referência
+    if target_contract_id:
+        try:
+            contract = Contract.objects.get(id=int(target_contract_id))
+            context['contract'] = contract
+            
+            # Se temos um pagamento aprovado, redirecionar automaticamente para download
+            if status == 'approved' or (payment_id and collection_id):
+                messages.success(request, f'Pagamento aprovado! Contrato {contract.contract_type.name} processado com sucesso.')
+                return redirect('contracts:download_contract', pk=contract.id)
+            
+            # Atualizar status do pagamento se necessário
+            if payment_id:
+                from .mercado_pago import mercado_pago_service
+                payment_info = mercado_pago_service.get_payment_info(payment_id)
+                
+                if payment_info['success']:
+                    payment_data = payment_info['payment']
+                    
+                    # Atualizar ou criar pagamento
+                    payment, created = Payment.objects.get_or_create(
+                        contract=contract,
+                        defaults={
+                            'amount': contract.contract_type.price,
+                            'status': 'pending'
+                        }
+                    )
+                    
+                    payment.update_from_mercadopago(payment_data)
+                    context['payment'] = payment
+                    
+                    # Se pagamento foi aprovado, redirecionar para download
+                    if payment.status == 'approved':
+                        messages.success(request, f'Pagamento confirmado! Baixe seu contrato agora.')
+                        return redirect('contracts:download_contract', pk=contract.id)
+                    
+        except (Contract.DoesNotExist, ValueError):
+            pass
+    
+    return render(request, 'contracts/payment_success.html', context)
+
+
+@login_required 
+def payment_failure(request):
+    """Página de falha no pagamento"""
+    return render(request, 'contracts/payment_failure.html')
+
+
+@login_required
+def payment_pending(request):
+    """Página de pagamento pendente"""
+    contract_id = request.GET.get('contract_id')
+    external_reference = request.GET.get('external_reference')
+    
+    context = {
+        'contract_id': contract_id,
+        'external_reference': external_reference
+    }
+    
+    # Buscar contrato se temos a referência
+    target_contract_id = contract_id or external_reference
+    if target_contract_id:
+        try:
+            contract = Contract.objects.get(id=int(target_contract_id))
+            context['contract'] = contract
+        except (Contract.DoesNotExist, ValueError):
+            pass
+    
+    return render(request, 'contracts/payment_pending.html', context)
+
+
+@csrf_exempt
+@require_http_methods(["POST", "GET"])
+def payment_webhook(request):
+    """Webhook para notificações do Mercado Pago"""
+    try:
+        from .mercado_pago import mercado_pago_service
+        
+        result = mercado_pago_service.process_webhook(request)
+        
+        if result['success']:
+            return HttpResponse("OK", status=200)
+        else:
+            return HttpResponse("Error", status=400)
+            
+    except Exception as e:
+        logger.error(f"Erro no webhook: {str(e)}")
+        return HttpResponse("Error", status=500)
+
+
+@login_required
+def download_contract(request, contract_id):
+    """Download do contrato após pagamento aprovado"""
+    contract = get_object_or_404(Contract, id=contract_id, user=request.user)
+    
+    # Verificar se o pagamento foi aprovado
+    try:
+        payment = Payment.objects.get(contract=contract)
+        if not payment.is_paid:
+            messages.error(request, 'Pagamento não aprovado. Não é possível baixar o contrato.')
+            return redirect('contracts:contract_detail', pk=contract.id)
+    except Payment.DoesNotExist:
+        messages.error(request, 'Pagamento não encontrado.')
+        return redirect('contracts:contract_detail', pk=contract.id)
+    
+    # Aqui você implementaria a geração do PDF
+    # Por enquanto, vamos mostrar uma página com as informações
+    return render(request, 'contracts/download_contract.html', {
+        'contract': contract,
+        'payment': payment
+    })
+
+
+@login_required
+def payment_status(request, contract_id):
+    """API para verificar status do pagamento"""
+    contract = get_object_or_404(Contract, id=contract_id, user=request.user)
+    
+    try:
+        payment = Payment.objects.get(contract=contract)
+        
+        return JsonResponse({
+            'status': payment.status,
+            'is_paid': payment.is_paid,
+            'payment_date': payment.payment_date.isoformat() if payment.payment_date else None,
+            'amount': str(payment.amount)
+        })
+        
+    except Payment.DoesNotExist:
+        return JsonResponse({
+            'status': 'not_found',
+            'is_paid': False
+        })
+
+@login_required
+def payment_status_check(request, contract_id):
+    """View para verificar status do pagamento via AJAX"""
+    try:
+        contract = get_object_or_404(Contract, id=contract_id, user=request.user)
+        payment = contract.payment
+        
+        return JsonResponse({
+            'status': payment.status,
+            'is_paid': payment.is_paid,
+            'payment_date': payment.payment_date.isoformat() if payment.payment_date else None,
+            'amount': str(payment.amount)
+        })
+        
+    except Payment.DoesNotExist:
+        return JsonResponse({
+            'status': 'not_found',
+            'is_paid': False
+        })
+
+@login_required
+def payment_page_view(request, contract_id):
+    """Página de pagamento - exibe dados do contrato antes do pagamento"""
+    contract = get_object_or_404(Contract, id=contract_id, user=request.user)
+    
+    # Verificar se já existe pagamento para este contrato
+    try:
+        payment = Payment.objects.get(contract=contract)
+        if payment.is_paid:
+            # Se já foi pago, redirecionar para download
+            return redirect('contracts:contract_detail', pk=contract.id)
+    except Payment.DoesNotExist:
+        # Se não existe pagamento, será criado na próxima etapa
+        payment = None
+    
+    context = {
+        'contract': contract,
+        'payment': payment,
+        'contract_type': contract.contract_type,
+    }
+    
+    return render(request, 'contracts/payment.html', context)
+
+@login_required
+def process_payment_view(request, contract_id):
+    """Processa o pagamento - cria preferência e redireciona para MP"""
+    contract = get_object_or_404(Contract, id=contract_id, user=request.user)
+    
+    try:
+        # Obter ou criar pagamento
+        payment, created = Payment.objects.get_or_create(
+            contract=contract,
+            defaults={
+                'amount': contract.contract_type.price,
+                'status': 'pending'
+            }
+        )
+        
+        # Verificar se já foi pago
+        if payment.is_paid:
+            messages.success(request, 'Este contrato já foi pago!')
+            return redirect('contracts:contract_detail', pk=contract.id)
+        
+        from .mercado_pago import mercado_pago_service
+        
+        # Criar preferência no Mercado Pago
+        result = mercado_pago_service.create_preference(payment, request)
+        
+        if result['success']:
+            # Redirecionar para o checkout do Mercado Pago
+            checkout_url = result['sandbox_init_point']  # Para produção: result['init_point']
+            return redirect(checkout_url)
+        else:
+            messages.error(request, f"Erro ao processar pagamento: {result['error']}")
+            return redirect('contracts:payment_page', contract_id=contract.id)
+            
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Erro ao processar pagamento: {str(e)}")
+        messages.error(request, 'Erro interno. Tente novamente em alguns instantes.')
+        return redirect('contracts:payment_page', contract_id=contract.id)

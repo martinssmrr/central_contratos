@@ -10,4 +10,5 @@ urlpatterns = [
     path('faq/', views.faq_view, name='faq'),
     path('terms/', views.terms_view, name='terms'),
     path('privacy/', views.privacy_view, name='privacy'),
+    path('pagamento/erro/', views.payment_error_view, name='payment_error'),
 ]

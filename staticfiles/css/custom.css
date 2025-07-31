@@ -371,9 +371,13 @@ section.py-5.bg-light .container {
 .py-5 .lead {
     font-size: 1.2rem;
     line-height: 1.7;
-    color: #6c757d;
+    color: #000000 ;
     font-weight: 300;
     margin-bottom: 2rem;
+}
+
+.mm {
+    color: #000000 !important;
 }
 
 .py-5 .text-muted {
@@ -402,6 +406,8 @@ section.py-5.bg-light .container {
     transform: scale(1.1);
     box-shadow: 0 8px 25px rgba(244, 98, 58, 0.3);
 }
+
+
 
 .py-5 .card:hover .feature-icon i {
     transform: rotate(5deg);

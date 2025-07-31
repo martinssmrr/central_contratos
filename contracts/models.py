@@ -200,6 +200,11 @@ class Payment(models.Model):
         ('approved', 'Aprovado'),
         ('cancelled', 'Cancelado'),
         ('failed', 'Falhou'),
+        ('in_process', 'Em Processo'),
+        ('in_mediation', 'Em Mediação'),
+        ('rejected', 'Rejeitado'),
+        ('refunded', 'Reembolsado'),
+        ('charged_back', 'Estornado'),
     ]
     
     PAYMENT_METHODS = [
@@ -207,15 +212,27 @@ class Payment(models.Model):
         ('debit_card', 'Cartão de Débito'),
         ('pix', 'PIX'),
         ('boleto', 'Boleto'),
+        ('account_money', 'Saldo no Mercado Pago'),
     ]
     
     contract = models.OneToOneField(Contract, on_delete=models.CASCADE, verbose_name='Contrato')
     status = models.CharField('Status', max_length=20, choices=STATUS_CHOICES, default='pending')
-    payment_method = models.CharField('Método de Pagamento', max_length=20, choices=PAYMENT_METHODS)
+    payment_method = models.CharField('Método de Pagamento', max_length=20, choices=PAYMENT_METHODS, blank=True, null=True)
     amount = models.DecimalField('Valor', max_digits=10, decimal_places=2)
+    
+    # Campos específicos do Mercado Pago
+    preference_id = models.CharField('ID da Preferência MP', max_length=100, blank=True, null=True)
+    payment_id = models.CharField('ID do Pagamento MP', max_length=100, blank=True, null=True)
+    merchant_order_id = models.CharField('ID da Ordem MP', max_length=100, blank=True, null=True)
+    
+    # Campos legados (manter compatibilidade)
     transaction_id = models.CharField('ID da Transação', max_length=100, blank=True, null=True)
     payment_date = models.DateTimeField('Data do Pagamento', blank=True, null=True)
     created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    
+    # Campos adicionais
+    external_reference = models.CharField('Referência Externa', max_length=100, blank=True, null=True)
+    notification_data = models.JSONField('Dados da Notificação', default=dict, blank=True)
     
     class Meta:
         verbose_name = 'Pagamento'
@@ -224,6 +241,24 @@ class Payment(models.Model):
     
     def __str__(self):
         return f"Pagamento {self.contract} - {self.get_status_display()}"
+    
+    @property
+    def is_paid(self):
+        """Retorna True se o pagamento foi aprovado"""
+        return self.status == 'approved'
+    
+    def update_from_mercadopago(self, payment_data):
+        """Atualiza dados do pagamento com informações do Mercado Pago"""
+        self.payment_id = str(payment_data.get('id', ''))
+        self.status = payment_data.get('status', 'pending')
+        self.payment_method = payment_data.get('payment_method_id', '')
+        
+        if payment_data.get('date_approved'):
+            from django.utils.dateparse import parse_datetime
+            self.payment_date = parse_datetime(payment_data['date_approved'])
+        
+        self.notification_data = payment_data
+        self.save()
 
 
 class CompraVendaImovel(models.Model):
