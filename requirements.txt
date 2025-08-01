@@ -1,5 +1,5 @@
-Django==4.2.23
-Pillow==11.1.0
+Django==4.2.11
+Pillow==8.4.0
 WeasyPrint==63.1
 django-crispy-forms==2.3
 crispy-bootstrap5==2025.6
