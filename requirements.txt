@@ -2,7 +2,7 @@ Django==4.2.11
 Pillow==8.4.0
 WeasyPrint==63.1
 django-crispy-forms==2.3
-crispy-bootstrap5==2025.6
+crispy-bootstrap5==2024.10
 python-decouple==3.8
 django-allauth==64.2.1
 requests==2.32.3
