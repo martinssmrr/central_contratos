@@ -369,6 +369,22 @@ tokens.json
 private_key*
 *.private
 
+# Google OAuth credentials (never commit)
+google_credentials.json
+client_secret*.json
+*client_secret*
+*oauth*secret*
+.env.real
+.env.production
+.env.local
+
+# Any file containing sensitive credentials
+*secret*
+*credential*
+*token*
+*key*.json
+*oauth*.json
+
 # ========================================
 # END OF .gitignore
 # ========================================

@@ -53,8 +53,8 @@ Este projeto foi configurado seguindo as **melhores práticas de segurança**:
 
 ```env
 # Arquivo .env (local apenas)
-GOOGLE_CLIENT_ID=322432672759-1oo7mv04rlmchslnf3u59eh1p2o62k3l.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
 ```
 
 ### 🌐 URIs DE CALLBACK CONFIGURADAS:
