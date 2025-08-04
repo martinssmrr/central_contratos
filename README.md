@@ -1,16 +1,25 @@
-# Central de Contratos - Sistema de Venda de Contratos Jurídicos
+# 🏆 Central de Contratos - Sistema de Venda de Contratos Jurídicos
 
 ## 📋 Descrição
 
-Sistema completo em Django para venda automatizada de contratos jurídicos personalizados em PDF. O sistema permite que usuários escolham tipos de contratos, preencham dados específicos, realizem pagamentos e baixem contratos profissionais automaticamente.
+Sistema completo em Django para venda automatizada de contratos jurídicos personalizados. Plataforma e-commerce com integração Mercado Pago, geração de documentos e painel administrativo completo.
 
-## 🚀 Funcionalidades
+## 🚀 Tecnologias Principais
+
+- **Backend:** Django 4.2.11 (Python)
+- **Frontend:** Bootstrap 5.3.0 + Font Awesome 6.0.0
+- **Pagamentos:** Mercado Pago SDK 2.2.3
+- **PDF:** WeasyPrint 63.1
+- **Deploy:** PythonAnywhere
+- **Database:** SQLite (dev) / MySQL (prod)
+
+## 🌟 Funcionalidades Implementadas
 
 ### 🏠 Página Inicial
 - Apresentação do serviço com design moderno
 - Destaque dos principais tipos de contratos
 - Chamada para ação clara
-- Layout responsivo com Bootstrap 5
+- Layout responsivo otimizado
 
 ### 📚 Catálogo de Contratos
 Tipos de contratos disponíveis:
@@ -20,34 +29,27 @@ Tipos de contratos disponíveis:
 - **Compra e Venda** - R$ 69,90
 - **Confissão de Dívida** - R$ 39,90
 - **Freelancer** - R$ 59,90
+- **Contrato de Teste MP** - R$ 1,00 (para testes)
 
-### 📝 Formulários Personalizados
-- Formulários específicos para cada tipo de contrato
-- Validação completa dos dados
-- Interface intuitiva com Crispy Forms
-- Campos obrigatórios e opcionais claramente identificados
+### 💳 Sistema de Pagamento Completo
+- **Mercado Pago integrado** (PIX, Cartão, Boleto)
+- **Auto-return inteligente** (prod/dev)
+- **Webhooks configurados** para notificações
+- **Status em tempo real** de pagamentos
+- **Histórico completo** de transações
 
-### 💳 Sistema de Pagamento
-- Múltiplos métodos: Cartão, PIX, Boleto
-- Simulação de processamento automático
-- Status de pagamento em tempo real
-- Histórico de transações
-
-### 📄 Geração de PDF
-- Contratos profissionais automatizados
-- Layout juridicamente válido
-- Dados personalizados inseridos automaticamente
-- Download instantâneo após pagamento
-
-### 👤 Área do Cliente
-- Sistema completo de autenticação
+### � Sistema de Usuários
+- Autenticação completa (Login/Register)
+- **Google OAuth** integrado
 - Perfil personalizável com avatar
-- Histórico de contratos gerados
-- Re-download de PDFs anteriores
+- Histórico de contratos e pagamentos
+- Re-download de documentos
 
 ### 🔧 Painel Administrativo
-- Dashboard com estatísticas
-- Relatórios de contratos e pagamentos
+- **Dashboard executivo** com métricas
+- Gerenciamento de contratos e categorias
+- **Sistema de FAQ** completo
+- Relatórios de vendas e usuários
 - Gerenciamento de usuários
 - Analytics de vendas por período
 
@@ -273,6 +275,169 @@ python manage.py migrate --run-syncdb
 ### Problemas de Estáticos
 ```bash
 python manage.py collectstatic
+```
+
+## 🌐 Deploy no PythonAnywhere
+
+### 📋 Pré-requisitos
+- Conta no PythonAnywhere
+- Repositório Git configurado
+- Arquivos `.gitignore` e `.gitattributes` criados
+
+### 🚀 Passo a Passo
+
+#### 1. Preparar o Repositório
+```bash
+# Commit todas as mudanças
+git add .
+git commit -m "Preparando para deploy no PythonAnywhere"
+git push origin main
+```
+
+#### 2. Configurar no PythonAnywhere Console
+```bash
+# Acessar console Bash no PythonAnywhere
+# Clone o repositório
+cd ~
+git clone https://github.com/martinssmrr/central_contratos.git
+cd central_contratos
+
+# Criar ambiente virtual
+python3.10 -m venv .venv
+source .venv/bin/activate
+
+# Instalar dependências
+pip install -r requirements.txt
+```
+
+#### 3. Configurar WSGI
+Editar `/var/www/martinssmrr_pythonanywhere_com_wsgi.py`:
+```python
+import os
+import sys
+
+# Adicionar projeto ao path
+path = '/home/martinssmrr/central_contratos'
+if path not in sys.path:
+    sys.path.insert(0, path)
+
+# Configurar Django settings
+os.environ['DJANGO_SETTINGS_MODULE'] = 'setup.settings_production'
+
+# Variáveis de ambiente para produção
+os.environ.setdefault('DEBUG', 'False')
+os.environ.setdefault('ALLOWED_HOSTS', 'martinssmrr.pythonanywhere.com')
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+```
+
+#### 4. Configurar Web App (Interface Web)
+- **Source code:** `/home/martinssmrr/central_contratos`
+- **Working directory:** `/home/martinssmrr/central_contratos`
+- **Virtualenv:** `/home/martinssmrr/central_contratos/.venv`
+
+**Static files:**
+- **URL:** `/static/`
+- **Directory:** `/home/martinssmrr/central_contratos/staticfiles/`
+
+**Media files:**
+- **URL:** `/media/`
+- **Directory:** `/home/martinssmrr/central_contratos/media/`
+
+#### 5. Configurar Variáveis de Ambiente
+Criar arquivo `.env` no diretório do projeto:
+```env
+DEBUG=False
+SECRET_KEY=sua-chave-secreta-super-segura-aqui
+MERCADO_PAGO_ACCESS_TOKEN=seu-token-producao
+MERCADO_PAGO_PUBLIC_KEY=sua-chave-publica-producao
+EMAIL_HOST_USER=seuemail@gmail.com
+EMAIL_HOST_PASSWORD=senha-app-gmail
+DEFAULT_FROM_EMAIL=noreply@centraldecontratos.com
+CONTACT_EMAIL=contato@centraldecontratos.com
+BASE_URL=https://martinssmrr.pythonanywhere.com
+```
+
+#### 6. Executar Comandos Finais
+```bash
+# Ativar ambiente virtual
+source .venv/bin/activate
+
+# Aplicar migrações
+python manage.py migrate --settings=setup.settings_production
+
+# Coletar arquivos estáticos
+python manage.py collectstatic --noinput --settings=setup.settings_production
+
+# Criar superusuário (opcional)
+python manage.py createsuperuser --settings=setup.settings_production
+
+# Popular banco com dados iniciais
+python populate_db.py
+```
+
+#### 7. Recarregar Web App
+- Acessar aba **Web** no PythonAnywhere
+- Clicar em **Reload martinssmrr.pythonanywhere.com**
+
+### ✅ Verificação do Deploy
+
+#### URLs para Testar:
+- **Home:** https://martinssmrr.pythonanywhere.com
+- **Admin:** https://martinssmrr.pythonanywhere.com/admin/
+- **Catálogo:** https://martinssmrr.pythonanywhere.com/contracts/catalog/
+- **Login:** https://martinssmrr.pythonanywhere.com/users/login/
+
+#### Checklist Pós-Deploy:
+- [ ] Site carregando corretamente
+- [ ] Static files sendo servidos
+- [ ] Admin panel acessível
+- [ ] Login funcionando
+- [ ] Mercado Pago testado
+- [ ] Formulários de contato operacionais
+
+### 🔧 Troubleshooting
+
+#### Problemas Comuns:
+
+**1. Erro 500 - Internal Server Error**
+```bash
+# Verificar logs
+tail -f /var/log/martinssmrr.pythonanywhere.com.error.log
+```
+
+**2. Static files não carregando**
+```bash
+# Re-executar collectstatic
+python manage.py collectstatic --noinput --clear
+```
+
+**3. Erro de importação**
+```bash
+# Verificar PYTHONPATH no WSGI
+import sys
+print(sys.path)
+```
+
+**4. Erro de database**
+```bash
+# Aplicar migrações novamente
+python manage.py migrate --settings=setup.settings_production
+```
+
+### 🔄 Atualizações
+
+Para atualizar o projeto em produção:
+```bash
+# No console PythonAnywhere
+cd ~/central_contratos
+git pull origin main
+source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate --settings=setup.settings_production
+python manage.py collectstatic --noinput --settings=setup.settings_production
+# Recarregar web app via interface
 ```
 
 ## 📝 Licença
