@@ -1,0 +1,256 @@
+# ========================================
+# .gitattributes para Central de Contratos
+# Configuração de line endings e arquivos
+# ========================================
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# ========================================
+# Source Code Files
+# ========================================
+
+# Python files
+*.py text eol=lf
+*.pyw text eol=lf
+*.pyx text eol=lf
+*.pxd text eol=lf
+*.pxi text eol=lf
+
+# Web files
+*.html text eol=lf
+*.htm text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.sass text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+
+# Template files
+*.jinja text eol=lf
+*.jinja2 text eol=lf
+*.j2 text eol=lf
+
+# ========================================
+# Configuration Files
+# ========================================
+
+# Django
+*.ini text eol=lf
+*.cfg text eol=lf
+manage.py text eol=lf
+wsgi.py text eol=lf
+asgi.py text eol=lf
+settings.py text eol=lf
+urls.py text eol=lf
+
+# Requirements and dependencies
+requirements.txt text eol=lf
+requirements-*.txt text eol=lf
+Pipfile text eol=lf
+poetry.lock text eol=lf
+pyproject.toml text eol=lf
+
+# Environment files
+.env text eol=lf
+.env.* text eol=lf
+*.env text eol=lf
+
+# ========================================
+# Documentation and Text Files
+# ========================================
+
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+*.rtf text eol=lf
+*.log text eol=lf
+
+# License files
+LICENSE text eol=lf
+COPYING text eol=lf
+COPYRIGHT text eol=lf
+NOTICE text eol=lf
+
+# Other text files
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.conf text eol=lf
+*.properties text eol=lf
+
+# ========================================
+# Shell and Script Files
+# ========================================
+
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# ========================================
+# Database Files
+# ========================================
+
+*.sql text eol=lf
+*.dump text eol=lf
+
+# Django migrations
+*/migrations/*.py text eol=lf
+
+# ========================================
+# Binary Files
+# ========================================
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.tiff binary
+*.tif binary
+*.bmp binary
+*.webp binary
+*.svg text eol=lf
+*.ico binary
+
+# Audio
+*.mp3 binary
+*.wav binary
+*.flac binary
+*.aac binary
+*.ogg binary
+
+# Video
+*.mp4 binary
+*.avi binary
+*.mov binary
+*.wmv binary
+*.flv binary
+*.webm binary
+
+# Documents
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+*.odt binary
+*.ods binary
+*.odp binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.tar.gz binary
+*.tar.bz2 binary
+*.tar.xz binary
+*.rar binary
+*.7z binary
+*.gz binary
+*.bz2 binary
+
+# Fonts
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+
+# Executables
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+
+# ========================================
+# Django Specific
+# ========================================
+
+# Static files (compiled)
+staticfiles/** binary
+
+# Media uploads
+media/** binary
+
+# Database files
+*.sqlite3 binary
+*.db binary
+
+# ========================================
+# Development Tools
+# ========================================
+
+# Git
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.gitmodules text eol=lf
+
+# Editor configs
+.editorconfig text eol=lf
+.vscode/** text eol=lf
+.idea/** text eol=lf
+
+# Linting and formatting
+.pylintrc text eol=lf
+.flake8 text eol=lf
+.black text eol=lf
+pyproject.toml text eol=lf
+setup.cfg text eol=lf
+tox.ini text eol=lf
+
+# Testing
+pytest.ini text eol=lf
+.coveragerc text eol=lf
+.pytest_cache/** binary
+
+# ========================================
+# Security Settings
+# ========================================
+
+# Treat these as binary to prevent accidental text modifications
+*.key binary
+*.crt binary
+*.pem binary
+*.p12 binary
+*.pfx binary
+
+# ========================================
+# Language Specific Attributes
+# ========================================
+
+# Python
+*.py linguist-language=Python
+*.pyw linguist-language=Python
+
+# Django templates
+*.html linguist-language=HTML
+templates/** linguist-language=HTML
+
+# JavaScript
+*.js linguist-language=JavaScript
+static/js/** linguist-language=JavaScript
+
+# CSS
+*.css linguist-language=CSS
+static/css/** linguist-language=CSS
+
+# ========================================
+# Export Ignore (for git archive)
+# ========================================
+
+.gitattributes export-ignore
+.gitignore export-ignore
+.github/ export-ignore
+tests/ export-ignore
+docs/ export-ignore
+*.md export-ignore

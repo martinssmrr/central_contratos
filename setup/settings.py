@@ -171,7 +171,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 
-# Google OAuth2 Settings - Configuração explícita para múltiplos domínios
+# Google OAuth2 Settings - Configuração segura usando variáveis de ambiente
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -185,12 +185,15 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# URLs de callback autorizadas (para referência - devem estar configuradas no Google Cloud Console)
-# URIs de redirecionamento que devem estar configuradas no Google Cloud Console:
+# IMPORTANTE: As credenciais do Google OAuth são configuradas via:
+# 1. Arquivo .env (desenvolvimento local)
+# 2. Banco de dados através do Django Admin (SocialApp)
+# 3. Variáveis de ambiente do servidor (produção)
+#
+# URLs de callback que devem estar configuradas no Google Cloud Console:
 # - http://localhost:8000/accounts/google/login/callback/
 # - http://127.0.0.1:8000/accounts/google/login/callback/
 # - http://centralcontratos.pythonanywhere.com/accounts/google/login/callback/
-
 # Email settings for development
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@centraldecontratos.com'
