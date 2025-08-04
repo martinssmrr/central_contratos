@@ -1,0 +1,569 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-hero {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .checkout-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="checkout-pattern" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="2" fill="%23f4623a" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23checkout-pattern)"/></svg>') repeat;
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    .checkout-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: #f4623a;
+        font-size: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: #6c757d;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .checkout-card {
+        border: 1px solid rgba(244, 98, 58, 0.1);
+        border-radius: 20px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: relative;
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    
+    .checkout-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(135deg, #f4623a, #e4552f);
+    }
+    
+    .checkout-steps {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+    
+    .step {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .step.active {
+        background: rgba(244, 98, 58, 0.1);
+        border: 1px solid rgba(244, 98, 58, 0.2);
+    }
+    
+    .step-number {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f4623a;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+    
+    .step.completed .step-number {
+        background: #28a745;
+    }
+    
+    .payment-method-card {
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        margin-bottom: 1rem;
+    }
+    
+    .payment-method-card:hover {
+        border-color: #f4623a;
+        background: rgba(244, 98, 58, 0.05);
+    }
+    
+    .payment-method-card.selected {
+        border-color: #f4623a;
+        background: rgba(244, 98, 58, 0.1);
+    }
+    
+    .payment-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+    
+    .payment-icon.pix {
+        background: linear-gradient(135deg, #00B7AB, #00A699);
+        color: white;
+    }
+    
+    .payment-icon.credit_card {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+    }
+    
+    .payment-icon.debit_card {
+        background: linear-gradient(135deg, #6f42c1, #5a2d91);
+        color: white;
+    }
+    
+    .payment-icon.boleto {
+        background: linear-gradient(135deg, #fd7e14, #e85d04);
+        color: white;
+    }
+    
+    .order-summary {
+        background: linear-gradient(135deg, #f4623a, #e4552f);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 25px rgba(244, 98, 58, 0.3);
+        position: sticky;
+        top: 2rem;
+    }
+    
+    .summary-item {
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .contract-mini {
+        display: flex;
+        align-items: center;
+    }
+    
+    .contract-mini-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1rem;
+    }
+    
+    .total-section {
+        border-top: 2px solid rgba(255, 255, 255, 0.3);
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .total-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+    
+    .place-order-btn {
+        background: white;
+        color: #f4623a;
+        border: none;
+        border-radius: 15px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+    
+    .place-order-btn:hover {
+        background: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .security-badges {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .security-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .order-summary {
+            margin-top: 2rem;
+            position: static;
+        }
+        
+        .payment-method-card {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Checkout Hero Section -->
+<section class="py-5 checkout-hero">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto hero-content">
+                <div class="checkout-icon mb-4">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h1 class="hero-title">Finalizar Compra</h1>
+                <p class="hero-subtitle">
+                    Você está quase lá! Preencha os dados para concluir seu pedido.
+                    <br><strong>{{ total_items }} contrato{{ total_items|pluralize }}</strong> por <strong>R$ {{ total_price|floatformat:2 }}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Checkout Content -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <form method="post" id="checkout-form">
+            {% csrf_token %}
+            <div class="row">
+                <!-- Checkout Form -->
+                <div class="col-lg-8">
+                    <div class="card checkout-card">
+                        <div class="card-body p-4">
+                            <!-- Progress Steps -->
+                            <div class="checkout-steps">
+                                <h6 class="text-primary mb-3">
+                                    <i class="fas fa-list-ol me-2"></i>Etapas do Checkout
+                                </h6>
+                                <div class="step completed">
+                                    <div class="step-number">1</div>
+                                    <div>
+                                        <strong>Revisão do Carrinho</strong>
+                                        <br><small class="text-muted">Contratos selecionados</small>
+                                    </div>
+                                </div>
+                                <div class="step active">
+                                    <div class="step-number">2</div>
+                                    <div>
+                                        <strong>Dados Pessoais</strong>
+                                        <br><small class="text-muted">Informações do comprador</small>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div>
+                                        <strong>Pagamento</strong>
+                                        <br><small class="text-muted">Método de pagamento</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Customer Information -->
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-user me-2"></i>Dados Pessoais
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.full_name.id_for_label }}" class="form-label">
+                                            {{ form.full_name.label }}
+                                        </label>
+                                        {{ form.full_name }}
+                                        {% if form.full_name.errors %}
+                                            <div class="text-danger small">{{ form.full_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.email.id_for_label }}" class="form-label">
+                                            {{ form.email.label }}
+                                        </label>
+                                        {{ form.email }}
+                                        {% if form.email.errors %}
+                                            <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Method -->
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-credit-card me-2"></i>Método de Pagamento
+                                </h5>
+                                <div class="row">
+                                    {% for value, label in form.payment_method.field.choices %}
+                                    <div class="col-md-6 mb-3">
+                                        <div class="payment-method-card" data-payment="{{ value }}">
+                                            <div class="d-flex align-items-center">
+                                                <div class="payment-icon {{ value }}">
+                                                    {% if value == 'pix' %}
+                                                        <i class="fas fa-qrcode"></i>
+                                                    {% elif value == 'credit_card' %}
+                                                        <i class="fas fa-credit-card"></i>
+                                                    {% elif value == 'debit_card' %}
+                                                        <i class="fas fa-money-check-alt"></i>
+                                                    {% elif value == 'boleto' %}
+                                                        <i class="fas fa-barcode"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" 
+                                                               name="{{ form.payment_method.name }}" 
+                                                               value="{{ value }}" 
+                                                               id="payment_{{ value }}">
+                                                        <label class="form-check-label fw-bold" for="payment_{{ value }}">
+                                                            {{ label }}
+                                                        </label>
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        {% if value == 'pix' %}
+                                                            Aprovação instantânea
+                                                        {% elif value == 'credit_card' %}
+                                                            Parcelamento disponível
+                                                        {% elif value == 'debit_card' %}
+                                                            Débito imediato
+                                                        {% elif value == 'boleto' %}
+                                                            Vencimento em 3 dias
+                                                        {% endif %}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% if form.payment_method.errors %}
+                                    <div class="text-danger small">{{ form.payment_method.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Terms and Conditions -->
+                            <div class="mb-4">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Importante:</strong> Ao finalizar a compra, você concorda com nossos 
+                                    <a href="{% url 'core:terms' %}" target="_blank" class="alert-link">Termos de Uso</a> 
+                                    e <a href="{% url 'core:privacy' %}" target="_blank" class="alert-link">Política de Privacidade</a>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="order-summary">
+                        <h5 class="mb-4">
+                            <i class="fas fa-receipt me-2"></i>Resumo do Pedido
+                        </h5>
+                        
+                        <!-- Cart Items -->
+                        {% for item in cart %}
+                        <div class="summary-item">
+                            <div class="contract-mini">
+                                <div class="contract-mini-icon">
+                                    <i class="{{ item.contract.icon|default:'fas fa-file-contract' }}"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">{{ item.contract.name }}</div>
+                                    <small>Qtd: {{ item.quantity }} x R$ {{ item.price|floatformat:2 }}</small>
+                                </div>
+                            </div>
+                            <div class="text-end mt-2">
+                                <strong>R$ {{ item.total_price|floatformat:2 }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <!-- Total Section -->
+                        <div class="total-section">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <span>R$ {{ total_price|floatformat:2 }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Taxa de processamento:</span>
+                                <span>Grátis</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="total-price">Total:</span>
+                                <span class="total-price">R$ {{ total_price|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Place Order Button -->
+                        <button type="submit" class="place-order-btn btn">
+                            <i class="fas fa-check-circle me-2"></i>Finalizar Compra
+                        </button>
+                        
+                        <!-- Security Badges -->
+                        <div class="security-badges">
+                            <div class="security-badge">
+                                <i class="fas fa-shield-alt"></i><br>
+                                100% Seguro
+                            </div>
+                            <div class="security-badge">
+                                <i class="fas fa-lock"></i><br>
+                                SSL Certificado
+                            </div>
+                            <div class="security-badge">
+                                <i class="fas fa-undo"></i><br>
+                                7 dias garantia
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-white-50">
+                                <i class="fas fa-support me-1"></i>
+                                Suporte 24/7 disponível
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Interatividade para métodos de pagamento
+document.querySelectorAll('.payment-method-card').forEach(card => {
+    card.addEventListener('click', function() {
+        // Remove seleção anterior
+        document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('selected'));
+        
+        // Adiciona seleção atual
+        this.classList.add('selected');
+        
+        // Marca o radio button
+        this.querySelector('input[type="radio"]').checked = true;
+        
+        // Atualiza os steps
+        updateCheckoutSteps();
+    });
+});
+
+// Atualizar steps visuais
+function updateCheckoutSteps() {
+    const form = document.getElementById('checkout-form');
+    const nameField = form.querySelector('[name="full_name"]');
+    const emailField = form.querySelector('[name="email"]');
+    const paymentMethod = form.querySelector('[name="payment_method"]:checked');
+    
+    const steps = document.querySelectorAll('.step');
+    
+    // Step 2 - Dados pessoais
+    if (nameField.value && emailField.value) {
+        steps[1].classList.add('completed');
+        steps[1].classList.remove('active');
+        steps[2].classList.add('active');
+    }
+    
+    // Step 3 - Pagamento
+    if (paymentMethod) {
+        steps[2].classList.add('completed');
+    }
+}
+
+// Monitorar mudanças nos campos
+document.querySelectorAll('#checkout-form input').forEach(input => {
+    input.addEventListener('input', updateCheckoutSteps);
+    input.addEventListener('change', updateCheckoutSteps);
+});
+
+// Validação do formulário
+document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    const nameField = this.querySelector('[name="full_name"]');
+    const emailField = this.querySelector('[name="email"]');
+    const paymentMethod = this.querySelector('[name="payment_method"]:checked');
+    
+    if (!nameField.value || !emailField.value || !paymentMethod) {
+        e.preventDefault();
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+    
+    // Confirmar pedido
+    if (!confirm('Confirma a finalização do pedido?')) {
+        e.preventDefault();
+    }
+});
+
+// Inicializar estado do formulário
+updateCheckoutSteps();
+</script>
+{% endblock %}

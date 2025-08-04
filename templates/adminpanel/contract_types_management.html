@@ -1,0 +1,598 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Controle de Preços - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===============================================
+   CONTROLE DE PREÇOS - CSS MODERNO
+   =============================================== */
+
+.price-management {
+    min-height: 100vh;
+    background: #f8f9fa;
+    padding: 2rem 0;
+}
+
+.management-header {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(39, 174, 96, 0.3);
+}
+
+.contract-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.contract-type-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    border-left: 5px solid #f4623a;
+}
+
+.contract-type-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    color: #fff;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+    animation: float 20s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+}
+
+.card-subtitle {
+    margin: 0.5rem 0 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 2;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 0.875rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    border-color: #f4623a;
+    box-shadow: 0 0 0 0.2rem rgba(244, 98, 58, 0.25);
+}
+
+.price-input {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #27ae60;
+    text-align: center;
+}
+
+.price-input:focus {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 0.2rem rgba(39, 174, 96, 0.25);
+}
+
+.description-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.status-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.status-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #27ae60;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    border: none;
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+}
+
+.save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.save-btn .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 2px;
+}
+
+.alert-custom {
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.contract-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.icon-prestacao { background: linear-gradient(135deg, #3498db, #2980b9); }
+.icon-locacao { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.icon-compra { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.icon-confissao { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.icon-freelancer { background: linear-gradient(135deg, #1abc9c, #16a085); }
+.icon-default { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .contract-types-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .card-header {
+        padding: 1.25rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .contract-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading {
+    animation: pulse 2s infinite;
+}
+
+/* Success feedback */
+.save-success {
+    background: #28a745 !important;
+    transform: scale(1.05);
+}
+
+.save-success::after {
+    content: '✓';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="price-management">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="management-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-cog me-3"></i>
+                        Controle de Preços e Descrições
+                    </h1>
+                    <p class="mb-0 opacity-75">Edite preços, descrições e configurações dos tipos de contrato</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'adminpanel:admin_panel' %}" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar ao Painel
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contratos Grid -->
+        <div class="contract-types-grid">
+            {% for contract_type in contract_types %}
+            <div class="contract-type-card" id="card-{{ contract_type.id }}">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <div class="contract-icon 
+                                    {% if contract_type.slug == 'prestacao_servico' %}icon-prestacao
+                                    {% elif 'locacao' in contract_type.slug %}icon-locacao
+                                    {% elif contract_type.slug == 'compra_venda' %}icon-compra
+                                    {% elif contract_type.slug == 'confissao_divida' %}icon-confissao
+                                    {% elif contract_type.slug == 'freelancer' %}icon-freelancer
+                                    {% else %}icon-default{% endif %}">
+                            {% if contract_type.slug == 'prestacao_servico' %}
+                                <i class="fas fa-handshake"></i>
+                            {% elif 'locacao' in contract_type.slug %}
+                                <i class="fas fa-home"></i>
+                            {% elif contract_type.slug == 'compra_venda' %}
+                                <i class="fas fa-exchange-alt"></i>
+                            {% elif contract_type.slug == 'confissao_divida' %}
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            {% elif contract_type.slug == 'freelancer' %}
+                                <i class="fas fa-laptop-code"></i>
+                            {% else %}
+                                <i class="fas fa-file-contract"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h5 class="card-title">{{ contract_type.name }}</h5>
+                            <p class="card-subtitle">{{ contract_type.slug|capfirst }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Alert Area -->
+                    <div id="alert-{{ contract_type.id }}" style="display: none;"></div>
+                    
+                    <form id="form-{{ contract_type.id }}" onsubmit="updateContractType(event, {{ contract_type.id }})">
+                        <!-- Nome -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-tag"></i>
+                                Nome do Contrato
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   name="name" 
+                                   value="{{ contract_type.name }}" 
+                                   required>
+                        </div>
+                        
+                        <!-- Descrição -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-align-left"></i>
+                                Descrição
+                            </label>
+                            <textarea class="form-control description-textarea" 
+                                      name="description" 
+                                      required>{{ contract_type.description }}</textarea>
+                        </div>
+                        
+                        <!-- Preço -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-dollar-sign"></i>
+                                Preço (R$)
+                            </label>
+                            <input type="number" 
+                                   class="form-control price-input" 
+                                   name="price" 
+                                   value="{{ contract_type.price }}" 
+                                   step="0.01" 
+                                   min="0" 
+                                   required>
+                        </div>
+                        
+                        <!-- Status Ativo -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-power-off"></i>
+                                Status
+                            </label>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-muted">
+                                    {{ contract_type.is_active|yesno:"Ativo,Inativo" }}
+                                </span>
+                                <label class="status-switch">
+                                    <input type="checkbox" 
+                                           name="is_active" 
+                                           {% if contract_type.is_active %}checked{% endif %}>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Botão Salvar -->
+                        <button type="submit" class="btn save-btn" id="btn-{{ contract_type.id }}">
+                            <span class="btn-text">
+                                <i class="fas fa-save me-2"></i>
+                                Salvar Alterações
+                            </span>
+                            <div class="spinner-border d-none" role="status">
+                                <span class="visually-hidden">Salvando...</span>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Informações Adicionais -->
+        <div class="mt-5">
+            <div class="alert alert-info alert-custom">
+                <h6><i class="fas fa-info-circle me-2"></i>Informações Importantes:</h6>
+                <ul class="mb-0">
+                    <li>As alterações são salvas automaticamente no banco de dados</li>
+                    <li>Contratos inativos não aparecem no catálogo para clientes</li>
+                    <li>Mudanças de preço afetam apenas novos contratos</li>
+                    <li>Use descrições claras e objetivas para melhor conversão</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// CSRF Token
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function updateContractType(event, contractTypeId) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const btn = document.getElementById(`btn-${contractTypeId}`);
+    const alertDiv = document.getElementById(`alert-${contractTypeId}`);
+    const card = document.getElementById(`card-${contractTypeId}`);
+    
+    // Show loading state
+    btn.disabled = true;
+    btn.querySelector('.btn-text').style.display = 'none';
+    btn.querySelector('.spinner-border').classList.remove('d-none');
+    card.classList.add('loading');
+    
+    // Collect form data
+    const formData = new FormData(form);
+    const data = {
+        id: contractTypeId,
+        name: formData.get('name'),
+        description: formData.get('description'),
+        price: formData.get('price'),
+        is_active: formData.get('is_active') === 'on'
+    };
+    
+    // Send AJAX request
+    fetch('{% url "adminpanel:update_contract_type_ajax" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Hide loading state
+        btn.disabled = false;
+        btn.querySelector('.btn-text').style.display = 'inline';
+        btn.querySelector('.spinner-border').classList.add('d-none');
+        card.classList.remove('loading');
+        
+        // Show result
+        if (result.success) {
+            showAlert(alertDiv, 'success', result.message);
+            
+            // Success animation
+            btn.classList.add('save-success');
+            setTimeout(() => {
+                btn.classList.remove('save-success');
+            }, 2000);
+            
+            // Update form if needed
+            if (result.data) {
+                form.querySelector('[name="name"]').value = result.data.name;
+                form.querySelector('[name="description"]').value = result.data.description;
+                form.querySelector('[name="price"]').value = result.data.price;
+                form.querySelector('[name="is_active"]').checked = result.data.is_active;
+            }
+            
+        } else {
+            showAlert(alertDiv, 'danger', result.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        
+        // Hide loading state
+        btn.disabled = false;
+        btn.querySelector('.btn-text').style.display = 'inline';
+        btn.querySelector('.spinner-border').classList.add('d-none');
+        card.classList.remove('loading');
+        
+        showAlert(alertDiv, 'danger', 'Erro de conexão. Tente novamente.');
+    });
+}
+
+function showAlert(alertDiv, type, message) {
+    alertDiv.style.display = 'block';
+    alertDiv.className = `alert alert-${type} alert-custom`;
+    alertDiv.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+            ${message}
+        </div>
+    `;
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        alertDiv.style.display = 'none';
+    }, 5000);
+}
+
+// Auto-save on significant changes (optional)
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('form[id^="form-"]');
+    
+    forms.forEach(form => {
+        const inputs = form.querySelectorAll('input, textarea');
+        
+        inputs.forEach(input => {
+            let timeout;
+            
+            input.addEventListener('input', function() {
+                clearTimeout(timeout);
+                
+                // Auto-save after 3 seconds of inactivity
+                timeout = setTimeout(() => {
+                    if (this.checkValidity()) {
+                        const contractId = form.id.split('-')[1];
+                        updateContractType({ preventDefault: () => {}, target: form }, contractId);
+                    }
+                }, 3000);
+            });
+        });
+    });
+    
+    // Real-time price formatting
+    const priceInputs = document.querySelectorAll('.price-input');
+    priceInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (!isNaN(value)) {
+                this.value = value.toFixed(2);
+            }
+        });
+    });
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    // Ctrl + S to save all forms
+    if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        
+        const forms = document.querySelectorAll('form[id^="form-"]');
+        forms.forEach(form => {
+            const contractId = form.id.split('-')[1];
+            updateContractType({ preventDefault: () => {}, target: form }, contractId);
+        });
+    }
+});
+</script>
+{% endblock %}

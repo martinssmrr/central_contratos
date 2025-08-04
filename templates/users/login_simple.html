@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login - Central de Contratos{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <!-- Header Section -->
+                    <div class="text-center mb-4">
+                        <div class="mb-4">
+                            <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                        </div>
+                        <h1 class="h3 fw-bold text-dark mb-2">Bem-vindo de volta!</h1>
+                        <p class="text-muted">Entre na sua conta para acessar seus contratos</p>
+                    </div>
+                    
+                    <!-- Error Messages -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            {% for field, errors in form.errors.items %}
+                                {% if field == '__all__' %}
+                                    {% for error in errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if not form.non_field_errors %}
+                                Usuário ou senha inválidos. Verifique suas credenciais e tente novamente.
+                            {% endif %}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Fechar alerta" aria-label="Fechar"></button>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Success Messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" title="Fechar mensagem" aria-label="Fechar"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <!-- Login Form -->
+                    {% crispy form %}
+                    
+                    <!-- Forgot Password Link -->
+                    <div class="text-center mb-4">
+                        <a href="{% url 'account_reset_password' %}" class="text-decoration-none small">
+                            <i class="fas fa-key me-1"></i>Esqueci minha senha
+                        </a>
+                    </div>
+                    
+                    <!-- Register Link -->
+                    <div class="text-center">
+                        <p class="text-muted mb-0">
+                            Ainda não tem uma conta?
+                            <a href="{% url 'users:register' %}" class="text-decoration-none fw-semibold">
+                                Criar nova conta
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Back to Home -->
+            <div class="text-center mt-4">
+                <a href="{% url 'core:home' %}" class="text-decoration-none text-muted">
+                    <i class="fas fa-arrow-left me-1"></i>
+                    Voltar ao início
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .form-control-lg {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control-lg:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+    
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+    
+    .form-label {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+    
+    .alert {
+        border-radius: 0.5rem;
+        border: none;
+    }
+</style>
+
+<!-- JavaScript for form enhancements -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            const username = form.querySelector('input[name="username"]');
+            const password = form.querySelector('input[name="password"]');
+            
+            if (!username.value.trim() || !password.value.trim()) {
+                event.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

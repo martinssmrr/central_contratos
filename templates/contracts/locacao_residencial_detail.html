@@ -1,0 +1,400 @@
+{% extends 'base.html' %}
+
+{% block title %}Contrato de Locação - {{ contrato.proprietario_nome }} - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contract-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .contract-header {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #007bff;
+    }
+    
+    .section-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    
+    .info-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+        color: #212529;
+    }
+    
+    .actions-section {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .btn-action {
+        margin: 0.5rem;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+    }
+    
+    .btn-secondary-custom {
+        background: #6c757d;
+        color: white;
+        border: none;
+    }
+    
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .highlight-value {
+        background: #e3f2fd;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contract-container">
+    <div class="contract-header">
+        <h1>📋 Contrato de Locação Residencial</h1>
+        <p class="mb-2">{{ contrato.proprietario_nome }} ⇄ {{ contrato.locatario_nome }}</p>
+        <small>Criado em {{ contrato.created_at|date:"d/m/Y às H:i" }}</small>
+    </div>
+    
+    <!-- Dados do Proprietário -->
+    <div class="section-card">
+        <h2 class="section-title">👤 Proprietário</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Nome Completo:</span>
+                <span class="info-value">{{ contrato.proprietario_nome }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Estado Civil:</span>
+                <span class="info-value">{{ contrato.get_proprietario_estado_civil_display }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Nacionalidade:</span>
+                <span class="info-value">{{ contrato.proprietario_nacionalidade }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Profissão:</span>
+                <span class="info-value">{{ contrato.proprietario_profissao }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">RG:</span>
+                <span class="info-value">{{ contrato.proprietario_rg }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">CPF:</span>
+                <span class="info-value">{{ contrato.proprietario_cpf }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Endereço:</span>
+                <span class="info-value">{{ contrato.endereco_completo_proprietario }}</span>
+            </div>
+        </div>
+        
+        {% if contrato.proprietario_conjuge_nome %}
+        <h5 class="mt-3 mb-2">👫 Cônjuge do Proprietário</h5>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Nome:</span>
+                <span class="info-value">{{ contrato.proprietario_conjuge_nome }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Nacionalidade:</span>
+                <span class="info-value">{{ contrato.proprietario_conjuge_nacionalidade }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Profissão:</span>
+                <span class="info-value">{{ contrato.proprietario_conjuge_profissao }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">RG:</span>
+                <span class="info-value">{{ contrato.proprietario_conjuge_rg }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">CPF:</span>
+                <span class="info-value">{{ contrato.proprietario_conjuge_cpf }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Dados do Locatário -->
+    <div class="section-card">
+        <h2 class="section-title">🏠 Locatário</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Nome Completo:</span>
+                <span class="info-value">{{ contrato.locatario_nome }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Estado Civil:</span>
+                <span class="info-value">{{ contrato.get_locatario_estado_civil_display }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Nacionalidade:</span>
+                <span class="info-value">{{ contrato.locatario_nacionalidade }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Profissão:</span>
+                <span class="info-value">{{ contrato.locatario_profissao }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">RG:</span>
+                <span class="info-value">{{ contrato.locatario_rg }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">CPF:</span>
+                <span class="info-value">{{ contrato.locatario_cpf }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Endereço:</span>
+                <span class="info-value">{{ contrato.endereco_completo_locatario }}</span>
+            </div>
+        </div>
+        
+        {% if contrato.locatario_conjuge_nome %}
+        <h5 class="mt-3 mb-2">👫 Cônjuge do Locatário</h5>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Nome:</span>
+                <span class="info-value">{{ contrato.locatario_conjuge_nome }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Nacionalidade:</span>
+                <span class="info-value">{{ contrato.locatario_conjuge_nacionalidade }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Profissão:</span>
+                <span class="info-value">{{ contrato.locatario_conjuge_profissao }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">RG:</span>
+                <span class="info-value">{{ contrato.locatario_conjuge_rg }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">CPF:</span>
+                <span class="info-value">{{ contrato.locatario_conjuge_cpf }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Dados do Imóvel -->
+    <div class="section-card">
+        <h2 class="section-title">🏘️ Imóvel</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Tipo:</span>
+                <span class="info-value highlight-value">{{ contrato.get_imovel_tipo_display }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Endereço Completo:</span>
+                <span class="info-value">{{ contrato.endereco_completo_imovel }}</span>
+            </div>
+            {% if contrato.imovel_matricula %}
+            <div class="info-item">
+                <span class="info-label">Matrícula:</span>
+                <span class="info-value">{{ contrato.imovel_matricula }}</span>
+            </div>
+            {% endif %}
+            {% if contrato.imovel_cartorio %}
+            <div class="info-item">
+                <span class="info-label">Cartório:</span>
+                <span class="info-value">{{ contrato.imovel_cartorio }}</span>
+            </div>
+            {% endif %}
+            {% if contrato.imovel_iptu %}
+            <div class="info-item">
+                <span class="info-label">IPTU:</span>
+                <span class="info-value">{{ contrato.imovel_iptu }}</span>
+            </div>
+            {% endif %}
+            {% if contrato.imovel_conta_agua %}
+            <div class="info-item">
+                <span class="info-label">Conta de Água:</span>
+                <span class="info-value">{{ contrato.imovel_conta_agua }}</span>
+            </div>
+            {% endif %}
+            {% if contrato.imovel_conta_luz %}
+            <div class="info-item">
+                <span class="info-label">Conta de Luz:</span>
+                <span class="info-value">{{ contrato.imovel_conta_luz }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Detalhes da Locação -->
+    <div class="section-card">
+        <h2 class="section-title">💰 Detalhes da Locação</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Valor do Aluguel:</span>
+                <span class="info-value highlight-value">R$ {{ contrato.valor_aluguel|floatformat:2 }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Valor por Extenso:</span>
+                <span class="info-value">{{ contrato.valor_aluguel_extenso }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Forma de Pagamento:</span>
+                <span class="info-value">{{ contrato.get_forma_pagamento_display }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Dia de Pagamento:</span>
+                <span class="info-value">Dia {{ contrato.dia_pagamento }}</span>
+            </div>
+            {% if contrato.conta_bancaria %}
+            <div class="info-item">
+                <span class="info-label">Conta Bancária:</span>
+                <span class="info-value">{{ contrato.conta_bancaria }}</span>
+            </div>
+            {% endif %}
+            <div class="info-item">
+                <span class="info-label">Período da Locação:</span>
+                <span class="info-value highlight-value">
+                    {{ contrato.data_inicio|date:"d/m/Y" }} até {{ contrato.data_termino|date:"d/m/Y" }}
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Garantia -->
+    <div class="section-card">
+        <h2 class="section-title">🛡️ Garantia da Locação</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Tipo de Garantia:</span>
+                <span class="info-value highlight-value">{{ contrato.get_tipo_garantia_display }}</span>
+            </div>
+            
+            {% if contrato.tipo_garantia == 'caucao' and contrato.valor_caucao %}
+            <div class="info-item">
+                <span class="info-label">Valor da Caução:</span>
+                <span class="info-value">R$ {{ contrato.valor_caucao|floatformat:2 }}</span>
+            </div>
+            {% endif %}
+            
+            {% if contrato.tipo_garantia == 'fiador' and contrato.fiador_nome %}
+            <div class="info-item">
+                <span class="info-label">Nome do Fiador:</span>
+                <span class="info-value">{{ contrato.fiador_nome }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">CPF do Fiador:</span>
+                <span class="info-value">{{ contrato.fiador_cpf }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Endereço do Fiador:</span>
+                <span class="info-value">{{ contrato.endereco_completo_fiador }}</span>
+            </div>
+            {% endif %}
+            
+            {% if contrato.tipo_garantia == 'seguro' and contrato.seguro_nome_seguradora %}
+            <div class="info-item">
+                <span class="info-label">Seguradora:</span>
+                <span class="info-value">{{ contrato.seguro_nome_seguradora }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Prazo do Seguro:</span>
+                <span class="info-value">{{ contrato.seguro_prazo }}</span>
+            </div>
+            {% if contrato.seguro_valor %}
+            <div class="info-item">
+                <span class="info-label">Valor do Seguro:</span>
+                <span class="info-value">R$ {{ contrato.seguro_valor|floatformat:2 }}</span>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Observações -->
+    {% if contrato.observacoes %}
+    <div class="section-card">
+        <h2 class="section-title">📝 Observações</h2>
+        <div class="info-item">
+            <span class="info-value">{{ contrato.observacoes|linebreaks }}</span>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Ações -->
+    <div class="actions-section">
+        <h4 class="mb-3">🎯 Ações</h4>
+        
+        <a href="#" class="btn btn-action btn-primary-custom" onclick="window.print(); return false;">
+            🖨️ Imprimir Contrato
+        </a>
+        
+        <a href="{% url 'contracts:meus_contratos_locacao_residencial' %}" class="btn btn-action btn-secondary-custom">
+            📁 Meus Contratos
+        </a>
+        
+        <a href="{% url 'contracts:catalog' %}" class="btn btn-action btn-secondary-custom">
+            ➕ Novo Contrato
+        </a>
+    </div>
+</div>
+{% endblock %}

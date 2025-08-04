@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Erro no Pagamento - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+.error-page {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffe6e6 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.error-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: none;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.error-header {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.error-body {
+    padding: 2rem;
+    text-align: center;
+}
+
+.error-icon {
+    font-size: 4rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.btn-retry {
+    background: linear-gradient(45deg, #f4623a, #e4552f);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    margin: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-retry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(244, 98, 58, 0.3);
+    color: white;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="container">
+        <div class="error-card">
+            <div class="error-header">
+                <div class="error-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <h1 class="h2 mb-3">Erro no Pagamento</h1>
+                <p class="lead mb-0">
+                    Não foi possível processar seu pagamento. Tente novamente.
+                </p>
+            </div>
+            
+            <div class="error-body">
+                <p class="mb-4">
+                    Ocorreu um problema durante o processamento do seu pagamento. 
+                    Isso pode ter acontecido por diversos motivos, como dados incorretos, 
+                    saldo insuficiente ou problemas temporários na rede.
+                </p>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{% url 'contracts:user_contracts' %}" class="btn-retry">
+                        <i class="fas fa-redo me-2"></i>
+                        Tentar Novamente
+                    </a>
+                    
+                    <a href="{% url 'core:contact' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-headset me-2"></i>
+                        Suporte
+                    </a>
+                </div>
+                
+                <div class="mt-4">
+                    <small class="text-muted">
+                        Se o problema persistir, entre em contato com nosso suporte.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

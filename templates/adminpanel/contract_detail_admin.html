@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Detalhes do Contrato #{{ contract.id }} - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===============================================
+   DETALHES DO CONTRATO - CSS MODERNO
+   =============================================== */
+
+.contract-detail {
+    min-height: 100vh;
+    background: #f8f9fa;
+    padding: 2rem 0;
+}
+
+.detail-header {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(52, 152, 219, 0.3);
+}
+
+.detail-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.detail-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #f4623a;
+}
+
+.detail-card h5 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.detail-value {
+    color: #2c3e50;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.full-width-card {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+    .detail-cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contract-detail">
+    <div class="container">
+        <!-- Header -->
+        <div class="detail-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-file-contract me-3"></i>
+                        Contrato #{{ contract.id }}
+                    </h1>
+                    <p class="mb-0 opacity-75">{{ contract.contract_type.name }}</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'adminpanel:contracts_management' %}" class="btn btn-light me-2">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar
+                    </a>
+                    {% if contract.pdf_file %}
+                        <a href="{{ contract.pdf_file.url }}" class="btn btn-success" target="_blank">
+                            <i class="fas fa-download me-2"></i>PDF
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards de Informações -->
+        <div class="detail-cards">
+            <!-- Informações do Cliente -->
+            <div class="detail-card">
+                <h5><i class="fas fa-user me-2"></i>Informações do Cliente</h5>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Nome:</span>
+                    <span class="detail-value">{{ contract.user.get_full_name|default:contract.user.username }}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value">{{ contract.user.email }}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Usuário desde:</span>
+                    <span class="detail-value">{{ contract.user.date_joined|date:"d/m/Y" }}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value">
+                        {% if contract.user.is_active %}
+                            <span class="badge bg-success">Ativo</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inativo</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Informações do Contrato -->
+            <div class="detail-card">
+                <h5><i class="fas fa-file-alt me-2"></i>Informações do Contrato</h5>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Tipo:</span>
+                    <span class="detail-value">{{ contract.contract_type.name }}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Criado em:</span>
+                    <span class="detail-value">{{ contract.created_at|date:"d/m/Y H:i" }}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value">
+                        {% if contract.status == 'paid' %}
+                            <span class="status-badge bg-success">Pago</span>
+                        {% elif contract.status == 'pending' %}
+                            <span class="status-badge bg-warning">Pendente</span>
+                        {% else %}
+                            <span class="status-badge bg-danger">Cancelado</span>
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Valor:</span>
+                    <span class="detail-value fw-bold text-success">R$ {{ contract.contract_type.price|floatformat:2 }}</span>
+                </div>
+            </div>
+
+            <!-- Informações de Pagamento -->
+            {% if contract.payment %}
+            <div class="detail-card full-width-card">
+                <h5><i class="fas fa-credit-card me-2"></i>Informações de Pagamento</h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label">Método:</span>
+                            <span class="detail-value">{{ contract.payment.get_payment_method_display }}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value">{{ contract.payment.get_status_display }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label">Valor Pago:</span>
+                            <span class="detail-value fw-bold">R$ {{ contract.payment.amount|floatformat:2 }}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Data do Pagamento:</span>
+                            <span class="detail-value">
+                                {% if contract.payment.payment_date %}
+                                    {{ contract.payment.payment_date|date:"d/m/Y H:i" }}
+                                {% else %}
+                                    Não processado
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

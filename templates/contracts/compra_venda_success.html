@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contrato Criado com Sucesso - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #f4623a;
+        --success-color: #27ae60;
+        --light-gray: #f8f9fa;
+    }
+
+    .success-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 3rem;
+        margin: 3rem 0;
+        text-align: center;
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        color: var(--success-color);
+        margin-bottom: 1.5rem;
+        animation: bounce 1s ease-in-out;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+
+    .success-title {
+        color: var(--success-color);
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .contract-summary {
+        background: var(--light-gray);
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        text-align: left;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .summary-item:last-child {
+        border-bottom: none;
+    }
+
+    .summary-label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .summary-value {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .action-buttons {
+        margin-top: 2rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), #e4552f);
+        border: none;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        border-radius: 8px;
+        margin: 0.5rem;
+    }
+
+    .btn-outline-primary {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 1rem 2rem;
+        font-weight: 600;
+        border-radius: 8px;
+        margin: 0.5rem;
+    }
+
+    .next-steps {
+        background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+        border-left: 4px solid var(--success-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        text-align: left;
+    }
+
+    .next-steps h5 {
+        color: var(--success-color);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .next-steps ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+
+    .next-steps li {
+        margin-bottom: 0.5rem;
+        color: #555;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="success-container">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                
+                <h2 class="success-title">Contrato Criado com Sucesso!</h2>
+                
+                <p class="lead">
+                    Seu contrato de compra e venda de imóvel foi gerado e está disponível para visualização.
+                </p>
+
+                <div class="contract-summary">
+                    <h5><i class="fas fa-file-contract me-2"></i>Resumo do Contrato</h5>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Número do Contrato:</span>
+                        <span class="summary-value">#{{ contrato.pk|stringformat:"06d" }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Proprietário:</span>
+                        <span class="summary-value">{{ contrato.proprietario_nome }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Comprador:</span>
+                        <span class="summary-value">{{ contrato.comprador_nome }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Imóvel:</span>
+                        <span class="summary-value">{{ contrato.get_imovel_tipo_display }} - {{ contrato.imovel_rua }}, {{ contrato.imovel_numero }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Valor:</span>
+                        <span class="summary-value">R$ {{ contrato.valor_total|floatformat:2 }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Forma de Pagamento:</span>
+                        <span class="summary-value">{{ contrato.get_forma_pagamento_display }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Data de Criação:</span>
+                        <span class="summary-value">{{ contrato.created_at|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span class="summary-label">Status:</span>
+                        <span class="summary-value">
+                            <span class="badge bg-warning">{{ contrato.get_status_display }}</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="next-steps">
+                    <h5><i class="fas fa-list-check me-2"></i>Próximos Passos</h5>
+                    <ul>
+                        <li><strong>Revisão:</strong> Revise todos os dados do contrato na visualização detalhada</li>
+                        <li><strong>Download:</strong> Faça o download do PDF quando necessário</li>
+                        <li><strong>Assinaturas:</strong> Colete as assinaturas das partes envolvidas</li>
+                        <li><strong>Registro:</strong> Proceda com o registro em cartório conforme necessário</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{% url 'contracts:compra_venda_detail' contrato.pk %}" class="btn btn-primary">
+                        <i class="fas fa-eye me-2"></i>Visualizar Contrato
+                    </a>
+                    
+                    <a href="{% url 'contracts:meus_contratos_compra_venda' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-list me-2"></i>Meus Contratos
+                    </a>
+                    
+                    <a href="{% url 'contracts:compra_venda_imovel' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-plus me-2"></i>Criar Outro Contrato
+                    </a>
+                </div>
+
+                <div class="mt-4">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Seu contrato foi salvo automaticamente e está disponível na área "Meus Contratos".
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Adicionar confetti de celebração
+document.addEventListener('DOMContentLoaded', function() {
+    // Criar efeito de confetti simples
+    function createConfetti() {
+        const colors = ['#f4623a', '#27ae60', '#3498db', '#f39c12', '#e74c3c'];
+        
+        for (let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+                confetti.style.animation = 'fall 3s ease-out forwards';
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }, i * 100);
+        }
+    }
+    
+    // CSS para animação de queda
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Executar confetti após um pequeno delay
+    setTimeout(createConfetti, 500);
+});
+</script>
+{% endblock %}

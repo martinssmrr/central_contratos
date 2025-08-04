@@ -1,0 +1,970 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contrato de Compra e Venda - Central de Contratos{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 contract-form-hero">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto hero-content">
+                <div class="contract-icon mb-4">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h1 class="hero-title">Contrato de Compra e Venda</h1>
+                <p class="hero-subtitle">
+                    Crie um contrato de compra e venda profissional e juridicamente válido.
+                    Preencha os dados abaixo e tenha seu documento pronto em minutos.
+                </p>
+                <div class="contract-features mt-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="feature-item">
+                                <i class="fas fa-shield-check text-primary"></i>
+                                <span>Juridicamente Válido</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item">
+                                <i class="fas fa-file-pdf text-primary"></i>
+                                <span>Download em PDF</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item">
+                                <i class="fas fa-clock text-primary"></i>
+                                <span>Pronto em Minutos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Form Section -->
+<section class="py-5 form-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h3 class="form-title">
+                            <i class="fas fa-edit me-2"></i>
+                            Dados do Contrato de Compra e Venda
+                        </h3>
+                        <p class="form-subtitle">
+                            Preencha todos os campos obrigatórios com atenção. 
+                            Seus dados estarão seguros e protegidos.
+                        </p>
+                    </div>
+                    
+                    <div class="form-card-body">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="post" id="contratoForm" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Seção Comprador -->
+                            <div class="form-section-wrapper">
+                                <div class="section-header">
+                                    <h4 class="section-title">
+                                        <i class="fas fa-user-tie me-2"></i>
+                                        Dados do Comprador
+                                    </h4>
+                                    <p class="section-subtitle">Informações da pessoa/empresa que está comprando</p>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="{{ form.parte1_nome.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-user me-2"></i>Nome Completo do Comprador
+                                            </label>
+                                            {{ form.parte1_nome }}
+                                            {% if form.parte1_nome.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.parte1_nome.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.parte1_cpf_cnpj.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-id-card me-2"></i>CPF/CNPJ
+                                            </label>
+                                            {{ form.parte1_cpf_cnpj }}
+                                            {% if form.parte1_cpf_cnpj.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.parte1_cpf_cnpj.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="{{ form.parte1_endereco.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-map-marker-alt me-2"></i>Endereço Completo
+                                            </label>
+                                            {{ form.parte1_endereco }}
+                                            {% if form.parte1_endereco.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.parte1_endereco.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seção Vendedor -->
+                            <div class="form-section-wrapper">
+                                <div class="section-header">
+                                    <h4 class="section-title">
+                                        <i class="fas fa-user-check me-2"></i>
+                                        Dados do Vendedor
+                                    </h4>
+                                    <p class="section-subtitle">Informações da pessoa/empresa que está vendendo</p>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="{{ form.parte2_nome.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-user me-2"></i>Nome Completo do Vendedor
+                                            </label>
+                                            {{ form.parte2_nome }}
+                                            {% if form.parte2_nome.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.parte2_nome.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.parte2_cpf_cnpj.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-id-card me-2"></i>CPF/CNPJ
+                                            </label>
+                                            {{ form.parte2_cpf_cnpj }}
+                                            {% if form.parte2_cpf_cnpj.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.parte2_cpf_cnpj.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="{{ form.parte2_endereco.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-map-marker-alt me-2"></i>Endereço Completo
+                                            </label>
+                                            {{ form.parte2_endereco }}
+                                            {% if form.parte2_endereco.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.parte2_endereco.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seção do Bem -->
+                            <div class="form-section-wrapper">
+                                <div class="section-header">
+                                    <h4 class="section-title">
+                                        <i class="fas fa-box me-2"></i>
+                                        Descrição do Bem
+                                    </h4>
+                                    <p class="section-subtitle">Detalhes do produto ou serviço vendido</p>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="{{ form.objeto_contrato.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-list-alt me-2"></i>Descrição Geral do Objeto
+                                            </label>
+                                            {{ form.objeto_contrato }}
+                                            {% if form.objeto_contrato.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.objeto_contrato.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="{{ form.descricao_bem.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-clipboard-list me-2"></i>Descrição Detalhada do Bem
+                                            </label>
+                                            {{ form.descricao_bem }}
+                                            {% if form.descricao_bem.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.descricao_bem.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Inclua marca, modelo, estado de conservação, características específicas, etc.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seção Financeira -->
+                            <div class="form-section-wrapper">
+                                <div class="section-header">
+                                    <h4 class="section-title">
+                                        <i class="fas fa-money-bill-wave me-2"></i>
+                                        Condições Financeiras
+                                    </h4>
+                                    <p class="section-subtitle">Valor e forma de pagamento</p>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.valor.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-dollar-sign me-2"></i>Valor da Transação (R$)
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">R$</span>
+                                                {{ form.valor }}
+                                            </div>
+                                            {% if form.valor.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.valor.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.forma_pagamento.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-credit-card me-2"></i>Forma de Pagamento
+                                            </label>
+                                            {{ form.forma_pagamento }}
+                                            {% if form.forma_pagamento.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.forma_pagamento.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seção Entrega -->
+                            <div class="form-section-wrapper">
+                                <div class="section-header">
+                                    <h4 class="section-title">
+                                        <i class="fas fa-shipping-fast me-2"></i>
+                                        Condições de Entrega
+                                    </h4>
+                                    <p class="section-subtitle">Local e prazo para entrega do bem</p>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="{{ form.local_entrega.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-map-marker-alt me-2"></i>Local de Entrega
+                                            </label>
+                                            {{ form.local_entrega }}
+                                            {% if form.local_entrega.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.local_entrega.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.prazo_entrega.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-calendar-alt me-2"></i>Prazo de Entrega
+                                            </label>
+                                            {{ form.prazo_entrega }}
+                                            {% if form.prazo_entrega.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.prazo_entrega.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seção Datas -->
+                            <div class="form-section-wrapper">
+                                <div class="section-header">
+                                    <h4 class="section-title">
+                                        <i class="fas fa-calendar-check me-2"></i>
+                                        Datas do Contrato
+                                    </h4>
+                                    <p class="section-subtitle">Período de vigência do contrato</p>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.data_inicio.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-play me-2"></i>Data de Início
+                                            </label>
+                                            {{ form.data_inicio }}
+                                            {% if form.data_inicio.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.data_inicio.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.data_fim.id_for_label }}" class="form-label">
+                                                <i class="fas fa-stop me-2"></i>Data de Término
+                                            </label>
+                                            {{ form.data_fim }}
+                                            {% if form.data_fim.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.data_fim.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text">Opcional - deixe em branco se não houver prazo definido</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.prazo_vigencia.id_for_label }}" class="form-label required">
+                                                <i class="fas fa-hourglass-half me-2"></i>Prazo de Vigência
+                                            </label>
+                                            {{ form.prazo_vigencia }}
+                                            {% if form.prazo_vigencia.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.prazo_vigencia.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botões de Ação -->
+                            <div class="form-actions">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <a href="{% url 'contracts:catalog' %}" class="btn btn-outline-secondary btn-lg w-100">
+                                            <i class="fas fa-arrow-left me-2"></i>
+                                            Voltar ao Catálogo
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+                                            <i class="fas fa-paper-plane me-2"></i>
+                                            <span class="btn-text">Gerar Contrato</span>
+                                            <span class="btn-loading d-none">
+                                                <span class="spinner-border spinner-border-sm me-2"></span>
+                                                Processando...
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Info Section -->
+<section class="py-5 bg-light info-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto">
+                <h3 class="info-title">Por que escolher nossos contratos?</h3>
+                <p class="info-subtitle">Garantia de qualidade e segurança jurídica</p>
+            </div>
+        </div>
+        
+        <div class="row g-4 mt-4">
+            <div class="col-md-4">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <h5>Validade Jurídica</h5>
+                    <p>Contratos criados por advogados especialistas e válidos em todo território nacional.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h5>Dados Seguros</h5>
+                    <p>Suas informações são protegidas com criptografia de nível bancário.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h5>Suporte Especializado</h5>
+                    <p>Equipe de suporte pronta para esclarecer dúvidas sobre seu contrato.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Contract Form Hero Section */
+.contract-form-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.contract-form-hero:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="contract-pattern" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="2" fill="%23f4623a" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23contract-pattern)"/></svg>') repeat;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.contract-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: #f4623a;
+    font-size: 2.5rem;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #333;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.contract-features .feature-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Form Card */
+.form-card {
+    background: #fff;
+    border: 1px solid rgba(244, 98, 58, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.form-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+}
+
+.form-card-header {
+    background: #f8f9fa;
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid rgba(244, 98, 58, 0.1);
+    text-align: center;
+}
+
+.form-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+}
+
+.form-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.form-card-body {
+    padding: 2rem;
+}
+
+/* Form Sections */
+.form-section-wrapper {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 16px;
+    border: 1px solid rgba(244, 98, 58, 0.1);
+    position: relative;
+}
+
+.form-section-wrapper:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    border-radius: 2px;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Form Controls */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.form-label.required:after {
+    content: ' *';
+    color: #dc3545;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #f4623a;
+    box-shadow: 0 0 0 0.2rem rgba(244, 98, 58, 0.1);
+    background: #fff;
+}
+
+.form-control:hover,
+.form-select:hover {
+    border-color: rgba(244, 98, 58, 0.5);
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-right: none;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f8f9fa;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary.btn-lg {
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    border: none;
+}
+
+.btn-primary.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(244, 98, 58, 0.4);
+}
+
+.btn-outline-secondary.btn-lg {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary.btn-lg:hover {
+    background: #6c757d;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Loading State */
+.btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* Info Section */
+.info-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.info-section:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="info-pattern" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="%23f4623a" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23info-pattern)"/></svg>') repeat;
+}
+
+.info-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+}
+
+.info-subtitle {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid rgba(244, 98, 58, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    height: 100%;
+}
+
+.info-card:hover {
+    background: #fff;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(244, 98, 58, 0.15);
+}
+
+.info-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba(244, 98, 58, 0.1), rgba(244, 98, 58, 0.05));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: #f4623a;
+    font-size: 1.75rem;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover .info-icon {
+    background: linear-gradient(135deg, #f4623a, #e4552f);
+    color: white;
+    transform: scale(1.1);
+}
+
+.info-card h5 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.info-card p {
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contract-form-hero {
+        padding: 3rem 0;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .contract-features .row {
+        gap: 1rem !important;
+    }
+    
+    .form-card-header,
+    .form-card-body {
+        padding: 1.5rem;
+    }
+    
+    .form-section-wrapper {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .form-actions .btn-lg {
+        margin-bottom: 1rem;
+    }
+    
+    .info-card {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .contract-features .feature-item {
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.9rem;
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+    
+    .form-label {
+        font-size: 0.9rem;
+    }
+    
+    .btn-lg {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-section-wrapper {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+.form-section-wrapper:nth-child(1) { animation-delay: 0.1s; }
+.form-section-wrapper:nth-child(2) { animation-delay: 0.2s; }
+.form-section-wrapper:nth-child(3) { animation-delay: 0.3s; }
+.form-section-wrapper:nth-child(4) { animation-delay: 0.4s; }
+.form-section-wrapper:nth-child(5) { animation-delay: 0.5s; }
+.form-section-wrapper:nth-child(6) { animation-delay: 0.6s; }
+
+.info-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+.info-card:nth-child(1) { animation-delay: 0.1s; }
+.info-card:nth-child(2) { animation-delay: 0.2s; }
+.info-card:nth-child(3) { animation-delay: 0.3s; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contratoForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnLoading = submitBtn.querySelector('.btn-loading');
+    
+    // Form submission handling
+    form.addEventListener('submit', function(e) {
+        // Show loading state
+        submitBtn.classList.add('loading');
+        btnText.classList.add('d-none');
+        btnLoading.classList.remove('d-none');
+        
+        // Basic validation
+        const requiredFields = form.querySelectorAll('[required]');
+        let hasErrors = false;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                hasErrors = true;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (hasErrors) {
+            e.preventDefault();
+            // Reset button state
+            submitBtn.classList.remove('loading');
+            btnText.classList.remove('d-none');
+            btnLoading.classList.add('d-none');
+            
+            // Show error message
+            const errorAlert = document.createElement('div');
+            errorAlert.className = 'alert alert-danger alert-dismissible fade show';
+            errorAlert.innerHTML = `
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Por favor, preencha todos os campos obrigatórios.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            form.insertBefore(errorAlert, form.firstChild);
+            
+            // Scroll to top
+            form.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+    
+    // Input validation on blur
+    const inputs = form.querySelectorAll('.form-control, .form-select');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.value.trim()) {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+    
+    // CPF/CNPJ mask
+    const cpfCnpjInputs = document.querySelectorAll('input[name$="_cpf_cnpj"]');
+    cpfCnpjInputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length <= 11) {
+                // CPF format
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            } else {
+                // CNPJ format
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            }
+            
+            e.target.value = value;
+        });
+    });
+    
+    // Money format for valor field
+    const valorInput = document.querySelector('input[name="valor"]');
+    if (valorInput) {
+        valorInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = (value / 100).toFixed(2);
+            e.target.value = value;
+        });
+    }
+});
+</script>
+{% endblock %}

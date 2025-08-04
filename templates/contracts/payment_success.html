@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pagamento Aprovado - Central de Contratos{% endblock %}
+
+{% block extra_css %}
+<style>
+.success-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.success-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    color: #333;
+    backdrop-filter: blur(10px);
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #28a745;
+    margin-bottom: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.success-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+.payment-details {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #666;
+}
+
+.detail-value {
+    color: #333;
+    font-weight: 500;
+}
+
+.btn-download {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #5a6268);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+    color: white;
+}
+
+.next-steps {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 1.5rem;
+    border-radius: 5px;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.next-steps h5 {
+    color: #1976d2;
+    margin-bottom: 1rem;
+}
+
+.next-steps ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.next-steps li {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="success-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="success-card">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    
+                    <h1 class="success-title">Pagamento Aprovado!</h1>
+                    <p class="lead mb-4">Seu contrato foi processado com sucesso e já está disponível para download.</p>
+                    
+                    {% if contract %}
+                    <div class="payment-details">
+                        <h5 class="mb-3"><i class="fas fa-file-contract me-2"></i>Detalhes do Contrato</h5>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Tipo de Contrato:</span>
+                            <span class="detail-value">{{ contract.contract_type.name }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Valor Pago:</span>
+                            <span class="detail-value">R$ {{ contract.contract_type.price }}</span>
+                        </div>
+                        
+                        {% if payment %}
+                        <div class="detail-row">
+                            <span class="detail-label">Status do Pagamento:</span>
+                            <span class="detail-value">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>{{ payment.get_status_display }}
+                                </span>
+                            </span>
+                        </div>
+                        
+                        {% if payment.payment_date %}
+                        <div class="detail-row">
+                            <span class="detail-label">Data do Pagamento:</span>
+                            <span class="detail-value">{{ payment.payment_date|date:"d/m/Y H:i" }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if payment_id %}
+                        <div class="detail-row">
+                            <span class="detail-label">ID do Pagamento:</span>
+                            <span class="detail-value">#{{ payment_id }}</span>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="action-buttons mt-4">
+                        <a href="{% url 'contracts:contract_download' contract.id %}" class="btn-download">
+                            <i class="fas fa-download me-2"></i>Baixar Contrato
+                        </a>
+                        
+                        <a href="{% url 'contracts:user_contracts' %}" class="btn-secondary">
+                            <i class="fas fa-list me-2"></i>Meus Contratos
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="next-steps">
+                        <h5><i class="fas fa-lightbulb me-2"></i>Próximos Passos</h5>
+                        <ul>
+                            <li>Baixe e guarde seu contrato em local seguro</li>
+                            <li>Imprima o documento para assinatura das partes</li>
+                            <li>Reconheça firma se necessário (consulte orientação jurídica)</li>
+                            <li>Mantenha uma cópia para seus registros</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Você pode acessar este contrato a qualquer momento através da seção "Meus Contratos"
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animação de entrada
+document.addEventListener('DOMContentLoaded', function() {
+    const card = document.querySelector('.success-card');
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    
+    setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
+{% endblock %}

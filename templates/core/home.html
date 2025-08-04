@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Central de Contratos - Contratos Jurídicos Personalizados{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white py-5 position-relative" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(244, 98, 58, 0.45), rgba(0, 0, 0, 0.5)), url('{% static "images/hero-contract.jpg" %}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 70vh;">
+    <div class="hero-background"></div>
+    <div class="hero-overlay"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Contratos Jurídicos Personalizados</h1>
+                <p class="lead mb-4">
+                    Crie contratos profissionais em minutos. Nossa plataforma oferece modelos jurídicos 
+                    validados para todas as suas necessidades comerciais e pessoais.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'contracts:catalog' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Criar Meu Contrato
+                    </a>
+                    <a href="{% url 'core:about' %}" class="btn btn-outline-light btn-lg">
+                        Saiba Mais
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <!-- Espaço para conteúdo adicional se necessário -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 content-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Por que escolher nossa plataforma?</h2>
+                <p class="lead text-muted">Desenvolvemos a solução mais completa para criação de contratos jurídicos</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-bolt fa-lg"></i>
+                        </div>
+                        <h5 class="fw-bold">Rápido e Fácil</h5>
+                        <p class="text-muted">Crie contratos profissionais em poucos minutos com nossos formulários intuitivos.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-shield-alt fa-lg"></i>
+                        </div>
+                        <h5 class="fw-bold">Juridicamente Válido</h5>
+                        <p class="text-muted">Todos os modelos são criados e validados por advogados especialistas.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-download fa-lg"></i>
+                        </div>
+                        <h5 class="fw-bold">Download Instantâneo</h5>
+                        <p class="text-muted">Receba seu contrato em PDF pronto para assinatura imediatamente após o pagamento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contract Types Section -->
+<section class="py-5 bg-light content-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Tipos de Contratos Disponíveis</h2>
+                <p class="lead text-muted">Escolha entre nossos modelos profissionais para cada situação</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for contract_type in featured_contracts %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm contract-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="contract-icon bg-primary text-white rounded me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">{{ contract_type.name }}</h5>
+                        </div>
+                        <p class="text-muted mb-3">{{ contract_type.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 text-primary fw-bold mb-0">R$ {{ contract_type.price }}</span>
+                            <a href="{{ contract_type.get_absolute_url }}" class="btn btn-outline-primary">
+                                Personalizar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Nenhum tipo de contrato disponível no momento.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'contracts:catalog' %}" class="btn btn-primary btn-lg">
+                Ver Todos os Contratos
+                <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 content-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Como Funciona</h2>
+                <p class="lead text-muted">Processo simples em 4 passos para ter seu contrato pronto</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold">1</span>
+                </div>
+                <h5 class="fw-bold">Escolha o Tipo</h5>
+                <p class="text-muted">Selecione o tipo de contrato que você precisa no nosso catálogo.</p>
+            </div>
+            
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold">2</span>
+                </div>
+                <h5 class="fw-bold">Preencha os Dados</h5>
+                <p class="text-muted">Complete o formulário com as informações específicas do seu contrato.</p>
+            </div>
+            
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold">3</span>
+                </div>
+                <h5 class="fw-bold">Efetue o Pagamento</h5>
+                <p class="text-muted">Realize o pagamento de forma segura através dos nossos métodos disponíveis.</p>
+            </div>
+            
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold">4</span>
+                </div>
+                <h5 class="fw-bold">Baixe seu Contrato</h5>
+                <p class="text-muted">Receba instantaneamente seu contrato personalizado em PDF.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Pronto para Criar seu Contrato?</h2>
+                <p class="mm">
+                    Junte-se a milhares de pessoas que já criaram contratos profissionais conosco.
+                </p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'contracts:catalog' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-file-contract me-2"></i>Acessar Catálogo
+                    </a>
+                {% else %}
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="{% url 'users:register' %}" class="btn btn-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Criar Conta Grátis
+                        </a>
+                        <a href="{% url 'contracts:catalog' %}" class="btn btn-outline-light btn-lg">
+                            Ver Catálogo
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    position: relative;
+    min-height: 70vh;
+}
+
+.hero-background {
+    display: none;
+}
+
+.hero-overlay {
+    display: none;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.min-vh-50 {
+    min-height: 70vh;
+}
+
+.contract-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.contract-card:hover {
+    transform: translateY(-5px);
+}
+
+.step-number {
+    font-size: 1.5rem;
+}
+
+/* Melhor legibilidade do texto */
+.hero-section h1,
+.hero-section .lead {
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+    color: white !important;
+}
+
+.hero-section .btn {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section .btn:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

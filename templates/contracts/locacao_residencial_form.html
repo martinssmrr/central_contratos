@@ -1,0 +1,795 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contrato de Locação Residencial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #007bff;
+    }
+    
+    .section-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .section-icon {
+        width: 24px;
+        height: 24px;
+        background: #007bff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.8rem;
+    }
+    
+    .form-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .conditional-fields {
+        display: none;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 3px solid #28a745;
+    }
+    
+    .conditional-fields.show {
+        display: block;
+    }
+    
+    .submit-section {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(40, 167, 69, 0.3);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="page-header">
+        <h1>🏠 Contrato de Locação Residencial</h1>
+        <p class="mb-0">Preencha todas as informações necessárias para gerar seu contrato</p>
+    </div>
+    
+    <form method="post" id="locacao-form">
+        {% csrf_token %}
+        
+        <!-- Seção Proprietário -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">1</span>
+                👤 Dados do Proprietário
+            </h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_nome.id_for_label }}" class="form-label">Nome Completo *</label>
+                        {{ form.proprietario_nome }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_estado_civil.id_for_label }}" class="form-label">Estado Civil *</label>
+                        {{ form.proprietario_estado_civil }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_nacionalidade.id_for_label }}" class="form-label">Nacionalidade *</label>
+                        {{ form.proprietario_nacionalidade }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_profissao.id_for_label }}" class="form-label">Profissão *</label>
+                        {{ form.proprietario_profissao }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_rg.id_for_label }}" class="form-label">RG *</label>
+                        {{ form.proprietario_rg }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_cpf.id_for_label }}" class="form-label">CPF *</label>
+                        {{ form.proprietario_cpf }}
+                    </div>
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">📍 Endereço do Proprietário</h5>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_rua.id_for_label }}" class="form-label">Rua *</label>
+                        {{ form.proprietario_rua }}
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_numero.id_for_label }}" class="form-label">Número *</label>
+                        {{ form.proprietario_numero }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_bairro.id_for_label }}" class="form-label">Bairro *</label>
+                        {{ form.proprietario_bairro }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_cidade.id_for_label }}" class="form-label">Cidade *</label>
+                        {{ form.proprietario_cidade }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.proprietario_estado.id_for_label }}" class="form-label">Estado *</label>
+                        {{ form.proprietario_estado }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Campos condicionais para cônjuge do proprietário -->
+            <div id="proprietario-conjuge-fields" class="conditional-fields">
+                <h5 class="mb-3">👫 Dados do Cônjuge</h5>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.proprietario_conjuge_nome.id_for_label }}" class="form-label">Nome Completo</label>
+                            {{ form.proprietario_conjuge_nome }}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.proprietario_conjuge_nacionalidade.id_for_label }}" class="form-label">Nacionalidade</label>
+                            {{ form.proprietario_conjuge_nacionalidade }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.proprietario_conjuge_profissao.id_for_label }}" class="form-label">Profissão</label>
+                            {{ form.proprietario_conjuge_profissao }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.proprietario_conjuge_rg.id_for_label }}" class="form-label">RG</label>
+                            {{ form.proprietario_conjuge_rg }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.proprietario_conjuge_cpf.id_for_label }}" class="form-label">CPF</label>
+                            {{ form.proprietario_conjuge_cpf }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Locatário -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">2</span>
+                🏠 Dados do Locatário
+            </h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_nome.id_for_label }}" class="form-label">Nome Completo *</label>
+                        {{ form.locatario_nome }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_estado_civil.id_for_label }}" class="form-label">Estado Civil *</label>
+                        {{ form.locatario_estado_civil }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_nacionalidade.id_for_label }}" class="form-label">Nacionalidade *</label>
+                        {{ form.locatario_nacionalidade }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_profissao.id_for_label }}" class="form-label">Profissão *</label>
+                        {{ form.locatario_profissao }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_rg.id_for_label }}" class="form-label">RG *</label>
+                        {{ form.locatario_rg }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_cpf.id_for_label }}" class="form-label">CPF *</label>
+                        {{ form.locatario_cpf }}
+                    </div>
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">📍 Endereço do Locatário</h5>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_rua.id_for_label }}" class="form-label">Rua *</label>
+                        {{ form.locatario_rua }}
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_numero.id_for_label }}" class="form-label">Número *</label>
+                        {{ form.locatario_numero }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_bairro.id_for_label }}" class="form-label">Bairro *</label>
+                        {{ form.locatario_bairro }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_cidade.id_for_label }}" class="form-label">Cidade *</label>
+                        {{ form.locatario_cidade }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.locatario_estado.id_for_label }}" class="form-label">Estado *</label>
+                        {{ form.locatario_estado }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Campos condicionais para cônjuge do locatário -->
+            <div id="locatario-conjuge-fields" class="conditional-fields">
+                <h5 class="mb-3">👫 Dados do Cônjuge</h5>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.locatario_conjuge_nome.id_for_label }}" class="form-label">Nome Completo</label>
+                            {{ form.locatario_conjuge_nome }}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.locatario_conjuge_nacionalidade.id_for_label }}" class="form-label">Nacionalidade</label>
+                            {{ form.locatario_conjuge_nacionalidade }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.locatario_conjuge_profissao.id_for_label }}" class="form-label">Profissão</label>
+                            {{ form.locatario_conjuge_profissao }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.locatario_conjuge_rg.id_for_label }}" class="form-label">RG</label>
+                            {{ form.locatario_conjuge_rg }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.locatario_conjuge_cpf.id_for_label }}" class="form-label">CPF</label>
+                            {{ form.locatario_conjuge_cpf }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Imóvel -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">3</span>
+                🏘️ Dados do Imóvel
+            </h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_tipo.id_for_label }}" class="form-label">Tipo do Imóvel *</label>
+                        {{ form.imovel_tipo }}
+                    </div>
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">📍 Endereço do Imóvel</h5>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_rua.id_for_label }}" class="form-label">Rua *</label>
+                        {{ form.imovel_rua }}
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_numero.id_for_label }}" class="form-label">Número *</label>
+                        {{ form.imovel_numero }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_bairro.id_for_label }}" class="form-label">Bairro *</label>
+                        {{ form.imovel_bairro }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_cidade.id_for_label }}" class="form-label">Cidade *</label>
+                        {{ form.imovel_cidade }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_estado.id_for_label }}" class="form-label">Estado *</label>
+                        {{ form.imovel_estado }}
+                    </div>
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">📋 Dados Registrais (Opcionais)</h5>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_matricula.id_for_label }}" class="form-label">Número da Matrícula</label>
+                        {{ form.imovel_matricula }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_cartorio.id_for_label }}" class="form-label">Cartório onde foi Registrado</label>
+                        {{ form.imovel_cartorio }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_iptu.id_for_label }}" class="form-label">Número do IPTU</label>
+                        {{ form.imovel_iptu }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_conta_agua.id_for_label }}" class="form-label">Número da Conta de Água</label>
+                        {{ form.imovel_conta_agua }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.imovel_conta_luz.id_for_label }}" class="form-label">Número da Conta de Luz</label>
+                        {{ form.imovel_conta_luz }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Detalhes da Locação -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">4</span>
+                💰 Detalhes da Locação
+            </h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.valor_aluguel.id_for_label }}" class="form-label">Valor do Aluguel *</label>
+                        {{ form.valor_aluguel }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.valor_aluguel_extenso.id_for_label }}" class="form-label">Valor por Extenso *</label>
+                        {{ form.valor_aluguel_extenso }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.forma_pagamento.id_for_label }}" class="form-label">Forma de Pagamento *</label>
+                        {{ form.forma_pagamento }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.dia_pagamento.id_for_label }}" class="form-label">Dia de Pagamento *</label>
+                        {{ form.dia_pagamento }}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ form.conta_bancaria.id_for_label }}" class="form-label">Conta Bancária</label>
+                        {{ form.conta_bancaria }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.data_inicio.id_for_label }}" class="form-label">Data de Início da Locação *</label>
+                        {{ form.data_inicio }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.data_termino.id_for_label }}" class="form-label">Data de Término da Locação *</label>
+                        {{ form.data_termino }}
+                    </div>
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3">🛡️ Garantia da Locação</h5>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="{{ form.tipo_garantia.id_for_label }}" class="form-label">Tipo de Garantia *</label>
+                        {{ form.tipo_garantia }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Campos condicionais para caução -->
+            <div id="caucao-fields" class="conditional-fields">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.valor_caucao.id_for_label }}" class="form-label">Valor da Caução *</label>
+                            {{ form.valor_caucao }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Campos condicionais para fiador -->
+            <div id="fiador-fields" class="conditional-fields">
+                <h6 class="mb-3">👥 Dados do Fiador/Avalista</h6>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_nome.id_for_label }}" class="form-label">Nome Completo *</label>
+                            {{ form.fiador_nome }}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_estado_civil.id_for_label }}" class="form-label">Estado Civil *</label>
+                            {{ form.fiador_estado_civil }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_nacionalidade.id_for_label }}" class="form-label">Nacionalidade *</label>
+                            {{ form.fiador_nacionalidade }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_profissao.id_for_label }}" class="form-label">Profissão *</label>
+                            {{ form.fiador_profissao }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_rg.id_for_label }}" class="form-label">RG *</label>
+                            {{ form.fiador_rg }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_cpf.id_for_label }}" class="form-label">CPF *</label>
+                            {{ form.fiador_cpf }}
+                        </div>
+                    </div>
+                </div>
+                
+                <h6 class="mt-3 mb-3">📍 Endereço do Fiador</h6>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_rua.id_for_label }}" class="form-label">Rua *</label>
+                            {{ form.fiador_rua }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_numero.id_for_label }}" class="form-label">Número *</label>
+                            {{ form.fiador_numero }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_bairro.id_for_label }}" class="form-label">Bairro *</label>
+                            {{ form.fiador_bairro }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_cidade.id_for_label }}" class="form-label">Cidade *</label>
+                            {{ form.fiador_cidade }}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.fiador_estado.id_for_label }}" class="form-label">Estado *</label>
+                            {{ form.fiador_estado }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Campos condicionais para seguro fiança -->
+            <div id="seguro-fields" class="conditional-fields">
+                <h6 class="mb-3">🛡️ Dados do Seguro Fiança</h6>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.seguro_nome_seguradora.id_for_label }}" class="form-label">Nome da Seguradora *</label>
+                            {{ form.seguro_nome_seguradora }}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.seguro_prazo.id_for_label }}" class="form-label">Prazo do Seguro *</label>
+                            {{ form.seguro_prazo }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.seguro_valor.id_for_label }}" class="form-label">Valor do Seguro *</label>
+                            {{ form.seguro_valor }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Observações -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">5</span>
+                📝 Observações
+            </h2>
+            
+            <div class="form-group">
+                <label for="{{ form.observacoes.id_for_label }}" class="form-label">Observações Adicionais</label>
+                {{ form.observacoes }}
+                <small class="form-text text-muted">Inclua quaisquer informações adicionais relevantes para o contrato.</small>
+            </div>
+        </div>
+        
+        <!-- Botão de Submissão -->
+        <div class="submit-section">
+            <button type="submit" class="btn btn-submit">
+                📄 Gerar Contrato de Locação
+            </button>
+            <p class="mt-3 text-muted">
+                Após submeter, você receberá seu contrato para revisão e download.
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Máscaras para campos
+    function setupMasks() {
+        // Máscara para CPF
+        const cpfFields = document.querySelectorAll('.cpf-mask');
+        cpfFields.forEach(field => {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 11) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                    e.target.value = value;
+                }
+            });
+        });
+    }
+    
+    // Campos condicionais para estado civil
+    function setupConditionalFields() {
+        // Proprietário
+        const proprietarioEstadoCivil = document.getElementById('{{ form.proprietario_estado_civil.id_for_label }}');
+        const proprietarioConjugeFields = document.getElementById('proprietario-conjuge-fields');
+        
+        function toggleProprietarioConjuge() {
+            if (proprietarioEstadoCivil.value === 'casado' || proprietarioEstadoCivil.value === 'uniao_estavel') {
+                proprietarioConjugeFields.classList.add('show');
+            } else {
+                proprietarioConjugeFields.classList.remove('show');
+            }
+        }
+        
+        proprietarioEstadoCivil.addEventListener('change', toggleProprietarioConjuge);
+        toggleProprietarioConjuge(); // Verificar estado inicial
+        
+        // Locatário
+        const locatarioEstadoCivil = document.getElementById('{{ form.locatario_estado_civil.id_for_label }}');
+        const locatarioConjugeFields = document.getElementById('locatario-conjuge-fields');
+        
+        function toggleLocatarioConjuge() {
+            if (locatarioEstadoCivil.value === 'casado' || locatarioEstadoCivil.value === 'uniao_estavel') {
+                locatarioConjugeFields.classList.add('show');
+            } else {
+                locatarioConjugeFields.classList.remove('show');
+            }
+        }
+        
+        locatarioEstadoCivil.addEventListener('change', toggleLocatarioConjuge);
+        toggleLocatarioConjuge(); // Verificar estado inicial
+    }
+    
+    // Campos condicionais para tipo de garantia
+    function setupGarantiaFields() {
+        const tipoGarantia = document.getElementById('{{ form.tipo_garantia.id_for_label }}');
+        const caucaoFields = document.getElementById('caucao-fields');
+        const fiadorFields = document.getElementById('fiador-fields');
+        const seguroFields = document.getElementById('seguro-fields');
+        
+        function toggleGarantiaFields() {
+            // Esconder todos os campos primeiro
+            caucaoFields.classList.remove('show');
+            fiadorFields.classList.remove('show');
+            seguroFields.classList.remove('show');
+            
+            // Mostrar os campos apropriados
+            switch(tipoGarantia.value) {
+                case 'caucao':
+                    caucaoFields.classList.add('show');
+                    break;
+                case 'fiador':
+                    fiadorFields.classList.add('show');
+                    break;
+                case 'seguro':
+                    seguroFields.classList.add('show');
+                    break;
+            }
+        }
+        
+        tipoGarantia.addEventListener('change', toggleGarantiaFields);
+        toggleGarantiaFields(); // Verificar estado inicial
+    }
+    
+    // Validação do formulário
+    function setupFormValidation() {
+        const form = document.getElementById('locacao-form');
+        
+        form.addEventListener('submit', function(e) {
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                // Rolar para o primeiro campo inválido
+                const firstInvalid = form.querySelector('.is-invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.focus();
+                }
+            }
+        });
+    }
+    
+    // Inicializar todas as funcionalidades
+    setupMasks();
+    setupConditionalFields();
+    setupGarantiaFields();
+    setupFormValidation();
+});
+</script>
+{% endblock %}
