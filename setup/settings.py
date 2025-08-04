@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY', default="django-insecure-yr#yw6=()1+p(=h6*-an%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['martinssmrr.pythonanywhere.com','localhost', '127.0.0.1', 'testserver']
+ALLOWED_HOSTS = ['centralcontratos.pythonanywhere.com','localhost', '127.0.0.1', 'testserver']
 
 
 # Application definition
