@@ -206,15 +206,15 @@ CONTACT_EMAIL = 'contato@centraldecontratos.com'
 # Mercado Pago Settings
 MERCADO_PAGO_ACCESS_TOKEN = config(
     'MERCADO_PAGO_ACCESS_TOKEN', 
-    default='TEST-670245024946802-072912-dfb6ad5c56cb6035967f242ed3954945-2591616010'
+    default='APP_USR-670245024946802-072912-8f2927e00d0ee46fff6ff19b530838e3-2591616010'
 )
 MERCADO_PAGO_PUBLIC_KEY = config(
     'MERCADO_PAGO_PUBLIC_KEY', 
-    default='TEST-904751a5-1896-435e-a6b3-2c283764c93a'
+    default='APP_USR-a27e50b7-c290-47f9-b674-c6aa9b544407'
 )
 
 # URL base do projeto (importante para back_urls do Mercado Pago)
-BASE_URL = config('BASE_URL', default='http://127.0.0.1:8000')
+BASE_URL = config('BASE_URL', default='https://centralcontratos.pythonanywhere.com/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

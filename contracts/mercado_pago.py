@@ -34,7 +34,7 @@ class MercadoPagoService:
             contract = payment.contract
             
             # URLs de retorno
-            base_url = "http://127.0.0.1:8000"  # URL temporária para teste
+            base_url = "https://centralcontratos.pythonanywhere.com/"  # URL temporária para teste
             if request:
                 base_url = f"{request.scheme}://{request.get_host()}"
             elif hasattr(settings, 'BASE_URL') and settings.BASE_URL:
