@@ -293,6 +293,34 @@ google_credentials.json
 client_secret*.json
 
 # ========================================
+# SECURITY: SENSITIVE FILES PROTECTION
+# ========================================
+
+# Environment files with sensitive data
+.env
+.env.real
+.env.local
+.env.production
+.env.staging
+.env.development
+
+# OAuth and API credentials
+*oauth*secret*
+*client_secret*
+*api_key*
+*token*
+google_credentials.json
+client_secret*.json
+
+# Any file with sensitive credentials patterns
+*secret*
+*credential*
+*password*
+*.key
+*.pem
+*.p12
+
+# ========================================
 # Logs and Monitoring
 # ========================================
 
@@ -368,22 +396,6 @@ tokens.json
 # Private keys
 private_key*
 *.private
-
-# Google OAuth credentials (never commit)
-google_credentials.json
-client_secret*.json
-*client_secret*
-*oauth*secret*
-.env.real
-.env.production
-.env.local
-
-# Any file containing sensitive credentials
-*secret*
-*credential*
-*token*
-*key*.json
-*oauth*.json
 
 # ========================================
 # END OF .gitignore
